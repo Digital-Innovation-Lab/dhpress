@@ -1,0 +1,13 @@
+    <!-- Handlebars Templates for Map View -->
+<script id="dhp-script-map-menus" type="text/x-handlebars-template">
+  <li class="has-dropdown">
+      <a href="#">Legends</a>
+      <ul class="dropdown legend-dropdown"">
+          <!-- links -->
+      </ul>
+  </li>
+
+  <li class="divider"></li>
+  <li><a id="layers-button" href="#">Layer Sliders</a></li>
+</script>
+

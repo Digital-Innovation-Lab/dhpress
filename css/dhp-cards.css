@@ -1,0 +1,143 @@
+
+/*********************
+ ** TopicCards
+ **/
+
+/* First, we need to disable some WP/Theme defaults, or they ruin card formatting */
+
+.entry-content p,
+.entry-summary p,
+.comment-content p,
+.mu_register p {
+    line-height: 1rem !important;
+    margin-bottom: 1rem !important;
+    margin: 0 0 0 0 !important;
+}
+
+p {
+    margin-bottom: 0 !important;
+}
+
+    /* Enable scroll bar for Cards */
+#dhp-visual {
+    overflow: auto;
+}
+
+    /* move top down to make room for head of nav bar */
+    /* bottom padding necessary to compensate for top nav bar */
+.fullscreen #card-container {
+    top: 50px;
+    padding-bottom: 48px;
+}
+
+#card-container {
+    padding-left: 4px;
+    z-index: 0 !important;
+}
+
+.card {
+    background: #00BFFF;
+    font-size: 11px;
+    line-height: 13px;
+    margin: 1px;
+    padding: 5px;
+    overflow: hidden;
+    margin-bottom: 2px;
+    z-index: 0 !important;
+}
+
+    /* When user hovers over card, tilt it and greyscale it somewhat */
+.card:hover {
+    border: 1px solid black;
+
+  -webkit-transform: rotate(-3deg);
+     -moz-transform: rotate(-3deg);
+       -o-transform: rotate(-3deg);
+      -ms-transform: rotate(-3deg);
+          transform: rotate(-3deg);
+}
+
+    /* Scale card acc to size */
+
+.card.short {
+    height: 120px;
+}
+
+.card.med-height {
+    height: 200px;
+}
+
+.card.tall {
+    height: 300px;
+}
+
+.card.thin {
+    width: 120px;
+}
+
+.card.med-width {
+    width: 200px;
+}
+
+.card.wide {
+    width: 300px;
+}
+
+
+    /* Material on the cards */
+
+.card p {
+    font-size: 11px;
+    line-height: 13px;
+    margin: 0 0 0 0;
+    padding: 1px;
+    margin-bottom: 2px;
+}
+
+.card p img {
+	display: block;
+	padding: 1px;
+    margin: 1px;
+    margin-top: 1px;
+    border: 1px black solid;
+    margin-bottom: 2px;
+    max-width: 98%;
+}
+
+    /* Controls */
+.top-bar .button {
+    margin: 3px;
+}
+
+    /* tweaks to Filter Modal modal */
+#filterModal {
+    max-height: 400px;
+    overflow: scroll;
+}
+
+#filterModal input {
+    margin: 4px;
+}
+
+#filterModal input[type="text"] {
+    width: 160px;
+}
+
+    /* Each selectable filter value for short text is encased in this div */
+.st-filter-value {
+    margin: 2px 5px 2px 0px;
+    padding: 0;
+    display: inline-block;
+    width: auto;
+    height: 1.1em;
+}
+
+.date-boxes {
+    padding: 0;
+    display: inline-block;
+}
+
+.date-boxes input {
+    margin: 2px 5px 2px 0px;
+    display: inline-block;
+}
