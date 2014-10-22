@@ -1,6 +1,6 @@
 # DH Press - Digital Humanities Toolkit
 
-Contributors: jehope, gaelicmichael
+Contributors: gaelicmichael, jehope
 Donate link: http://dhpress.org/
 Tags: plugin, visualization, humanities, toolkit, historical
 Requires at least: 3.4

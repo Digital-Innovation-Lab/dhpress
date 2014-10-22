@@ -30,7 +30,11 @@ var dhpTimeline = {
         dhpTimeline.tlEP        = tlEP;
 
         dhpTimeline.fromDate = dhpServices.parseADate(tlEP.from, true);
-        dhpTimeline.toDate = dhpServices.parseADate(tlEP.to, true);
+        if (tlEP.to === '' || tlEP.to === ' ') {
+            dhpTimeline.toDate = new Date();
+        } else {
+            dhpTimeline.toDate = dhpServices.parseADate(tlEP.to, true);            
+        }
         dhpTimeline.openFromDate = dhpServices.parseADate(tlEP.openFrom, true);
         dhpTimeline.openToDate = dhpServices.parseADate(tlEP.openTo, true);
 
@@ -233,7 +237,7 @@ var dhpTimeline = {
 
             // Process Event info
         eventData.forEach(function(item, index) {
-            var newEvent = dhpServices.eventFromDateStr(item.date);
+            var newEvent = dhpServices.eventFromDateStr(item.date, dhpTimeline.fromDate, dhpTimeline.toDate);
             newEvent.index = index;
 
                 // If an instantaneous event, need to create "placeholder" endpoint
