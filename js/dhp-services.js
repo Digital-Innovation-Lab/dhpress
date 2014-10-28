@@ -230,10 +230,12 @@ var dhpServices = {
             jQuery('#legends .legend-row').append('<div class="legend-div" id="layers-panel"><div class="legend-title">'+layerTitle+'</div></div>');
         }
 
-            // Hide all Legends, except 0 by default
-        jQuery('.legend-div').hide();
-        jQuery('#term-legend-0').show();
-        jQuery('#term-legend-0').addClass('active-legend');
+        if (legendList.length) {
+                // Hide all Legends, except 0 by default
+            jQuery('.legend-div').hide();
+            jQuery('#term-legend-0').show();
+            jQuery('#term-legend-0').addClass('active-legend');
+        }
 
             // Update checkbox height(varies by theme/browser) 
         // checkboxHeight = jQuery('#legends').find('input:checkbox').height();

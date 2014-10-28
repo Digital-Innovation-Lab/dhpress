@@ -79,13 +79,21 @@ var dhpPinboardView = {
         dhpPinboardView.zoomStep=10;
 
             // Add pinboard elements to nav bar
-        jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-pin-menus").html()));
+        if (pinboardEP.legends.length) {
+            jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-pin-leg-menu").html()));
+                // We only need Layers button "switch" if there are also Legends
+            if (pinboardEP.layers.length) {
+                jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-pin-layer-menu").html()));
+            }
+        }
 
             // Create control div for Legend and image navigation buttons
         jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
 
-            // Create placeholder for Legend menu
-        jQuery('#dhp-controls').append(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
+            // Only create placeholder for menu area if there is a Legend or an overlay layer
+        if (pinboardEP.legends.length || pinboardEP.layers.length) {
+            jQuery('#dhp-controls').prepend(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
+        }
 
             // Create buttons for navigating & zooming background image
         jQuery('#dhp-controls').append('<div id="dhp-pin-controls"><div class="pin-fndn-icon"><i class="fi-arrow-left" id="pin-left"></i> <i class="fi-arrow-right" id="pin-right"></i> <i class="fi-arrow-down" id="pin-down"></i> <i class="fi-arrow-up" id="pin-up"></i> <i class="fi-arrows-in" id="pin-reduce"></i> <i class="fi-arrows-out" id="pin-zoom"></i> <i class="fi-x-circle" id="pin-refresh"></i> </div></div>');
@@ -658,8 +666,6 @@ var dhpPinboardView = {
         dhpPinboardView.createLegends();
         dhpPinboardView.createLayerButtons();
         dhpPinboardView.createSVG();
-
-        // dhpPinboardView.dhpUpdateSize();
     }, // createDataObjects()
 
 
@@ -683,7 +689,56 @@ var dhpPinboardView = {
     }, // getMarkersOfCategory()
 
 
-        // PURPOSE: Create SVG data to represent markers on image
+        // PURPOSE: Create the SVG data for a single marker and binds code for Select Modal
+        // RETURNS: Object for marker shape
+    createMarker: function(theMarker, mIndex, isPNG, pngItem)
+    {
+        var shape;
+
+        if (isPNG) {
+            shape = dhpPinboardView.paper.image(pngItem.url, theMarker.geometry.coordinates[0]-(pngItem.w/2),
+                        theMarker.geometry.coordinates[1]-pngItem.h, pngItem.w, pngItem.h);
+        } else {
+            switch(dhpPinboardView.pinboardEP.icon) {
+            case 'circle':
+                shape = dhpPinboardView.paper.circle(theMarker.geometry.coordinates[0],
+                                                    theMarker.geometry.coordinates[1],
+                                                    dhpPinboardView.radius);
+                break;
+            case 'diamond':
+                shape = dhpPinboardView.paper.polygon(dhpPinboardView.diamondPts);
+                shape.transform("t" + theMarker.geometry.coordinates[0] + "," + theMarker.geometry.coordinates[1]);
+                break;
+            case 'tack':
+                shape = dhpPinboardView.icons.thumbtack.use();
+                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-4) + "," + String(parseInt(theMarker.geometry.coordinates[1])-20));
+                break;
+            case 'ballon':
+                shape = dhpPinboardView.icons.ballon.use();
+                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-8) + "," + String(parseInt(theMarker.geometry.coordinates[1])-17));
+                break;
+            case 'mag':
+                shape = dhpPinboardView.icons.magGlass.use();
+                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-6) + "," + String(parseInt(theMarker.geometry.coordinates[1])-6));
+                break;
+            } // switch
+        }
+        shape.node.id = mIndex;
+        shape.data("i", mIndex);
+        shape.click(function() {
+            if (dhpPinboardView.playState == dhpPinboardView.STATE_END) {
+                    // Get index to marker
+                var index = parseInt(this.data("i"));
+                var clicked = dhpPinboardView.allMarkers[index];
+                dhpServices.showMarkerModal(clicked);
+            }
+        });
+
+        return shape;
+    }, // createMarker
+
+
+        // PURPOSE: Create SVG data to represent all markers on the image
         // NOTES:   Need to create nested <g> groups to correspond to Legend heads and values
         //          Then we can show or hide various Legends by setting attributes
         //          Legend heads will have class .lgd-head and id #lgd-id+ID#
@@ -695,95 +750,69 @@ var dhpPinboardView = {
     {
         var legendName, lgdHeadGroup, lgdHeadVal, markerIndices, theMarker, shape;
 
-        _.each(dhpPinboardView.filters, function(theLegend, legIndex) {
-            legendName = theLegend.name;
+            // Logic for creating markers with Legends different than without due to IDs, etc
+        if (dhpPinboardView.filters.length) {
+            _.each(dhpPinboardView.filters, function(theLegend, legIndex) {
+                legendName = theLegend.name;
 
-                // Create grouping for Legend head
-            lgdHeadGroup = dhpPinboardView.paper.group();
-                // Create entries for all of the 1st-level terms
-            _.each(theLegend.terms, function(theTerm) {
-                if (legendName === theTerm.name) {
-                        // Can't set the attributes for Legend head until we get to its term entry
-                        // Only first legend is visible initially, so set class accordingly
-                    var lgdAtts = { id: 'lgd-id'+theTerm.id,
-                                    stroke: "#000",
-                                    strokeWidth: 1
-                                  };
-                    if (legIndex == 0) {
-                        lgdAtts.class = 'lgd-head';
-                    } else {
-                        lgdAtts.class = 'lgd-head hide';
-                    }
-                    lgdHeadGroup.attr(lgdAtts);
-                } else {
-                        // Create grouping for Legend value
-                        // Set color for all items of this value
-                    lgdHeadVal = lgdHeadGroup.group();
-                    var isPNG=false;
-                        // If Legend value is PNG image, locate its details
-                    if (theTerm.icon_url.charAt(0) === '@') {
-                        isPNG=true;
-                        var pngTitle = theTerm.icon_url.substring(1);
-                        var pngItem = _.find(pngData, function(thePNG) { return thePNG.title === pngTitle; } );
-                        lgdHeadVal.attr( { class: 'lgd-val',
-                                            id: 'lgd-id'+theTerm.id
-                                        } );
-                    } else {
-                        lgdHeadVal.attr( { class: 'lgd-val',
-                                            id: 'lgd-id'+theTerm.id,
-                                            fill: theTerm.icon_url
-                                        } );
-                    }
-                        // Get list of all markers marked with this Legend value
-                    markerIndices = dhpPinboardView.getMarkersOfCategory(theTerm.id);
-                        // Create each marker in this group
-                    _.each(markerIndices, function(mIndex) {
-                        theMarker = dhpPinboardView.allMarkers[mIndex];
-                        if (isPNG) {
-                            shape = dhpPinboardView.paper.image(pngItem.url, theMarker.geometry.coordinates[0]-(pngItem.w/2),
-                                        theMarker.geometry.coordinates[1]-pngItem.h, pngItem.w, pngItem.h);
+                    // Create grouping for Legend head
+                lgdHeadGroup = dhpPinboardView.paper.group();
+                    // Create entries for all of the 1st-level terms
+                _.each(theLegend.terms, function(theTerm) {
+                    if (legendName === theTerm.name) {
+                            // Can't set the attributes for Legend head until we get to its term entry
+                            // Only first legend is visible initially, so set class accordingly
+                        var lgdAtts = { id: 'lgd-id'+theTerm.id,
+                                        stroke: "#000",
+                                        strokeWidth: 1
+                                      };
+                        if (legIndex == 0) {
+                            lgdAtts.class = 'lgd-head';
                         } else {
-                            switch(dhpPinboardView.pinboardEP.icon) {
-                            case 'circle':
-                                shape = dhpPinboardView.paper.circle(theMarker.geometry.coordinates[0],
-                                                                    theMarker.geometry.coordinates[1],
-                                                                    dhpPinboardView.radius);
-                                break;
-                            case 'diamond':
-                                shape = dhpPinboardView.paper.polygon(dhpPinboardView.diamondPts);
-                                shape.transform("t" + theMarker.geometry.coordinates[0] + "," + theMarker.geometry.coordinates[1]);
-                                break;
-                            case 'tack':
-                                shape = dhpPinboardView.icons.thumbtack.use();
-                                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-4) + "," + String(parseInt(theMarker.geometry.coordinates[1])-20));
-                                break;
-                            case 'ballon':
-                                shape = dhpPinboardView.icons.ballon.use();
-                                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-8) + "," + String(parseInt(theMarker.geometry.coordinates[1])-17));
-                                break;
-                            case 'mag':
-                                shape = dhpPinboardView.icons.magGlass.use();
-                                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-6) + "," + String(parseInt(theMarker.geometry.coordinates[1])-6));
-                                break;
-                            } // switch
+                            lgdAtts.class = 'lgd-head hide';
                         }
-                        shape.node.id = mIndex;
-                        shape.data("i", mIndex);
-                            // Clicking shape must invoke select modal (if no animation showing)
-                        shape.click(function() {
-                            if (dhpPinboardView.playState == dhpPinboardView.STATE_END) {
-                                    // Get index to marker
-                                var index = parseInt(this.data("i"));
-                                var clicked = dhpPinboardView.allMarkers[index];
-                                dhpServices.showMarkerModal(clicked);
-                            }
-                        });
-                        lgdHeadVal.add(shape);
-                    }); // each marker
-                } // if
-            }); // each Legend value
-            lgdHeadGroup.add(lgdHeadVal);
-        }); // each Legend Head
+                        lgdHeadGroup.attr(lgdAtts);
+                    } else {
+                            // Create grouping for Legend value
+                            // Set color for all items of this value
+                        lgdHeadVal = lgdHeadGroup.group();
+                        var isPNG=false;
+                            // If Legend value is PNG image, locate its details
+                        if (theTerm.icon_url.charAt(0) === '@') {
+                            isPNG=true;
+                            var pngTitle = theTerm.icon_url.substring(1);
+                            var pngItem = _.find(pngData, function(thePNG) { return thePNG.title === pngTitle; } );
+                            lgdHeadVal.attr( { class: 'lgd-val',
+                                                id: 'lgd-id'+theTerm.id
+                                            } );
+                        } else {
+                            lgdHeadVal.attr( { class: 'lgd-val',
+                                                id: 'lgd-id'+theTerm.id,
+                                                fill: theTerm.icon_url
+                                            } );
+                        }
+                            // Get list of all markers marked with this Legend value
+                        markerIndices = dhpPinboardView.getMarkersOfCategory(theTerm.id);
+                            // Create each marker in this group
+                        _.each(markerIndices, function(mIndex) {
+                            theMarker = dhpPinboardView.allMarkers[mIndex];
+                            shape = dhpPinboardView.createMarker(theMarker, mIndex, isPNG, pngItem);
+                            lgdHeadVal.add(shape);
+                        }); // each marker
+                    } // if
+                }); // each Legend value
+                lgdHeadGroup.add(lgdHeadVal);
+            }); // each Legend Head
+
+        } else {
+                // Everything will be put under this single pseudo-Legend header
+            lgdHeadGroup = dhpPinboardView.paper.group();
+
+            _.each(dhpPinboardView.allMarkers, function(theMarker, index) {
+                shape = dhpPinboardView.createMarker(theMarker, index, false, null);
+                lgdHeadGroup.add(shape);
+            });
+        }
     }, // createSVG()
 
 
@@ -882,7 +911,12 @@ var dhpPinboardView = {
         // PURPOSE: Create HTML for all of the legends for this visualization
     createLegends: function() 
     {
+
         dhpServices.createLegends(dhpPinboardView.filters, 'Layer Buttons');
+
+            // Skip the rest if there are no filters!
+        if (dhpPinboardView.filters.length == 0)
+            return;
 
             // Handle user selection of value name from current Legend
         jQuery('#legends div.terms .row a').click(function(event) {
@@ -953,13 +987,13 @@ var dhpPinboardView = {
         // ASSUMES: createLegends() has already been called to create other legends
     createLayerButtons: function()
     {
-            // If there are no layers, hide button and don't do anything else
-        if (dhpPinboardView.pinboardEP.layers.length == 0) {
-            jQuery('#layers-button').hide();
+        var layerSettings = dhpPinboardView.pinboardEP.layers;
+
+            // If there are no layers, don't do anything else
+        if (layerSettings.length == 0) {
             return;
         }
 
-        var layerSettings = dhpPinboardView.pinboardEP.layers;
         _.each(layerSettings, function(thisLayer, index) {
             jQuery('#layers-panel').append('<div class="layer-set" id="oLayerCtrl'+index+'">'+
                 '<input type="checkbox" checked="checked"> '+
@@ -979,7 +1013,13 @@ var dhpPinboardView = {
             });
         });
 
-            // Handle selecting "Layer Buttons" button on navbar
+            // If there are no Legends, need to force showing of layers
+        if (dhpPinboardView.pinboardEP.legends.length == 0) {
+            jQuery('#layers-panel').addClass('active-legend');
+            jQuery('#layers-panel').show();
+        }
+
+            // Handle selecting "Layer Buttons" button on navbar (if this button exists)
         jQuery('#layers-button').click(function(evt) {
             evt.preventDefault();
 
