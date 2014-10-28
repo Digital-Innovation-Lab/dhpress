@@ -755,15 +755,15 @@ var dhpPinboardView = {
                                 break;
                             case 'tack':
                                 shape = dhpPinboardView.icons.thumbtack.use();
-                                shape.transform("t" + theMarker.geometry.coordinates[0] + "," + theMarker.geometry.coordinates[1]);
+                                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-4) + "," + String(parseInt(theMarker.geometry.coordinates[1])-20));
                                 break;
                             case 'ballon':
                                 shape = dhpPinboardView.icons.ballon.use();
-                                shape.transform("t" + theMarker.geometry.coordinates[0] + "," + theMarker.geometry.coordinates[1]);
+                                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-8) + "," + String(parseInt(theMarker.geometry.coordinates[1])-17));
                                 break;
                             case 'mag':
                                 shape = dhpPinboardView.icons.magGlass.use();
-                                shape.transform("t" + theMarker.geometry.coordinates[0] + "," + theMarker.geometry.coordinates[1]);
+                                shape.transform("t" + String(parseInt(theMarker.geometry.coordinates[0])-6) + "," + String(parseInt(theMarker.geometry.coordinates[1])-6));
                                 break;
                             } // switch
                         }
