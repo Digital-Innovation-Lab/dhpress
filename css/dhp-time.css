@@ -106,3 +106,9 @@
     fill: blue;
     fill-opacity: .2;
 }
+
+.brush .dragger {
+    fill: #99CCCC;
+    stroke: black;
+    stroke-width: 1;
+}
