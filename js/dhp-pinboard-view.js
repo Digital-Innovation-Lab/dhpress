@@ -115,8 +115,9 @@ var dhpPinboardView = {
         jQuery("#svg-container").append(dhpPinboardView.svgRoot);
         dhpPinboardView.paper = Snap(dhpPinboardView.svgRoot);
 
-            // Create background image
-        dhpPinboardView.paper.image(pinboardEP.imageURL, 0, 0, dhpPinboardView.iWidth, dhpPinboardView.iHeight);
+            // Create background image and assign ID
+        var image = dhpPinboardView.paper.image(pinboardEP.imageURL, 0, 0, dhpPinboardView.iWidth, dhpPinboardView.iHeight);
+        image.attr( { id: 'dhp-base-layer' } );
 
         var pathBallon = "M8,0C4.687,0,2,2.687,2,6c0,3.854,4.321,8.663,5,9.398C7.281,15.703,7.516,16,8,16s0.719-0.297,1-0.602  C9.679,14.663,14,9.854,14,6C14,2.687,11.313,0,8,0z M8,10c-2.209,0-4-1.791-4-4s1.791-4,4-4s4,1.791,4,4S10.209,10,8,10z M8,4  C6.896,4,6,4.896,6,6s0.896,2,2,2s2-0.896,2-2S9.104,4,8,4z";
         var pathMagGlass = "M15.7,14.3l-3.105-3.105C13.473,10.024,14,8.576,14,7c0-3.866-3.134-7-7-7S0,3.134,0,7s3.134,7,7,7  c1.576,0,3.024-0.527,4.194-1.405L14.3,15.7c0.184,0.184,0.38,0.3,0.7,0.3c0.553,0,1-0.447,1-1C16,14.781,15.946,14.546,15.7,14.3z   M2,7c0-2.762,2.238-5,5-5s5,2.238,5,5s-2.238,5-5,5S2,9.762,2,7z";
@@ -223,7 +224,7 @@ var dhpPinboardView = {
                 Snap.load(layerInfo.file, function(thisLayer) {
                         // Must attach an ID to it so that it can be turned on and off
                     var g = thisLayer.select("g");
-                    g.attr( { id: 'oLayer'+lIndex } );
+                    g.attr( { id: 'dhp-over-layer-'+lIndex } );
                     dhpPinboardView.loadedLayers.append(g);
                     loadHandler(lIndex+1);
                 }); // load()
@@ -982,25 +983,66 @@ var dhpPinboardView = {
         dhpPinboardView.curLgdName = dhpPinboardView.curLgdFilter.name;
     }, // createLegends()
 
+    setLayerOpacity: function(id, value)
+    {
+        svgLayer = dhpPinboardView.paper.select(id);
+        svgLayer.attr( { opacity: value } );
+    }, // setLayerOpacity()
 
         // PURPOSE: Create button to turn on/off each SVG overlay layer in Legend area
         // ASSUMES: createLegends() has already been called to create other legends
     createLayerButtons: function()
     {
         var layerSettings = dhpPinboardView.pinboardEP.layers;
+        var svgLayer;
 
             // If there are no layers, don't do anything else
         if (layerSettings.length == 0) {
             return;
         }
 
+            // Create slider for background image
+        jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-base">'+
+                    '<div><input type="checkbox" checked="checked"><a class="value">Background Image</a></div>'+
+                    '<div><div class="layer-opacity"></div></div></div>');
+        jQuery('#layer-opct-base .layer-opacity').slider({
+                    range: false,
+                    min: 0,
+                    max: 1,
+                    step: 0.05,
+                    values: [ 1 ],
+                    slide: function( event, ui ) {
+                        dhpPinboardView.setLayerOpacity('#dhp-base-layer', ui.values[0]);
+                    }
+                });
+            // Handle turning on and off map layer
+        jQuery('#layer-opct-base input').click(function() {
+            svgLayer = dhpPinboardView.paper.select('#dhp-base-layer');
+            if(jQuery(this).is(':checked')) {
+                svgLayer.removeClass('hide');
+            } else {
+                svgLayer.addClass('hide');
+            }
+        });
+
+            // Create buttons and sliders for each later
         _.each(layerSettings, function(thisLayer, index) {
-            jQuery('#layers-panel').append('<div class="layer-set" id="oLayerCtrl'+index+'">'+
-                '<input type="checkbox" checked="checked"> '+
-                '<a class="value" id="oLayerCtrlA'+index+'">'+thisLayer.label+'</a></div>');
+            jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-'+index+'">'+
+                '<div><input type="checkbox" checked="checked"><a class="value" id="layer-opct-a-'+
+                index+'">'+thisLayer.label+'</a></div><div><div class="layer-opacity"></div></div></div>');
+            jQuery('#layer-opct-'+index+' .layer-opacity').slider({
+                    range: false,
+                    min: 0,
+                    max: 1,
+                    step: 0.05,
+                    values: [ 1 ],
+                    slide: function( event, ui ) {
+                        dhpPinboardView.setLayerOpacity('#dhp-over-layer-'+index, ui.values[0]);
+                    }
+                });
                 // Handle turning on and off pinboard svg overlay layer
-            jQuery('#oLayerCtrl'+index+' input').click(function() {
-                svgLayer = dhpPinboardView.paper.select('#oLayer'+index);
+            jQuery('#layer-opct-'+index+' input').click(function() {
+                svgLayer = dhpPinboardView.paper.select('#dhp-over-layer-'+index);
                     // Ensure layer visible
                 if(jQuery(this).is(':checked')) {
                     svgLayer.removeClass('hide');
