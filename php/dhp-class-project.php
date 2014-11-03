@@ -69,8 +69,10 @@
 									// Pinboard settings are as follows
 		            "settings" : {
 		                "imageURL" : String,						// complete URL to background image
-		            	"width" : Number,							// Pixel width of background image
-		            	"height" : Number,							// Pixel height of background image
+		            	"iw" : Number,								// Pixel width of background image
+		            	"ih" : Number,								// Pixel height of background image
+		            	"dw" : Number,								// Pixel width of display image
+		            	"dh" : Number,								// Pixel height of display image
 		                "size": Character,							// relative size of markers: "s" | "m" | "l"
 		                "icon": String,								// Name of icon marker to use or "disable"
 						"coordMote": String (name of mote),			// mote which supplies X-Y coordinate

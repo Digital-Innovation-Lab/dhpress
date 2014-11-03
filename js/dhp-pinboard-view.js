@@ -18,6 +18,7 @@ var dhpPinboardView = {
         //                  curLgdName = name of current legend/filter
         //                  curLgdFilter = pointer to current legend/filter array
 
+        //                  dWidth, dHeight = pixel width and height of background display frame
         //                  iWidth, iHeight = actual pixel width and height of image
         //                  viewL, viewT, viewW, viewH = current viewport into background image
         //                  viewScale = current zoom scale % (100=fullsize)
@@ -65,12 +66,14 @@ var dhpPinboardView = {
         dhpPinboardView.layerBtnsOn = false;
 
             // ensure that EP parameters are integers, not strings
-        dhpPinboardView.iWidth  = typeof(pinboardEP.width)  === 'number' ? pinboardEP.width  : parseInt(pinboardEP.width);
-        dhpPinboardView.iHeight = typeof(pinboardEP.height) === 'number' ? pinboardEP.height : parseInt(pinboardEP.height);
+        dhpPinboardView.dWidth  = typeof(pinboardEP.dw)  === 'number' ? pinboardEP.dw  : parseInt(pinboardEP.dw);
+        dhpPinboardView.dHeight = typeof(pinboardEP.dh) === 'number' ? pinboardEP.dh : parseInt(pinboardEP.dh);
+        dhpPinboardView.iWidth  = typeof(pinboardEP.iw)  === 'number' ? pinboardEP.iw  : parseInt(pinboardEP.iw);
+        dhpPinboardView.iHeight = typeof(pinboardEP.ih) === 'number' ? pinboardEP.ih : parseInt(pinboardEP.ih);
 
             // set view/scroll window parameters
 
-            // viewBox coordinates -- start out 1-1 actual pixel view
+            // viewBox coordinates
         dhpPinboardView.viewL=0;
         dhpPinboardView.viewT=0;
         dhpPinboardView.viewW=dhpPinboardView.iWidth;
@@ -105,10 +108,12 @@ var dhpPinboardView = {
         jQuery("#pin-up").click(dhpPinboardView.goUp);
         jQuery("#pin-down").click(dhpPinboardView.goDown);
 
-            // Initialize Snap and create "paper" palette
+            // Initialize Snap and create "paper" palette for the display
         dhpPinboardView.svgRoot = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        dhpPinboardView.svgRoot.setAttribute('preserveAspectRatio', 'xMinYMin');
 
-        jQuery(dhpPinboardView.svgRoot).width(dhpPinboardView.iWidth+2).height(dhpPinboardView.iHeight+2);
+            // Account for 1-pixel border
+        jQuery(dhpPinboardView.svgRoot).width(dhpPinboardView.dWidth+2).height(dhpPinboardView.dHeight+2);
 
             // Create container for SVG and insert the "paper"
         jQuery("#dhp-visual").append('<div id="svg-container"></div>');

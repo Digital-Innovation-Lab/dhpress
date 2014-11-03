@@ -316,12 +316,16 @@
     </h2>
     <ul>
         <li>Pinboard short label <input data-bind="value: theEP.label" type="text" size="12"/></li>
+        <li>Display Frame Size: Width (in pixels)
+            <input data-bind="value: theEP.settings.dw" type="number" size="4"/>
+            Height (in pixels) <input data-bind="value: theEP.settings.dh" type="number" size="4"/>
+        </li>
         <li>Background Image URL
             <input data-bind="value: theEP.settings.imageURL" type="text" size="48"/>
         </li>
         <li>Background Image Size: Width (in pixels)
-            <input data-bind="value: theEP.settings.width" type="number" size="4"/>
-            Height (in pixels) <input data-bind="value: theEP.settings.height" type="number" size="4"/>
+            <input data-bind="value: theEP.settings.iw" type="number" size="4"/>
+            Height (in pixels) <input data-bind="value: theEP.settings.ih" type="number" size="4"/>
         </li>
         <li>Pin marker: Size (circle and diamond only) <select data-bind="value: theEP.settings.size">
                 <option value="s">Small</option>
