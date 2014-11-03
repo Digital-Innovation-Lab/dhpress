@@ -651,7 +651,7 @@ jQuery(document).ready(function($) {
       return doGetMoteNames(['YouTube'], true);
     }, self);    
     self.tstMoteNames = ko.computed(function() {
-      return doGetMoteNames(['Timestamp']);
+      return doGetMoteNames(['Timestamp'], true);
     }, self);
     self.imageMoteNames = ko.computed(function() {
       return doGetMoteNames(['Image'], true);
@@ -802,7 +802,7 @@ jQuery(document).ready(function($) {
             if (self.edTrnsVideo()  == moteName)  { self.edTrnsVideo('disable'); }
             if (self.edTrnsTransc() == moteName)  { self.edTrnsTransc('disable'); }
             if (self.edTrnsTransc2() == moteName) { self.edTrnsTransc2('disable'); }
-            if (self.edTrnsTime()  == moteName)   { self.edTrnsTime(''); }
+            if (self.edTrnsTime()  == moteName)   { self.edTrnsTime('disable'); }
             if (self.edTrnsSrc()  == moteName)    { self.edTrnsSrc('disable'); }
 
               // In case any Legend exists

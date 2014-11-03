@@ -21,7 +21,8 @@ jQuery(document).ready(function($) {
 
         // Check to see if this is a transcript taxonomy
 	if (isTranscript) {
-        dhpWidget.initialize();
+            // Don't need to pass valid wParams parameter in case of archive pages
+        dhpWidget.initialize(null);
 
         dhpWidget.prepareTaxTranscript(ajax_url, project_id, ".dhp-transcript-content", taxTerm.taxonomy, taxTerm.slug);
 	}

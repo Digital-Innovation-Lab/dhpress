@@ -169,7 +169,7 @@ var dhpWidget = {
                         dhpWidget.playingNow = false;
                     }
                         // Keep within bounds if only excerpt of longer transcript
-                    if (dhpWidget.wParams.timecode != -1) {
+                    if (dhpWidget.wParams.timecode !== -1) {
                         if (params.currentPosition < dhpWidget.wParams.startTime) {
                             playWidget.seekTo(dhpWidget.wParams.startTime);
                         } else if (params.currentPosition > dhpWidget.wParams.endTime) {
@@ -230,7 +230,7 @@ var dhpWidget = {
                     onStateChange: ytStateChange,
                     onReady: function() {
                             // If this is to play an excerpt, specify time bounds now (in seconds)
-                        if (dhpWidget.wParams.timecode != -1) {
+                        if (dhpWidget.wParams.timecode !== -1) {
                             dhpWidget.playWidget.cueVideoById(
                                 {   videoId: dhpWidget.wParams.stream,
                                     startSeconds: (dhpWidget.wParams.startTime/1000),

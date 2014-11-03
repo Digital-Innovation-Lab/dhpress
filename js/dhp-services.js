@@ -121,6 +121,24 @@ if (!Array.prototype.map) {
   };
 }
 
+    // Interface between embedded YouTube player and code that uses it
+    // This is called once iFrame and API code is ready
+    // Need to determine whether this calls dhpWidget or dhpPinboard animation...
+    // Must be here because it is used both on Project pages and Archive pages!
+function onYouTubeIframeAPIReady()
+{
+        // Viewing pinboard but video player not yet instantiated yet it is loading
+    if (typeof(dhpPinboardView) === 'undefined') {
+        dhpWidget.bindPlayerHandlers();        
+    } else {
+        if (dhpPinboardView.vidPlayer==null && dhpPinboardView.playState==dhpPinboardView.STATE_LOADING) {
+            dhpPinboardView.onYouTubeAPIReady();
+        } else {
+            dhpWidget.bindPlayerHandlers();        
+        }
+    }
+}
+
     // PURPOSE: This Object contains methods to service & coordinate common needs of DH Press visualizations
 var dhpServices = {
 
@@ -590,7 +608,7 @@ var dhpServices = {
                 stream: null,
                 transcript: null,
                 transcript2: null,
-                timecode: null,
+                timecode: -1,
                 startTime: -1,
                 endTime: -1
             };

@@ -1585,17 +1585,23 @@ function dhp_get_tax_transcript()
 
 		// What custom fields holds appropriate data? Fetch from Marker
 	$dhp_audio_mote = null;
-	if ($proj_settings->views->transcript->audio && $proj_settings->views->transcript->audio != '') {
+	if ($proj_settings->views->transcript->audio && $proj_settings->views->transcript->audio != '' &&
+		$proj_settings->views->transcript->audio != 'disable')
+	{
 		$dhp_audio_mote = $projObj->getMoteByName($proj_settings->views->transcript->audio);
 		$dhp_object['audio'] = $marker_meta[$dhp_audio_mote->cf][0];
 	}
 	$dhp_video_mote = null;
-	if ($proj_settings->views->transcript->video && $proj_settings->views->transcript->video != '') {
+	if ($proj_settings->views->transcript->video && $proj_settings->views->transcript->video != '' &&
+		$proj_settings->views->transcript->video != 'disable')
+	{
 		$dhp_video_mote = $projObj->getMoteByName($proj_settings->views->transcript->video);
 		$dhp_object['video'] = $marker_meta[$dhp_video_mote->cf][0];
 	}
 
-	if ($proj_settings->views->transcript->transcript && $proj_settings->views->transcript->transcript != '') {
+	if ($proj_settings->views->transcript->transcript && $proj_settings->views->transcript->transcript != '' &&
+		$proj_settings->views->transcript->transcript != 'disable')
+	{
 		$dhp_transcript_mote = $projObj->getMoteByName($proj_settings->views->transcript->transcript);
 		$dhp_transcript_cfield = $dhp_transcript_mote->cf;
 		$dhp_transcript = $marker_meta[$dhp_transcript_cfield][0];
@@ -1606,7 +1612,9 @@ function dhp_get_tax_transcript()
 	}
 
 		// if project has 2nd transcripts
-	if ($proj_settings->views->transcript->transcript2 && $proj_settings->views->transcript->transcript2 != '') {
+	if ($proj_settings->views->transcript->transcript2 && $proj_settings->views->transcript->transcript2 != '' &&
+		$proj_settings->views->transcript->transcript2 != 'disable')
+	{
 		$dhp_transcript_mote = $projObj->getMoteByName($proj_settings->views->transcript->transcript2);
 		$dhp_transcript_cfield = $dhp_transcript_mote->cf;
 		$dhp_transcript = $marker_meta[$dhp_transcript_cfield][0];

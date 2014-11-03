@@ -156,7 +156,7 @@
 					"audio" 	: Name of mote (that contains last part of URL to audio file)
 					"transcript" : Name of mote (that contains URL to textual transcription of original),
 					"transcript2" : Name of mote (that contains URL to textual transcription of any translation),
-					"timecode" : Name of mote (that contains the timestamp),
+					"timecode" : 'disable' | Name of mote (that contains the timestamp),
 					"source"	: Name of mote with common value across excerpts of transcripts (taxonomy category),
 					"content"	: [							// Motes to show when tax/archive page shown
 			            String (mote name), ...
@@ -574,7 +574,7 @@ class DHPressMarkerQuery
 			if ($projSettings->views->transcript->transcripts2 !== '') {
 				$this->transcript2= $projObj->getCustomFieldForMote($projSettings->views->transcript->transcript2);
 			}
-			if ($projSettings->views->transcript->timecode !== '') {
+			if ($projSettings->views->transcript->timecode !== '' && $projSettings->views->transcript->timecode !== 'disable') {
 				$this->timecode   = $projObj->getCustomFieldForMote($projSettings->views->transcript->timecode);
 			}
 		}
