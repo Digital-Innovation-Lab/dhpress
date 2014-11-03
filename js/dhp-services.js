@@ -626,7 +626,7 @@ var dhpServices = {
 
             // Create HTML for all of the data related to the Marker
          if (selectParams.content) {
-            builtHTML = '<div><h3>Details:</h3></div>';
+            builtHTML = '';
                 // Go through each of the motes specified to be shown in select modal
             _.each(selectParams.content, function(cMote) {
                 builtHTML += dhpServices.moteValToHTML(feature, cMote);
@@ -798,7 +798,7 @@ var dhpServices = {
         var dateSegs = dStr.split('/');
 
         dateSegs[0] = dateSegs[0].trim();
-        if (dateSegs[0] == 'open') {
+        if (dateSegs[0] === 'open') {
             newEvent.start = minBound;
         } else {
             newEvent.start = dhpServices.parseADate(dateSegs[0], true);

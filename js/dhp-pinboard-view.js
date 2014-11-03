@@ -666,7 +666,7 @@ var dhpPinboardView = {
             // First legend will be selected by default
         dhpPinboardView.createLegends();
         dhpPinboardView.createLayerButtons();
-        dhpPinboardView.createSVG();
+        dhpPinboardView.createSVGMarkers();
     }, // createDataObjects()
 
 
@@ -747,7 +747,7 @@ var dhpPinboardView = {
         // ASSUMES: 2nd-level Legend value gets checked or unchecked by 1st-level parent, so that
         //              Markers can retain their distinctive 2nd-level IDs
         //          Legend head is the first term that appears in each Legend/Filter array
-    createSVG: function()
+    createSVGMarkers: function()
     {
         var legendName, lgdHeadGroup, lgdHeadVal, markerIndices, theMarker, shape;
 
@@ -808,13 +808,15 @@ var dhpPinboardView = {
         } else {
                 // Everything will be put under this single pseudo-Legend header
             lgdHeadGroup = dhpPinboardView.paper.group();
+            lgdHeadGroup.attr( { class: 'lgd-head' } );
+
 
             _.each(dhpPinboardView.allMarkers, function(theMarker, index) {
                 shape = dhpPinboardView.createMarker(theMarker, index, false, null);
                 lgdHeadGroup.add(shape);
             });
         }
-    }, // createSVG()
+    }, // createSVGMarkers()
 
 
         // PURPOSE: Handle user selection of legend in navbar menu
@@ -983,10 +985,12 @@ var dhpPinboardView = {
         dhpPinboardView.curLgdName = dhpPinboardView.curLgdFilter.name;
     }, // createLegends()
 
-    setLayerOpacity: function(id, value)
+    setLayerOpacity: function(selector, value)
     {
-        svgLayer = dhpPinboardView.paper.select(id);
-        svgLayer.attr( { opacity: value } );
+        var svgLayers = dhpPinboardView.paper.selectAll(selector);
+        _.each(svgLayers, function(theLayer) {
+            svgLayers.attr( { opacity: value } );
+        });
     }, // setLayerOpacity()
 
         // PURPOSE: Create button to turn on/off each SVG overlay layer in Legend area
@@ -1025,7 +1029,23 @@ var dhpPinboardView = {
             }
         });
 
-            // Create buttons and sliders for each later
+            // Create slider for SVG markers
+            // Don't create on/off checkmark, as Legends do that and it would complicate logic
+        jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-markers">'+
+                    '<div><a class="value">Markers</a></div>'+
+                    '<div><div class="layer-opacity"></div></div></div>');
+        jQuery('#layer-opct-markers .layer-opacity').slider({
+                    range: false,
+                    min: 0,
+                    max: 1,
+                    step: 0.05,
+                    values: [ 1 ],
+                    slide: function( event, ui ) {
+                        dhpPinboardView.setLayerOpacity('.lgd-head', ui.values[0]);
+                    }
+                });
+
+            // Create buttons and sliders for each overlay layer
         _.each(layerSettings, function(thisLayer, index) {
             jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-'+index+'">'+
                 '<div><input type="checkbox" checked="checked"><a class="value" id="layer-opct-a-'+
