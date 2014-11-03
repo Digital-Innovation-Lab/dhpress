@@ -119,6 +119,8 @@ var dhpPinboardView = {
         jQuery("#dhp-visual").append('<div id="svg-container"></div>');
         jQuery("#svg-container").append(dhpPinboardView.svgRoot);
         dhpPinboardView.paper = Snap(dhpPinboardView.svgRoot);
+            // Create initial zoombox
+        dhpPinboardView.recalcViewBox();
 
             // Create background image and assign ID
         var image = dhpPinboardView.paper.image(pinboardEP.imageURL, 0, 0, dhpPinboardView.iWidth, dhpPinboardView.iHeight);
@@ -355,8 +357,8 @@ var dhpPinboardView = {
 
     zoomOut: function() {
         var centX, centY, newW, newH;
-            // Allow a maximum of 1.5x zoom
-        if (dhpPinboardView.viewScale < 150) {
+            // Allow a maximum of 2x zoom
+        if (dhpPinboardView.viewScale < 200) {
                 // To zoom out, we need to add % of pix shown!
             dhpPinboardView.viewScale += dhpPinboardView.zoomStep;
                 // Compute current width, height and center point
@@ -814,7 +816,6 @@ var dhpPinboardView = {
                 // Everything will be put under this single pseudo-Legend header
             lgdHeadGroup = dhpPinboardView.paper.group();
             lgdHeadGroup.attr( { class: 'lgd-head' } );
-
 
             _.each(dhpPinboardView.allMarkers, function(theMarker, index) {
                 shape = dhpPinboardView.createMarker(theMarker, index, false, null);
