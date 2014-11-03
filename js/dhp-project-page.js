@@ -384,20 +384,3 @@ jQuery(document).ready(function($) {
     } // createLoadingMessage()
 }); // project page bootstrap
 
-
-    // Interface between embedded YouTube player and code that uses it
-    // This is called once iFrame and API code is ready
-    // Need to determine whether this calls dhpWidget or dhpPinboard animation...
-function onYouTubeIframeAPIReady()
-{
-        // Viewing pinboard but video player not yet instantiated yet it is loading
-    if (typeof(dhpPinboardView) === 'undefined') {
-        dhpWidget.bindPlayerHandlers();        
-    } else {
-        if (dhpPinboardView.vidPlayer==null && dhpPinboardView.playState==dhpPinboardView.STATE_LOADING) {
-            dhpPinboardView.onYouTubeAPIReady();
-        } else {
-            dhpWidget.bindPlayerHandlers();        
-        }
-    }
-}

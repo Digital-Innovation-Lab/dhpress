@@ -1585,17 +1585,23 @@ function dhp_get_tax_transcript()
 
 		// What custom fields holds appropriate data? Fetch from Marker
 	$dhp_audio_mote = null;
-	if ($proj_settings->views->transcript->audio && $proj_settings->views->transcript->audio != '') {
+	if ($proj_settings->views->transcript->audio && $proj_settings->views->transcript->audio != '' &&
+		$proj_settings->views->transcript->audio != 'disable')
+	{
 		$dhp_audio_mote = $projObj->getMoteByName($proj_settings->views->transcript->audio);
 		$dhp_object['audio'] = $marker_meta[$dhp_audio_mote->cf][0];
 	}
 	$dhp_video_mote = null;
-	if ($proj_settings->views->transcript->video && $proj_settings->views->transcript->video != '') {
+	if ($proj_settings->views->transcript->video && $proj_settings->views->transcript->video != '' &&
+		$proj_settings->views->transcript->video != 'disable')
+	{
 		$dhp_video_mote = $projObj->getMoteByName($proj_settings->views->transcript->video);
 		$dhp_object['video'] = $marker_meta[$dhp_video_mote->cf][0];
 	}
 
-	if ($proj_settings->views->transcript->transcript && $proj_settings->views->transcript->transcript != '') {
+	if ($proj_settings->views->transcript->transcript && $proj_settings->views->transcript->transcript != '' &&
+		$proj_settings->views->transcript->transcript != 'disable')
+	{
 		$dhp_transcript_mote = $projObj->getMoteByName($proj_settings->views->transcript->transcript);
 		$dhp_transcript_cfield = $dhp_transcript_mote->cf;
 		$dhp_transcript = $marker_meta[$dhp_transcript_cfield][0];
@@ -1606,7 +1612,9 @@ function dhp_get_tax_transcript()
 	}
 
 		// if project has 2nd transcripts
-	if ($proj_settings->views->transcript->transcript2 && $proj_settings->views->transcript->transcript2 != '') {
+	if ($proj_settings->views->transcript->transcript2 && $proj_settings->views->transcript->transcript2 != '' &&
+		$proj_settings->views->transcript->transcript2 != 'disable')
+	{
 		$dhp_transcript_mote = $projObj->getMoteByName($proj_settings->views->transcript->transcript2);
 		$dhp_transcript_cfield = $dhp_transcript_mote->cf;
 		$dhp_transcript = $marker_meta[$dhp_transcript_cfield][0];
@@ -2588,7 +2596,7 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('dhp-jquery-ui-mouse', plugins_url('/lib/jquery-ui-1.11.1/ui/mouse.js', dirname(__FILE__)), 
 						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget') );
 			wp_enqueue_script('dhp-jquery-ui-slider', plugins_url('/lib/jquery-ui-1.11.1/ui/slider.js', dirname(__FILE__)),
-						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget') );
+						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget', 'dhp-jquery-ui-mouse') );
 
 			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.3/leaflet.js', dirname(__FILE__)));
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
@@ -2618,8 +2626,23 @@ function dhp_page_template( $page_template )
 	    	break;
 
 	    case 'pinboard':
+			wp_enqueue_style('dhp-jquery-ui-base-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/core.css', dirname(__FILE__)) );
+			wp_enqueue_style('dhp-jquery-ui-slider-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/slider.css', dirname(__FILE__)),
+								 'dhp-jquery-ui-base-style' );
+			wp_enqueue_style('dhp-jquery-ui-smooth-style', plugins_url('/lib/jquery-ui-1.11.1/jquery-ui.theme.min.css', dirname(__FILE__)),
+								 array('dhp-jquery-ui-base-style', 'dhp-jquery-ui-slider-style') );
+
 			wp_enqueue_style('foundation-icons-css', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
 			wp_enqueue_style('dhp-pinboard-css', plugins_url('/css/dhp-pinboard.css',  dirname(__FILE__)) );
+
+				// Will call our own versions of jquery-ui to minimize compatibility problems
+			wp_enqueue_script('dhp-jquery-ui-core', plugins_url('/lib/jquery-ui-1.11.1/ui/core.js', dirname(__FILE__)), 'jquery' );
+			wp_enqueue_script('dhp-jquery-ui-widget', plugins_url('/lib/jquery-ui-1.11.1/ui/widget.js', dirname(__FILE__)), 
+						array('jquery', 'dhp-jquery-ui-core') );
+			wp_enqueue_script('dhp-jquery-ui-mouse', plugins_url('/lib/jquery-ui-1.11.1/ui/mouse.js', dirname(__FILE__)), 
+						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget') );
+			wp_enqueue_script('dhp-jquery-ui-slider', plugins_url('/lib/jquery-ui-1.11.1/ui/slider.js', dirname(__FILE__)),
+						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget', 'dhp-jquery-ui-mouse') );
 
 			wp_enqueue_script('snap', plugins_url('/lib/snap.svg-min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-pinboard-view', plugins_url('/js/dhp-pinboard-view.js', dirname(__FILE__)), 
@@ -2636,7 +2659,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-	    	array_push($dependencies, 'snap', 'dhp-pinboard-view');
+	    	array_push($dependencies, 'snap', 'dhp-jquery-ui-slider', 'dhp-pinboard-view');
 	    	break;
 
 	    case 'tree':

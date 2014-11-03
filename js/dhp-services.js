@@ -121,6 +121,24 @@ if (!Array.prototype.map) {
   };
 }
 
+    // Interface between embedded YouTube player and code that uses it
+    // This is called once iFrame and API code is ready
+    // Need to determine whether this calls dhpWidget or dhpPinboard animation...
+    // Must be here because it is used both on Project pages and Archive pages!
+function onYouTubeIframeAPIReady()
+{
+        // Viewing pinboard but video player not yet instantiated yet it is loading
+    if (typeof(dhpPinboardView) === 'undefined') {
+        dhpWidget.bindPlayerHandlers();        
+    } else {
+        if (dhpPinboardView.vidPlayer==null && dhpPinboardView.playState==dhpPinboardView.STATE_LOADING) {
+            dhpPinboardView.onYouTubeAPIReady();
+        } else {
+            dhpWidget.bindPlayerHandlers();        
+        }
+    }
+}
+
     // PURPOSE: This Object contains methods to service & coordinate common needs of DH Press visualizations
 var dhpServices = {
 
@@ -230,10 +248,12 @@ var dhpServices = {
             jQuery('#legends .legend-row').append('<div class="legend-div" id="layers-panel"><div class="legend-title">'+layerTitle+'</div></div>');
         }
 
-            // Hide all Legends, except 0 by default
-        jQuery('.legend-div').hide();
-        jQuery('#term-legend-0').show();
-        jQuery('#term-legend-0').addClass('active-legend');
+        if (legendList.length) {
+                // Hide all Legends, except 0 by default
+            jQuery('.legend-div').hide();
+            jQuery('#term-legend-0').show();
+            jQuery('#term-legend-0').addClass('active-legend');
+        }
 
             // Update checkbox height(varies by theme/browser) 
         // checkboxHeight = jQuery('#legends').find('input:checkbox').height();
@@ -588,7 +608,7 @@ var dhpServices = {
                 stream: null,
                 transcript: null,
                 transcript2: null,
-                timecode: null,
+                timecode: -1,
                 startTime: -1,
                 endTime: -1
             };
@@ -624,7 +644,7 @@ var dhpServices = {
 
             // Create HTML for all of the data related to the Marker
          if (selectParams.content) {
-            builtHTML = '<div><h3>Details:</h3></div>';
+            builtHTML = '';
                 // Go through each of the motes specified to be shown in select modal
             _.each(selectParams.content, function(cMote) {
                 builtHTML += dhpServices.moteValToHTML(feature, cMote);
@@ -796,7 +816,7 @@ var dhpServices = {
         var dateSegs = dStr.split('/');
 
         dateSegs[0] = dateSegs[0].trim();
-        if (dateSegs[0] == 'open') {
+        if (dateSegs[0] === 'open') {
             newEvent.start = minBound;
         } else {
             newEvent.start = dhpServices.parseADate(dateSegs[0], true);

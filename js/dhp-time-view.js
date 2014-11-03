@@ -19,6 +19,75 @@
 //                  instantOffset = amount of time added to start date for display purposes (proportional)
 
 var dhpTimeline = {
+    // Object for creating brush handles, variant of: http://bl.ocks.org/jisaacks/5678983
+    // NOTE: Assumes that dhpTimeline.brush has already been created
+    BrushHandles: (function() {
+        function BrushHandles(g, height) {
+            this._height = height;
+            this.g = g;
+            this.mask  = this.g.attr("class", "brush").call(dhpTimeline.brush);
+            this.mask.selectAll("rect").attr("y", 0).attr("height", height);
+
+            this.left  = this.mask.append("polygon").attr("class","dragger");
+            this.right = this.mask.append("polygon").attr("class","dragger");
+            this._x = null;
+            this._top = null;
+            this._bottom = null;
+        }
+
+        BrushHandles.prototype.style = function(prop, val) {
+            this.left.style(prop, val);
+            this.right.style(prop, val);
+            return this;
+        }
+
+        BrushHandles.prototype.x = function(f) {
+            if (f == null) {
+                return this._x;
+            }
+            this._x = f;
+            return this;
+        };
+
+        BrushHandles.prototype.height = function(h) {
+            if (h == null) {
+                return this._height;
+            }
+            this._height = h;
+            this.mask.selectAll("rect").attr("height", h);
+            return this;
+        };
+
+            // NOTE: This only redraws handles
+        BrushHandles.prototype.redraw = function() {
+            var leftTime, rightTime, lp, rp, xRange, theExtent;
+
+            theExtent = dhpTimeline.brush.extent();
+
+            xRange = this._x.range();
+            leftTime = theExtent[0];
+            rightTime = theExtent[1];
+            lp = this._x(leftTime);
+            rp = this._x(rightTime);
+
+                // Side handles -- but they are not "hot" themselves, so may be misleading
+            // var midH = this._height / 2;
+            // this.left.attr("points", "" + lp+","+(midH-5) + " " + lp+","+(midH+5) + " " + (lp-5)+","+(midH+5) + " " +
+            //                 (lp-9)+","+midH + " " + (lp-5)+","+(midH-5) + " " + lp+","+(midH-5));
+            // this.right.attr("points", "" + rp+","+(midH-5) + " " + (rp+5)+","+(midH-5) + " " + (rp+9)+","+midH + " " +
+            //                 (rp+5)+","+(midH+5) + " " + rp+","+(midH+5) + " " + rp+","+(midH-5));
+
+                // Bottom handles
+            this.left.attr("points", "" + lp+","+this._height + " " + (lp+5)+","+(this._height+5) + " " + (lp+5)+","+(this._height+9) + " " +
+                            (lp-5)+","+(this._height+9) + " " + (lp-5)+","+(this._height+5) + " " + lp+","+this._height);
+            this.right.attr("points", "" + rp+","+this._height + " " + (rp+5)+","+(this._height+5) + " " + (rp+5)+","+(this._height+9) + " " +
+                            (rp-5)+","+(this._height+9) + " " + (rp-5)+","+(this._height+5) + " " + rp+","+this._height);
+            return this;
+        };
+
+        return BrushHandles;
+    })(),
+
 
         // PURPOSE: Initialize timeline viewing area with controls and layers
         // INPUT:   ajaxURL      = URL to WP
@@ -30,7 +99,11 @@ var dhpTimeline = {
         dhpTimeline.tlEP        = tlEP;
 
         dhpTimeline.fromDate = dhpServices.parseADate(tlEP.from, true);
-        dhpTimeline.toDate = dhpServices.parseADate(tlEP.to, true);
+        if (tlEP.to === '' || tlEP.to === ' ') {
+            dhpTimeline.toDate = new Date();
+        } else {
+            dhpTimeline.toDate = dhpServices.parseADate(tlEP.to, true);            
+        }
         dhpTimeline.openFromDate = dhpServices.parseADate(tlEP.openFrom, true);
         dhpTimeline.openToDate = dhpServices.parseADate(tlEP.openTo, true);
 
@@ -95,6 +168,7 @@ var dhpTimeline = {
         dhpTimeline.chart = dhpTimeline.svg.append("g")
                 .attr("class", "chart")
                 .attr("clip-path", "url(#chart-area)" );
+
 
         jQuery.ajax({
             type: 'POST',
@@ -198,9 +272,13 @@ var dhpTimeline = {
             component.redraw();
         });
 
-            // Update brush by reinstating its extent
-        var extent = dhpTimeline.brush.extent();
-        d3.select('.brush').call(dhpTimeline.brush.extent(extent));
+        if (dhpTimeline.brush) {
+                // Update brush by reinstating its extent
+            var extent = dhpTimeline.brush.extent();
+
+            d3.select('.brush').call(dhpTimeline.brush.extent(extent));
+            dhpTimeline.brushHandler.redraw();
+        }
     }, // dhpUpdateSize()
 
 
@@ -233,7 +311,7 @@ var dhpTimeline = {
 
             // Process Event info
         eventData.forEach(function(item, index) {
-            var newEvent = dhpServices.eventFromDateStr(item.date);
+            var newEvent = dhpServices.eventFromDateStr(item.date, dhpTimeline.fromDate, dhpTimeline.toDate);
             newEvent.index = index;
 
                 // If an instantaneous event, need to create "placeholder" endpoint
@@ -667,22 +745,33 @@ var dhpTimeline = {
 
                     // "this" will actually point to the brushSVG object
                     // Replaces SVG data to correspond to new brush params
-                d3.select(this).call(dhpTimeline.brush.extent(extent1));
+                // d3.select(this).call(dhpTimeline.brush.extent(extent1));
+
+                dhpTimeline.brush.extent(extent1);
+                dhpTimeline.brushHandler.redraw();
 
                     // Rescale top timeline(s) according to bottom brush
                 dhpTimeline.bands[0].xScale.domain(extent1);
                 dhpTimeline.bands[0].redraw();
             });
 
-            // Create SVG component and connect to controller
-        dhpTimeline.brushSVG = band.g.append("svg")
-            .attr("class", "brush")
-            .call(dhpTimeline.brush);
+            // SVG area where brush will be created
+        dhpTimeline.brushSVG = band.g.append("svg");
 
-            // Container is opaque rectangle
-        dhpTimeline.brushSVG.selectAll("rect")
-            .attr("y", 0)
-            .attr("height", band.h-1);
+        dhpTimeline.brushHandler =
+            new dhpTimeline.BrushHandles(dhpTimeline.brushSVG, band.h-1)
+                .x(band.xScale)
+                .redraw();
+
+            // Create SVG component and connect to controller
+        // dhpTimeline.brushSVG = band.g.append("svg")
+        //     .attr("class", "brush")
+        //     .call(dhpTimeline.brush);
+
+        //     // Container is opaque rectangle
+        // dhpTimeline.brushSVG.selectAll("rect")
+        //     .attr("y", 0)
+        //     .attr("height", band.h-1);
     } // createBrush()
 
 }; // dhpTimeline

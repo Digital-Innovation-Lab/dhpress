@@ -192,8 +192,10 @@ jQuery(document).ready(function($) {
     self.label= ko.observable(epSettings.label || 'name me');
     self.settings = { };
     self.settings.imageURL = ko.observable(epSettings.settings.imageURL);
-    self.settings.width = ko.observable(epSettings.settings.width);
-    self.settings.height = ko.observable(epSettings.settings.height);
+    self.settings.dw = ko.observable(epSettings.settings.dw);
+    self.settings.dh = ko.observable(epSettings.settings.dh);
+    self.settings.iw = ko.observable(epSettings.settings.iw);
+    self.settings.ih = ko.observable(epSettings.settings.ih);
     self.settings.size = ko.observable(epSettings.settings.size);
     self.settings.icon = ko.observable(epSettings.settings.icon);
     self.settings.coordMote = ko.observable(epSettings.settings.coordMote);
@@ -450,9 +452,11 @@ jQuery(document).ready(function($) {
           break;
 
         case 'pinboard':
+          savedEP.settings.dw = theEP.settings.dw();
+          savedEP.settings.dh = theEP.settings.dh();
           savedEP.settings.imageURL = theEP.settings.imageURL();
-          savedEP.settings.width = theEP.settings.width();
-          savedEP.settings.height = theEP.settings.height();
+          savedEP.settings.iw = theEP.settings.iw();
+          savedEP.settings.ih = theEP.settings.ih();
           savedEP.settings.size = theEP.settings.size();
           savedEP.settings.icon = theEP.settings.icon();
           savedEP.settings.coordMote = theEP.settings.coordMote();
@@ -647,7 +651,7 @@ jQuery(document).ready(function($) {
       return doGetMoteNames(['YouTube'], true);
     }, self);    
     self.tstMoteNames = ko.computed(function() {
-      return doGetMoteNames(['Timestamp']);
+      return doGetMoteNames(['Timestamp'], true);
     }, self);
     self.imageMoteNames = ko.computed(function() {
       return doGetMoteNames(['Image'], true);
@@ -798,7 +802,7 @@ jQuery(document).ready(function($) {
             if (self.edTrnsVideo()  == moteName)  { self.edTrnsVideo('disable'); }
             if (self.edTrnsTransc() == moteName)  { self.edTrnsTransc('disable'); }
             if (self.edTrnsTransc2() == moteName) { self.edTrnsTransc2('disable'); }
-            if (self.edTrnsTime()  == moteName)   { self.edTrnsTime(''); }
+            if (self.edTrnsTime()  == moteName)   { self.edTrnsTime('disable'); }
             if (self.edTrnsSrc()  == moteName)    { self.edTrnsSrc('disable'); }
 
               // In case any Legend exists
@@ -1477,9 +1481,11 @@ jQuery(document).ready(function($) {
         type: 'pinboard',
         label: 'name me',
         settings: {
+          dw: 500,
+          dh: 500,
           imageURL: '',
-          width: 500,
-          height: 500,
+          iw: 500,
+          ih: 500,
           icon: 'circle',
           size: 'm',
           coordMote: '',
@@ -2241,20 +2247,26 @@ jQuery(document).ready(function($) {
           }
           break;
         case 'pinboard':
+          var w;
+          if (theEP.settings.dw() == '' || isNaN(w=parseInt(theEP.settings.dw(),10)) || w <= 0) {
+            epErrorMessage('You must specify a valid display width for the Pinboard');
+          }
+          var h;
+          if (theEP.settings.dh() == '' || isNaN(h=parseInt(theEP.settings.dh(),10)) || h <= 0) {
+            epErrorMessage('You must specify a valid display height for the Pinboard');
+          }
+          if (theEP.settings.iw() == '' || isNaN(w=parseInt(theEP.settings.iw(),10)) || w <= 0) {
+            epErrorMessage('You must specify a valid background image width for the Pinboard');
+          }
+          if (theEP.settings.ih() == '' || isNaN(h=parseInt(theEP.settings.ih(),10)) || h <= 0) {
+            epErrorMessage('You must specify a valid background image height for the Pinboard');
+          }
             // Do pinboards have at least one legend?
           if (theEP.settings.legends().length == 0) {
             epErrorMessage('You have not yet added a legend to the Pinboard');
           }
           if (theEP.settings.coordMote() == '') {
             epErrorMessage('You must specify the mote that will provide the coordinate for the Pinboard');
-          }
-          var w;
-          if (theEP.settings.width() == '' || isNaN(w=parseInt(theEP.settings.width(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid background image width for the Pinboard');
-          }
-          var h;
-          if (theEP.settings.height() == '' || isNaN(h=parseInt(theEP.settings.height(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid background image height for the Pinboard');
           }
           break;
         case 'tree':
