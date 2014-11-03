@@ -272,11 +272,13 @@ var dhpTimeline = {
             component.redraw();
         });
 
-            // Update brush by reinstating its extent
-        var extent = dhpTimeline.brush.extent();
+        if (dhpTimeline.brush) {
+                // Update brush by reinstating its extent
+            var extent = dhpTimeline.brush.extent();
 
-        d3.select('.brush').call(dhpTimeline.brush.extent(extent));
-        dhpTimeline.brushHandler.redraw();
+            d3.select('.brush').call(dhpTimeline.brush.extent(extent));
+            dhpTimeline.brushHandler.redraw();
+        }
     }, // dhpUpdateSize()
 
 
