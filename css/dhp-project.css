@@ -118,7 +118,7 @@ html.fullscreen {
 }
 .modal-content div {
 	padding-bottom: 10px;
-	line-height: 1.5;
+	line-height: 1.5em;
 }
 .modal.transcript {
 	position: fixed;
@@ -138,6 +138,14 @@ html.fullscreen {
 }
 .modal-body h3 {
 	font-size: 16px;
+}
+
+	/* Lines of mote values */
+.modal-body div {
+	line-height: 1.1em;
+	padding-top: 4px;
+	padding-left: 2px;
+	padding-bottom: 0;
 }
 
 .modal-body .dhp-mote-title {

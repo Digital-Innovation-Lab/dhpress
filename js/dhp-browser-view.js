@@ -107,35 +107,40 @@ var dhpBrowser = {
 							var theDate = fValues[0].split("/")[0];
 							var yearPre="";
 
-							if (theDate.charAt(0) == '-') {
-					            yearPre = "-";
-					            theDate = theDate.substring(1);
-					        }
-		        			var dateParts = theDate.split("-");
-							switch (browserEP.dateGrp) {
-							case 'exact':
-								fValues[0] = yearPre+theDate;
-								break;
-							case 'month':
-									// Provide default if none given
-								if (dateParts.length == 1) {
-									fValues[0] = yearPre+dateParts[0]+"1";
-								} else {
-									fValues[0] = yearPre+dateParts[0]+"-"+dateParts[1];
-								}
-								break;
-							case 'year':
-								fValues[0] = yearPre+dateParts[0];
-								break;
-							case 'decade':
-								var yearInt = Math.floor(parseInt(yearPre+dateParts[0])/10);
-								fValues[0] = String(yearInt)+'0';
-								break;
-							case 'century':
-								var yearInt = Math.floor(parseInt(yearPre+dateParts[0])/100);
-								fValues[0] = String(yearInt)+'00';
-								break;
-							} // switch
+								// can't process further if date is "open"
+							if (theDate === 'open') {
+								fValues[0] = 'open';
+							} else {
+								if (theDate.charAt(0) == '-') {
+						            yearPre = "-";
+						            theDate = theDate.substring(1);
+						        }
+			        			var dateParts = theDate.split("-");
+								switch (browserEP.dateGrp) {
+								case 'exact':
+									fValues[0] = yearPre+theDate;
+									break;
+								case 'month':
+										// Provide default if none given
+									if (dateParts.length == 1) {
+										fValues[0] = yearPre+dateParts[0]+"1";
+									} else {
+										fValues[0] = yearPre+dateParts[0]+"-"+dateParts[1];
+									}
+									break;
+								case 'year':
+									fValues[0] = yearPre+dateParts[0];
+									break;
+								case 'decade':
+									var yearInt = Math.floor(parseInt(yearPre+dateParts[0])/10);
+									fValues[0] = String(yearInt)+'0';
+									break;
+								case 'century':
+									var yearInt = Math.floor(parseInt(yearPre+dateParts[0])/100);
+									fValues[0] = String(yearInt)+'00';
+									break;
+								} // switch
+							} // if !open
 						} // if Date
 		            } // not Short Text
 
