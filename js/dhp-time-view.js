@@ -141,7 +141,8 @@ var dhpTimeline = {
 
             // Append div for timeline into visualization space
         jQuery('#dhp-visual').append('<div id="dhp-timeline"><div>');
-        jQuery('#dhp-timeline').width(widths[0]);
+            // -6 necessary to compensate for left inset of 6 in CSS
+        jQuery('#dhp-timeline').width(widths[0]-6);
 
         dhpTimeline.labelW     = typeof(tlEP.wAxisLbl) === 'number' ? tlEP.wAxisLbl : parseInt(tlEP.wAxisLbl);
 
@@ -243,7 +244,8 @@ var dhpTimeline = {
             // Expand width of containers for visual space
         var newWidths = dhpTimeline.getWidths();
 
-        jQuery('#dhp-timeline').width(newWidths[0]);
+            // -6 necessary to compensate for left inset of 6 in CSS
+        jQuery('#dhp-timeline').width(newWidths[0]-6);
         jQuery('#svg-container').width(newWidths[1]);
 
         dhpTimeline.threshold  = (newWidths[2] / (dhpTimeline.labelW*6.25));

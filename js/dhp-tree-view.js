@@ -40,7 +40,7 @@ var dhpTreeView = {
         //          treeEP       = settings for tree entry point (from project settings)
     initialize: function(ajaxURL, projectID, vizIndex, treeEP) {
              // Constants
-        dhpTreeView.controlHeight   = 49;  // LegendHeight[45] + 4
+        dhpTreeView.controlHeight   = 45;  // LegendHeight
 
             // Save visualization data for later
         dhpTreeView.treeEP         = treeEP;
@@ -175,7 +175,7 @@ var dhpTreeView = {
             // Width of dhp-tree is same as visual space
         jQuery('#dhp-tree').width(jQuery('#dhp-visual').width()-2);
             // Height of dhp-tree will be total viz space minus height of navbar, margins, border & scroll bar itself
-        var svgHeight = jQuery('#dhp-visual').height() - (dhpTreeView.controlHeight+10);
+        var svgHeight = jQuery('#dhp-visual').height() - (dhpTreeView.controlHeight+7);
         jQuery('#dhp-tree').height(svgHeight);
     }, // dhpUpdateSize()
 

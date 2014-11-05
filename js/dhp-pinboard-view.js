@@ -55,7 +55,7 @@ var dhpPinboardView = {
         //          viewParams   = array of extra data about visualization
     initialize: function(ajaxURL, projectID, vizIndex, pinboardEP, viewParams) {
              // GUI Constants
-        dhpPinboardView.controlHeight   = 49;  // max(navButtonHeight[30], LegendHeight[45]) + 4
+        dhpPinboardView.controlHeight   = 45;  // max(navButtonHeight[30], LegendHeight[45])
 
             // Save visualization data for later
         dhpPinboardView.pinboardEP     = pinboardEP;
@@ -317,7 +317,7 @@ var dhpPinboardView = {
             // Width of svg-container is same as visual space
         jQuery('#svg-container').width(jQuery('#dhp-visual').width()-2);
             // Height of svg-container will be total viz space minus height of navbar, margins, border & scroll bar itself
-        var svgHeight = jQuery('#dhp-visual').height() - (dhpPinboardView.controlHeight+5);
+        var svgHeight = jQuery('#dhp-visual').height() - (dhpPinboardView.controlHeight);
         jQuery('#svg-container').height(svgHeight);
     }, // dhpUpdateSize()
 
