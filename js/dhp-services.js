@@ -141,6 +141,10 @@ function onYouTubeIframeAPIReady()
 
     // PURPOSE: This Object contains methods to service & coordinate common needs of DH Press visualizations
 var dhpServices = {
+        // CONSTANTS
+    timeInstant: 1,
+    timeFuzzyStart: 2,
+    timeFuzzyEnd: 4,
 
         // LOCAL PROPERTIES
     ajaxURL: null,
@@ -755,7 +759,7 @@ var dhpServices = {
         // RETURNS: Date object or null if error
         // INPUT:   dateString = string itself containing Date
         //          from = true if it is the from Date, false if it is the to Date
-        // ASSUMES: dateString has been trimmed
+        // ASSUMES: dateString has been trimmed; can ignore fuzzy char ~
         // NOTE:    month # is 0-based!!
     parseADate: function(dateString, from)
     {
@@ -763,7 +767,12 @@ var dhpServices = {
         var yearBCE;
         var year, month, day;
 
-            // First check for negative year
+            // Check for fuzzy char indicator -- but discard if exists
+        if (dateString.charAt(0) == '~') {
+            dateString = dateString.substring(1);
+        }
+
+            // Check for negative year
         if (dateString.charAt(0) == '-') {
             yearBCE = true;
             dateString = dateString.substring(1);
@@ -805,36 +814,47 @@ var dhpServices = {
     }, // parseADate()
 
 
-        // PURPOSE: Create an event object by parsing Date string (which can have from & to)
+        // PURPOSE: Create event object by parsing Date range string (which can have from & to)
+        // RETURNS: Event object whose bitwise flags field represent three properties:
+        //              timeInstant = is this an instantaneous event?
+        //              timeFuzzyStart = is the beginning event fuzzy?
+        //              timeFuzzyEnd = is the end event fuzzy?
         // INPUT:   dStr = text string representing a Date (range)
         //          minBound = minimum Date in range
         //          maxBound = maximum Date in range
     eventFromDateStr: function(dStr, minBound, maxBound)
     {
-        var newEvent = { };
+        var newEvent = { flags: 0 };
 
         var dateSegs = dStr.split('/');
 
-        dateSegs[0] = dateSegs[0].trim();
-        if (dateSegs[0] === 'open') {
+        var start = dateSegs[0].trim();
+        if (start === 'open') {
             newEvent.start = minBound;
         } else {
-            newEvent.start = dhpServices.parseADate(dateSegs[0], true);
+            if (start.charAt(0) === '~') {
+                start = start.substr(1);
+                newEvent.flags |= dhpServices.timeFuzzyStart;
+            }
+            newEvent.start = dhpServices.parseADate(start, true);
         }
 
             // Is it a range of from/to?
         if (dateSegs.length == 2) {
-            newEvent.instant = false;
-            dateSegs[1] = dateSegs[1].trim();
-            if (dateSegs[1] === 'open') {
+            var end = dateSegs[1].trim();
+            if (end === 'open') {
                 newEvent.end = maxBound;
             } else {
-                newEvent.end = dhpServices.parseADate(dateSegs[1], false);
+                if (end.charAt(0) === '~') {
+                    end = end.substr(1);
+                    newEvent.flags |= dhpServices.timeFuzzyEnd;
+                }
+                newEvent.end = dhpServices.parseADate(end, false);
             }
 
             // Otherwise an instantaneous event -- just set to start Date
         } else {
-            newEvent.instant = true;
+            newEvent.flags |= dhpServices.timeInstant;
             newEvent.end = newEvent.start;
         }
 
@@ -846,6 +866,21 @@ var dhpServices = {
         // RETURNS: Complete HTML string for displaying the mote value
     moteValToHTML: function(markerData, moteName)
     {
+        function dateExplain(dateStr, from)
+        {
+            var theString='';
+
+            if (dateStr.charAt(0) === '~') {
+                if (from) {
+                    theString = 'no later than ';
+                } else {
+                    theString = 'at least ';
+                }
+                dateStr = dateStr.substr(1);
+            }
+            return theString+dateStr;
+        } // dateExplain()
+
         var builtHTML='';
 
         var moteDef = dhpServices.findMoteByName(moteName);
@@ -855,13 +890,18 @@ var dhpServices = {
             switch (moteDef.type) {
             case 'Date':
                 var dateSegs = mVal.split('/');
-                dateSegs[0] = dateSegs[0].trim();
+                var start = dateSegs[0].trim();
                 if (dateSegs.length == 1) {
-                    builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+dateSegs[0]+'</div>';
+                    var dateStr;
+                    if (start.charAt(0) === '~') {
+                        dateStr = 'about '+start.substr(1);
+                    } else {
+                        dateStr = start;
+                    }
+                    builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+dateStr+'</div>';
                 } else {
-                    dateSegs[1] = dateSegs[1].trim();
-                    builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: From '+dateSegs[0]+
-                                ' To '+dateSegs[1]+'</div>';
+                    builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: From '+
+                                dateExplain(start, true)+' To '+dateExplain(dateSegs[1].trim(), false)+'</div>';
                 }
                 break;
             case 'Image':

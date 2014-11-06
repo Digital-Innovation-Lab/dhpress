@@ -154,9 +154,11 @@ var dhpTimeline = {
         dhpTimeline.svg = d3.select('#dhp-timeline').append("svg")
             .attr("class", "svg-container")
             .attr("id", "svg-container")
-            .attr("width", widths[1])
+            .attr("width", widths[1]);
+                // Create space for definitions (colors and gradients)
+        dhpTimeline.svg.append('defs');
                 // Create inset frame
-            .append("g")
+        dhpTimeline.svg.append("g")
             .attr("transform", "translate(" + dhpTimeline.svgMargin.left + "," + dhpTimeline.svgMargin.top +  ")");
 
             // Clip all graphics to inner area of chart
@@ -170,7 +172,6 @@ var dhpTimeline = {
                 .attr("class", "chart")
                 .attr("clip-path", "url(#chart-area)" );
 
-
         jQuery.ajax({
             type: 'POST',
             url: ajaxURL,
@@ -183,10 +184,11 @@ var dhpTimeline = {
             {
                 dhpTimeline.rawData = JSON.parse(data);
 
-                    // First deal with Legend
+                    // First deal with Legends
                 dhpTimeline.legendTerms = dhpTimeline.rawData[0];
                 dhpTimeline.legendTerms = dhpTimeline.legendTerms.terms;
                 dhpServices.create1Legend(tlEP.color, dhpTimeline.legendTerms);
+                dhpTimeline.createLegendGrads();
 
                     // Now handle the actual events and create timeline
                 dhpTimeline.processEvents();
@@ -284,6 +286,43 @@ var dhpTimeline = {
     }, // dhpUpdateSize()
 
 
+        // PURPOSE: Create gradient definitions for Legends in SVG
+        // NOTES:   We must base gradient names on color values, since we'll only get
+        //              that back for Short Text Legend values
+        //          Append "-fs" = "fuzzy start", "-fe" = "fuzzy end", "-fb" = "fuzzy both"
+        //          So there are three variants of each color
+    createLegendGrads: function()
+    {
+        var defSpace = dhpTimeline.svg.select('defs');
+        var gradDef;
+
+        dhpTimeline.legendTerms.forEach(function(item) {
+                // First entry for Legend is "header", no color info
+            if (item.icon_url) {
+                var color = item.icon_url;
+                if (color.charAt(0) !== '#') {
+                    throw new Error('Using a non-color Legend for Timeline View');
+                }
+                var name = color.substr(1);
+                    // Create three variants of each color
+                gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
+                gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
+                gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
+                gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
+                gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
+                gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
+                gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
+                gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
+            }
+        });
+    }, // createLegendGrads
+
+
         // PURPOSE: Handle loading time events -- create all visuals from them
         //          Converts raw event data into usable data in events array
         // ASSUMES: dhpTimeline.rawData contains all time data
@@ -317,7 +356,7 @@ var dhpTimeline = {
             newEvent.index = index;
 
                 // If an instantaneous event, need to create "placeholder" endpoint
-            if (newEvent.instant) {
+            if (newEvent.flags & dhpServices.timeInstant) {
                 newEvent.end = new Date(newEvent.start.getTime() + dhpTimeline.instantOffset);
             }
 
@@ -425,7 +464,7 @@ var dhpTimeline = {
 
             // Create a div for this band
         band.g = dhpTimeline.chart.append("g")
-            .attr("id", "band"+band.id)
+            .attr("id", "band-"+band.id)
             .attr("transform", "translate(0," + band.t +  ")");
 
             // Only top band will have text labels -- compute relative size and position
@@ -448,28 +487,41 @@ var dhpTimeline = {
             .enter().append("svg")
             .attr("y", function (d) { return band.yScale(d.track); })
             .attr("height", band.itemHeight)
-            .attr("class", function (d) { return d.instant ? "part instant" : "part interval"; })
+            .attr("class", function (d) { return (d.flags & dhpServices.timeInstant) ? "part instant" : "part interval"; })
             .on("click", function(d) {
                 var eventData = dhpTimeline.features[d.index];
                 dhpServices.showMarkerModal(eventData);
             });
 
             // Finish specifying data for date ranges
-        var intervals = d3.select("#band" + band.id).selectAll(".interval");
+        var intervals = d3.select("#band-" + band.id).selectAll(".interval");
             // Solid rectangle to fill interval with color
         intervals.append("rect")
             .attr("width", "100%")
             .attr("height", "100%")
             .style("fill", function(d) {
                 var eventData = dhpTimeline.features[d.index];
-                return dhpServices.getItemSTColor(eventData.properties.categories, dhpTimeline.legendTerms);
+                var color = dhpServices.getItemSTColor(eventData.properties.categories, dhpTimeline.legendTerms);
+                    // check to see if fuzzy start or end
+                if (index == 0 && (d.flags & (dhpServices.timeFuzzyStart|dhpServices.timeFuzzyEnd))) {
+                        // both?
+                    if ((d.flags & (dhpServices.timeFuzzyStart|dhpServices.timeFuzzyEnd)) === (dhpServices.timeFuzzyStart|dhpServices.timeFuzzyEnd)) {
+                        return 'url('+color+'-fb)';
+                    } else if ((d.flags & dhpServices.timeFuzzyStart) === dhpServices.timeFuzzyStart) {
+                        return 'url('+color+'-fs)';
+                    } else {
+                        return 'url('+color+'-fe)';
+                    }
+                } else {
+                    return color;
+                }
             });
 
             // Label for interval -- only for top band
         if (index == 0) {
             intervals.append("text")
                 .attr("class", "intervalLabel")
-                .attr("x", 2)
+                .attr("x", 4)
                 .attr("y", fontPos)
                 .style("fill", function(d) {
                     var eventData = dhpTimeline.features[d.index];
@@ -484,7 +536,7 @@ var dhpTimeline = {
         }
 
             // Finish specifying data for instantaneous events
-        var instants = d3.select("#band" + band.id).selectAll(".instant");
+        var instants = d3.select("#band-" + band.id).selectAll(".instant");
             // Create circle for these
         instants.append("circle")
             .attr("cx", instCX)
