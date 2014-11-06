@@ -111,6 +111,9 @@ var dhpBrowser = {
 							if (theDate === 'open') {
 								fValues[0] = 'open';
 							} else {
+								if (theDate.charAt(0) == '~') {
+						            theDate = theDate.substring(1);
+								}
 								if (theDate.charAt(0) == '-') {
 						            yearPre = "-";
 						            theDate = theDate.substring(1);
