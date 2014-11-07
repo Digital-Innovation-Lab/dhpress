@@ -499,7 +499,7 @@ var dhpTimeline = {
         intervals.append("rect")
             .attr("width", "100%")
             .attr("height", "100%")
-            .style("fill", function(d) {
+            .attr("fill", function(d) {
                 var eventData = dhpTimeline.features[d.index];
                 var color = dhpServices.getItemSTColor(eventData.properties.categories, dhpTimeline.legendTerms);
                     // check to see if fuzzy start or end
@@ -523,7 +523,7 @@ var dhpTimeline = {
                 .attr("class", "intervalLabel")
                 .attr("x", 4)
                 .attr("y", fontPos)
-                .style("fill", function(d) {
+                .attr("fill", function(d) {
                     var eventData = dhpTimeline.features[d.index];
                     var colors = dhpServices.getItemSTColors(eventData.properties.categories, dhpTimeline.legendTerms);
                     return colors[1];
@@ -542,7 +542,7 @@ var dhpTimeline = {
             .attr("cx", instCX)
             .attr("cy", instCY)
             .attr("r", instR)
-            .style("fill", function(d) {
+            .attr("fill", function(d) {
                 var eventData = dhpTimeline.features[d.index];
                 return dhpServices.getItemSTColor(eventData.properties.categories, dhpTimeline.legendTerms);
             });
@@ -555,7 +555,6 @@ var dhpTimeline = {
                 .attr("x", instLabelX)
                 .attr("y", fontPos)
                 .style("font-size", fontSize)
-                .style("fill", '#000')
                 .text(function (d) {
                     var feature = dhpTimeline.features[d.index];
                     return feature.title;

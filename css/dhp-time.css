@@ -61,29 +61,38 @@
     fill: #FAFAFA;
 }
 
-.interval {
+#band-0 .interval {
     fill: #AAFFFF;
-    stroke-width: 6;
     cursor : default;
     pointer-events: true;
+    stroke-width: 1;
+    stroke: black;
+    stroke-opacity: 0.8;
 }
 
-.instant {
+#band-0 .instant {
     fill: #FFAAFF;
-    stroke-width: 6;
     cursor : default;
     pointer-events: true;
+    stroke-width: 1;
+    stroke: black;
+    stroke-opacity: 0.8;
 }
 
 .instantLabel {
-    fill : blue;
     font: 10px sans-serif;
+    font-weight: 300;
+    fill: black;                    /* instantaneous event labels always on white background */
+    stroke-width: 0;
+    stroke: none;
     shape-rendering: crispEdges;
 }
 
 .intervalLabel {
-    fill : black;
     font: 10px sans-serif;
+    font-weight: 300;
+    stroke: none;
+    stroke-width: 0;
     shape-rendering: crispEdges;
 }
 
