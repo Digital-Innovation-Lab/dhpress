@@ -2340,7 +2340,8 @@ function add_dhp_project_admin_scripts( $hook )
     if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
         if ( $post->post_type == 'dhp-project' ) {
         		// Library styles
-			wp_enqueue_style('jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/all.css', dirname(__FILE__)) );
+			wp_enqueue_style('jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.css', dirname(__FILE__)) );
+
 			wp_enqueue_style('jquery-colorpicker-style', plugins_url('/lib/colorpicker/jquery.colorpicker.css',  dirname(__FILE__)),
 					array('jquery-ui-style') );
 			// wp_enqueue_style('wp-jquery-ui-dialog' );
@@ -2354,16 +2355,7 @@ function add_dhp_project_admin_scripts( $hook )
 			wp_enqueue_script('underscore');
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
-			wp_enqueue_script('dhp-jquery-ui-core', plugins_url('/lib/jquery-ui-1.11.1/ui/core.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-widget', plugins_url('/lib/jquery-ui-1.11.1/ui/widget.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-accordion', plugins_url('/lib/jquery-ui-1.11.1/ui/accordion.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-mouse', plugins_url('/lib/jquery-ui-1.11.1/ui/mouse.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-button', plugins_url('/lib/jquery-ui-1.11.1/ui/button.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-draggable', plugins_url('/lib/jquery-ui-1.11.1/ui/draggable.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-position', plugins_url('/lib/jquery-ui-1.11.1/ui/position.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-dialog', plugins_url('/lib/jquery-ui-1.11.1/ui/dialog.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-accordion', plugins_url('/lib/jquery-ui-1.11.1/ui/accordian.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-slider', plugins_url('/lib/jquery-ui-1.11.1/ui/slider.js', dirname(__FILE__)), 'jquery' );
+			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.js', dirname(__FILE__)), 'jquery' );
 
 				// JS libraries specific to DH Press
 			wp_enqueue_script('jquery-nestable', plugins_url('/lib/jquery.nestable.js', dirname(__FILE__)), 'jquery' );
@@ -2373,12 +2365,12 @@ function add_dhp_project_admin_scripts( $hook )
 
 				// For touch-screen mechanisms
 			wp_enqueue_script('dhp-touch-punch', plugins_url('/lib/jquery.ui.touch-punch.js', dirname(__FILE__)),
-				array('jquery', 'dhp-jquery-ui-widget', 'dhp-jquery-ui-mouse') );
+				array('jquery', 'dhp-jquery-ui') );
 
 			wp_enqueue_script('knockout', plugins_url('/lib/knockout-3.1.0.js', dirname(__FILE__)) );
 
 				// Custom JavaScript for Admin Edit Panel
-			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui-core', 'jquery-nestable', 'jquery-colorpicker',
+			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'jquery-colorpicker',
 								'knockout');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
@@ -2552,7 +2544,6 @@ function dhp_page_template( $page_template )
         wp_enqueue_style('dhp-foundation-style', plugins_url('/lib/foundation-5.1.1/css/foundation.min.css',  dirname(__FILE__)));
         wp_enqueue_style('dhp-foundation-icons', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
 
-		// wp_enqueue_style('dhp-jquery-ui-style', 'http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css');
 		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 
 		wp_enqueue_script('underscore');
@@ -2577,11 +2568,7 @@ function dhp_page_template( $page_template )
     	$thisEP = $projObj->getEntryPointByIndex($vizIndex);
     	switch ($thisEP->type) {
     	case 'map':
-			wp_enqueue_style('dhp-jquery-ui-base-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/core.css', dirname(__FILE__)) );
-			wp_enqueue_style('dhp-jquery-ui-slider-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/slider.css', dirname(__FILE__)),
-								 'dhp-jquery-ui-base-style' );
-			wp_enqueue_style('dhp-jquery-ui-smooth-style', plugins_url('/lib/jquery-ui-1.11.1/jquery-ui.theme.min.css', dirname(__FILE__)),
-								 array('dhp-jquery-ui-base-style', 'dhp-jquery-ui-slider-style') );
+			wp_enqueue_style('dhp-jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.css', dirname(__FILE__)));
 
 			wp_enqueue_style('dhp-map-css', plugins_url('/css/dhp-map.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.3/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
@@ -2590,13 +2577,7 @@ function dhp_page_template( $page_template )
 	    	wp_enqueue_script('dhp-google-map-script', 'http'. ( is_ssl() ? 's' : '' ) .'://maps.google.com/maps/api/js?v=3&amp;sensor=false');
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
-			wp_enqueue_script('dhp-jquery-ui-core', plugins_url('/lib/jquery-ui-1.11.1/ui/core.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-widget', plugins_url('/lib/jquery-ui-1.11.1/ui/widget.js', dirname(__FILE__)), 
-						array('jquery', 'dhp-jquery-ui-core') );
-			wp_enqueue_script('dhp-jquery-ui-mouse', plugins_url('/lib/jquery-ui-1.11.1/ui/mouse.js', dirname(__FILE__)), 
-						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget') );
-			wp_enqueue_script('dhp-jquery-ui-slider', plugins_url('/lib/jquery-ui-1.11.1/ui/slider.js', dirname(__FILE__)),
-						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget', 'dhp-jquery-ui-mouse') );
+			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
 
 			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.3/leaflet.js', dirname(__FILE__)));
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
@@ -2612,7 +2593,7 @@ function dhp_page_template( $page_template )
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
 	    	array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-custom-maps',
-	    							'dhp-jquery-ui-slider');
+	    							'dhp-jquery-ui');
 	    	break;
 
 	    case 'cards':
@@ -2626,23 +2607,13 @@ function dhp_page_template( $page_template )
 	    	break;
 
 	    case 'pinboard':
-			wp_enqueue_style('dhp-jquery-ui-base-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/core.css', dirname(__FILE__)) );
-			wp_enqueue_style('dhp-jquery-ui-slider-style', plugins_url('/lib/jquery-ui-1.11.1/themes/base/slider.css', dirname(__FILE__)),
-								 'dhp-jquery-ui-base-style' );
-			wp_enqueue_style('dhp-jquery-ui-smooth-style', plugins_url('/lib/jquery-ui-1.11.1/jquery-ui.theme.min.css', dirname(__FILE__)),
-								 array('dhp-jquery-ui-base-style', 'dhp-jquery-ui-slider-style') );
+			wp_enqueue_style('dhp-jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.css', dirname(__FILE__)));
 
 			wp_enqueue_style('foundation-icons-css', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
 			wp_enqueue_style('dhp-pinboard-css', plugins_url('/css/dhp-pinboard.css',  dirname(__FILE__)) );
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
-			wp_enqueue_script('dhp-jquery-ui-core', plugins_url('/lib/jquery-ui-1.11.1/ui/core.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('dhp-jquery-ui-widget', plugins_url('/lib/jquery-ui-1.11.1/ui/widget.js', dirname(__FILE__)), 
-						array('jquery', 'dhp-jquery-ui-core') );
-			wp_enqueue_script('dhp-jquery-ui-mouse', plugins_url('/lib/jquery-ui-1.11.1/ui/mouse.js', dirname(__FILE__)), 
-						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget') );
-			wp_enqueue_script('dhp-jquery-ui-slider', plugins_url('/lib/jquery-ui-1.11.1/ui/slider.js', dirname(__FILE__)),
-						array('jquery', 'dhp-jquery-ui-core', 'dhp-jquery-ui-widget', 'dhp-jquery-ui-mouse') );
+			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
 
 			wp_enqueue_script('snap', plugins_url('/lib/snap.svg-min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-pinboard-view', plugins_url('/js/dhp-pinboard-view.js', dirname(__FILE__)), 
@@ -2659,7 +2630,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-	    	array_push($dependencies, 'snap', 'dhp-jquery-ui-slider', 'dhp-pinboard-view');
+	    	array_push($dependencies, 'snap', 'dhp-jquery-ui', 'dhp-pinboard-view');
 	    	break;
 
 	    case 'tree':
