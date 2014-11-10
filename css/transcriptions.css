@@ -40,6 +40,8 @@
 }
 
 .transcript-list .type-text {
+	line-height: 1.2em;
+
 	width: 76%;
 	display: table-cell;
 	vertical-align: top;
@@ -47,6 +49,8 @@
 }
 
 .transcript-list.two-column .type-text {
+	line-height: 1.2em;
+
 	width: 40%;
 	display: table-cell;
 	vertical-align: top;

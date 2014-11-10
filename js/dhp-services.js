@@ -601,8 +601,8 @@ var dhpServices = {
             // Remove anything currently in body -- will rebuild from scratch
         jQuery('#markerModal .modal-body').empty();
 
-            // Should Select Modal show SoundCloud or YouTube widgets?
-        if (dhpServices.modalViewHas("scloud") || dhpServices.modalViewHas("youtube"))
+            // Create playback widgets if there are A/V settings or transcript
+        if (feature.properties.audio || feature.properties.video || feature.properties.transcript)
         {
             jQuery('#markerModal').addClass('transcript');
 
@@ -618,11 +618,11 @@ var dhpServices = {
             };
 
                 // Configure player-specific data
-            if (dhpServices.modalViewHas('scloud'))
+            if (feature.properties.audio)
             {
                 widgetSettings.stream = feature.properties.audio;
                 widgetSettings.playerType = 'scloud';
-            } else if (dhpServices.modalViewHas('youtube'))
+            } else if (feature.properties.video)
             {
                 widgetSettings.stream = feature.properties.video;
                 widgetSettings.playerType = 'youtube';
@@ -644,10 +644,10 @@ var dhpServices = {
 
             dhpWidget.initialize(widgetSettings);
             dhpWidget.prepareOneTranscript(ajaxURL, projectID, '#markerModal .modal-body');
-         }
+        } // playback widgets
 
             // Create HTML for all of the data related to the Marker
-         if (selectParams.content) {
+        if (selectParams.content) {
             builtHTML = '';
                 // Go through each of the motes specified to be shown in select modal
             _.each(selectParams.content, function(cMote) {

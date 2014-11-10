@@ -566,11 +566,11 @@ class DHPressMarkerQuery
 				$this->video = null;
 			}
 		}
-			// Only check for transcript data if there is audio or video
-		if ($this->audio || $this->video) {
-			if ($projSettings->views->transcript->transcript !== '') {
-				$this->transcript = $projObj->getCustomFieldForMote($projSettings->views->transcript->transcript);
-			}
+
+			// Check for transcript setting (independent of A/V)
+		if ($projSettings->views->transcript->transcript !== '' && $projSettings->views->transcript->transcript !== 'disable') {
+			$this->transcript = $projObj->getCustomFieldForMote($projSettings->views->transcript->transcript);
+				// Only need to check 2nd transcript and timecode if primary transcript set
 			if ($projSettings->views->transcript->transcripts2 !== '') {
 				$this->transcript2= $projObj->getCustomFieldForMote($projSettings->views->transcript->transcript2);
 			}
@@ -578,7 +578,7 @@ class DHPressMarkerQuery
 				$this->timecode   = $projObj->getCustomFieldForMote($projSettings->views->transcript->timecode);
 			}
 		}
-
+		
 			// Link parent enables linking to either the Post page for this Marker,
 			//	or to the category/taxonomy which includes this Marker
 		$this->linkParent = $projSettings->views->select->link;

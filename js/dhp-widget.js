@@ -69,7 +69,7 @@ var dhpWidget = {
         //          htmlID = jQuery selector to specify where resulting HTML should be appended
     prepareOneTranscript: function (ajaxURL, projectID, htmlID)
     {
-        var appendPos, appendSyncBtn = false;
+        var appendPos, usingAV = false, haveTransc = false;
         var fullTranscript = (dhpWidget.wParams.timecode == -1);
 
         appendPos = jQuery(htmlID);
@@ -82,6 +82,7 @@ var dhpWidget = {
         switch (dhpWidget.wParams.playerType) {
             // Sound Cloud
         case 'scloud':
+            usingAV = true;
             jQuery('#player-widget').append('<p class="pull-right"><iframe id="scWidget" class="player" width="100%" height="166" src="http://w.soundcloud.com/player/?url='+
                 dhpWidget.wParams.stream+'"></iframe></p>');
 
@@ -90,6 +91,7 @@ var dhpWidget = {
             dhpWidget.bindPlayerHandlers();
             break;
         case 'youtube':
+            usingAV = true;
             jQuery('#player-widget').append('<div id="ytWidget" style="margin: 3px"></div><p class="pull-right"></p>');
 
                 // YouTube API is only loaded once
@@ -105,11 +107,15 @@ var dhpWidget = {
                 dhpWidget.bindPlayerHandlers();
             }
             break;
+            // No A/V
+        default:
+            jQuery('#player-widget').append('<p class="pull-right"></p>');
+            break;
         } // playerType
 
             // Is there any primary transcript data?
         if (dhpWidget.wParams.transcript && dhpWidget.wParams.transcript!=='') {
-            appendSyncBtn = true;
+            haveTransc = true;
             if (fullTranscript) {
                 dhpWidget.attachTranscript(dhpWidget.wParams.transcript, 0);
             } else {
@@ -118,7 +124,7 @@ var dhpWidget = {
         }
             // Is there 2ndary transcript data? If only 2nd, treat as 1st
         if (dhpWidget.wParams.transcript==='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='') {
-            appendSyncBtn = true;
+            haveTransc = true;
             if (fullTranscript) {
                 dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 0);
             } else {
@@ -127,7 +133,7 @@ var dhpWidget = {
         }
             // Otherwise, add 2nd to 1st
         else if (dhpWidget.wParams.transcript!=='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='') {
-            appendSyncBtn = true;
+            haveTransc = true;
             if (fullTranscript) {
                 dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 1);
             } else {
@@ -135,7 +141,7 @@ var dhpWidget = {
             }
         }
 
-        if (appendSyncBtn) {
+        if (usingAV && haveTransc) {
             jQuery(appendPos).append('<div style="padding-top:5px"><input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Scroll transcript to follow playback</div><br>');
         }
     }, // prepareOneTranscript()
