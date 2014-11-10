@@ -9,14 +9,15 @@
 
     /* Enable scroll bar in case background image is too large */
 #svg-container {
-/*    z-index: 1000; */
-    border: 2px solid #000;
     overflow-x: auto;
     overflow-y: auto;
 }
 
 svg {
-/*    z-index: 1000; */
+    /* Would be nice to float SVG in center, but this doesn't work */
+/*    margin-left: auto;
+    margin-right: auto; */
+    border: 1px solid #000;
 }
 
 

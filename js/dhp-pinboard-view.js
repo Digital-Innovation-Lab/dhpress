@@ -99,7 +99,7 @@ var dhpPinboardView = {
         }
 
             // Create buttons for navigating & zooming background image
-        jQuery('#dhp-controls').append('<div id="dhp-pin-controls"><div class="pin-fndn-icon"><i class="fi-arrow-left" id="pin-left"></i> <i class="fi-arrow-right" id="pin-right"></i> <i class="fi-arrow-down" id="pin-down"></i> <i class="fi-arrow-up" id="pin-up"></i> <i class="fi-arrows-in" id="pin-reduce"></i> <i class="fi-arrows-out" id="pin-zoom"></i> <i class="fi-x-circle" id="pin-refresh"></i> </div></div>');
+        jQuery('#dhp-controls').append('<div id="dhp-pin-controls"><div class="pin-fndn-icon"><i class="fi-arrow-left" id="pin-left"></i> <i class="fi-arrow-right" id="pin-right"></i> <i class="fi-arrow-down" id="pin-down"></i> <i class="fi-arrow-up" id="pin-up"></i> <i class="fi-arrows-in" id="pin-reduce"></i> <i class="fi-arrows-out" id="pin-zoom"></i> <i class="fi-refresh" id="pin-refresh"></i> </div></div>');
         jQuery("#pin-refresh").click(dhpPinboardView.resetView);
         jQuery("#pin-zoom").click(dhpPinboardView.zoomIn);
         jQuery("#pin-reduce").click(dhpPinboardView.zoomOut);
