@@ -56,9 +56,9 @@
 </script>
 
 <script id="dhp-script-filter-stext" type="text/x-handlebars-template">
-  <input type="radio" name="filter-type" value="valSel"/>Select Legend value(s)<br/>
+  <input type="radio" name="filter-type" value="valSel"/>Select Legend value(s)
   <div id="st-filter-vals"></div>
-  <input type="radio" name="filter-type" value="text"> Or filter by text pattern <input id="filter-text-input" type="text" size="12"/> <br/>
+  <input type="radio" name="filter-type" value="text"/> Or filter by text pattern <input id="filter-text-input" type="text" size="12"/> <br/>
 </script>
 
 <script id="dhp-script-filter-dates" type="text/x-handlebars-template">

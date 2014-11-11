@@ -113,10 +113,13 @@ p {
 #filterModal {
     max-height: 400px;
     overflow: scroll;
+    line-height: 1.1em;
+
 }
 
 #filterModal input {
     margin: 4px;
+    padding: 0;
 }
 
 #filterModal input[type="text"] {
@@ -125,11 +128,17 @@ p {
 
     /* Each selectable filter value for short text is encased in this div */
 .st-filter-value {
-    margin: 2px 5px 2px 0px;
-    padding: 0;
+    margin: 2px 5px 2px 0px !important;
+    padding: 0 !important;
     display: inline-block;
     width: auto;
-    height: 1.1em;
+    line-height: 1.1em;
+}
+
+#st-filter-vals {
+    line-height: 1.1em;
+    padding-top: 0;
+    margin-top: 4px;
 }
 
 .date-boxes {
