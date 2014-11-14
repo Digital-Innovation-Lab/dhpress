@@ -85,21 +85,17 @@ var dhpPinboardView = {
         if (pinboardEP.legends.length) {
             jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-pin-leg-menu").html()));
                 // We only need Layers button "switch" if there are also Legends
-            if (pinboardEP.layers.length) {
-                jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-pin-layer-menu").html()));
-            }
+            jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-pin-layer-menu").html()));
         }
 
             // Create control div for Legend and image navigation buttons
         jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
 
-            // Only create placeholder for menu area if there is a Legend or an overlay layer
-        if (pinboardEP.legends.length || pinboardEP.layers.length) {
-            jQuery('#dhp-controls').prepend(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
-        }
+            // Always need Legend head for Layer Opacity settings at the minimum
+        jQuery('#dhp-controls').prepend(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
 
             // Create buttons for navigating & zooming background image
-        jQuery('#dhp-controls').append('<div id="dhp-pin-controls"><div class="pin-fndn-icon"><i class="fi-arrow-left" id="pin-left"></i> <i class="fi-arrow-right" id="pin-right"></i> <i class="fi-arrow-down" id="pin-down"></i> <i class="fi-arrow-up" id="pin-up"></i> <i class="fi-arrows-in" id="pin-reduce"></i> <i class="fi-arrows-out" id="pin-zoom"></i> <i class="fi-refresh" id="pin-refresh"></i> </div></div>');
+        jQuery('#dhp-controls').append('<div id="dhp-pin-controls"><div class="pin-fndn-icon"><i class="fi-arrow-left" title="Move Image Left" id="pin-left"></i> <i class="fi-arrow-right" title="Move Image Right" id="pin-right"></i> <i class="fi-arrow-down" title="Move Image Down" id="pin-down"></i> <i class="fi-arrow-up" title="Move Image Up" id="pin-up"></i> <i class="fi-arrows-in" title="Reduce Image Size" id="pin-reduce"></i> <i class="fi-arrows-out" title="Zoom Image" id="pin-zoom"></i> <i class="fi-refresh" title="Reset Image Settings" id="pin-refresh"></i> </div></div>');
         jQuery("#pin-refresh").click(dhpPinboardView.resetView);
         jQuery("#pin-zoom").click(dhpPinboardView.zoomIn);
         jQuery("#pin-reduce").click(dhpPinboardView.zoomOut);
@@ -138,12 +134,12 @@ var dhpPinboardView = {
             dhpPinboardView.diamondPts = [ [0,-4], [4,0], [0,4], [-4,0] ];
             break;
         case "m":
-            dhpPinboardView.radius     = 8;
+            dhpPinboardView.radius     = 9;
             dhpPinboardView.diamondPts = [ [0,-9], [9,0], [0,9], [-9,0] ];
             break;
         case "l":
-            dhpPinboardView.radius     = 12;
-            dhpPinboardView.diamondPts = [ [0,-12], [12,0], [0,12], [-12,0] ];
+            dhpPinboardView.radius     = 15;
+            dhpPinboardView.diamondPts = [ [0,-15], [15,0], [0,15], [-15,0] ];
             break;
         }
             // Prepare object for icon definitions
@@ -672,7 +668,7 @@ var dhpPinboardView = {
 
             // First legend will be selected by default
         dhpPinboardView.createLegends();
-        dhpPinboardView.createLayerButtons();
+        dhpPinboardView.createOpacityButtons();
         dhpPinboardView.createSVGMarkers();
     }, // createDataObjects()
 
@@ -920,8 +916,7 @@ var dhpPinboardView = {
         // PURPOSE: Create HTML for all of the legends for this visualization
     createLegends: function() 
     {
-
-        dhpServices.createLegends(dhpPinboardView.filters, 'Layer Buttons');
+        dhpServices.createLegends(dhpPinboardView.filters, 'Layer Opacities');
 
             // Skip the rest if there are no filters!
         if (dhpPinboardView.filters.length == 0)
@@ -991,6 +986,7 @@ var dhpPinboardView = {
         dhpPinboardView.curLgdName = dhpPinboardView.curLgdFilter.name;
     }, // createLegends()
 
+
     setLayerOpacity: function(selector, value)
     {
         var svgLayers = dhpPinboardView.paper.selectAll(selector);
@@ -999,17 +995,13 @@ var dhpPinboardView = {
         });
     }, // setLayerOpacity()
 
-        // PURPOSE: Create button to turn on/off each SVG overlay layer in Legend area
+
+        // PURPOSE: Create button to set appearance and opacity each SVG overlay layer in Legend area
         // ASSUMES: createLegends() has already been called to create other legends
-    createLayerButtons: function()
+    createOpacityButtons: function()
     {
         var layerSettings = dhpPinboardView.pinboardEP.layers;
         var svgLayer;
-
-            // If there are no layers, don't do anything else
-        if (layerSettings.length == 0) {
-            return;
-        }
 
             // Create slider for background image
         jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-base">'+
@@ -1120,5 +1112,5 @@ var dhpPinboardView = {
                 dhpPinboardView.layerBtnsOn = true;
             }
         });
-    } // createLayerButtons()
+    } // createOpacityButtons()
 };
