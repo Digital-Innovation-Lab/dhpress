@@ -267,17 +267,7 @@ var dhpServices = {
             //Initialize new foundation elements
         jQuery(document).foundation();
 
-            // For small mobile screens, expand Legend menu on hover
         jQuery('#legends').prepend('<a class="legend-resize btn pull-right" href="#" alt="mini"><i class="fi-arrows-compress"></i></a>');
-        if(!jQuery('body').hasClass('isMobile')) {
-            jQuery('.legend-resize').hide();
-            jQuery('#legends').hover(function(){
-                jQuery('.legend-resize').fadeIn(100);
-            },
-            function() {
-                jQuery('.legend-resize').fadeOut(100);
-            });
-        }
 
             // Add legend Min-Max expand/contract action
         jQuery('.legend-resize').click( function() {
@@ -349,17 +339,7 @@ var dhpServices = {
             // Save height for min/max
         legendHeight = jQuery('#legends').height();
 
-            // Handle resizing Legend (min/max)
         jQuery('#legends').prepend('<a class="legend-resize btn pull-right" href="#" alt="mini"><i class="fi-arrows-compress"></i></a>');
-        if (!jQuery('body').hasClass('isMobile')) {
-            jQuery('.legend-resize').hide();
-            jQuery('#legends').hover(function(){
-                jQuery('.legend-resize').fadeIn(100);
-            },
-            function() {
-                jQuery('.legend-resize').fadeOut(100);
-            });
-        }
 
             // Add legend hide/show action
         jQuery('.legend-resize').click(function() {
