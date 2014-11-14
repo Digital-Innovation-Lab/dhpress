@@ -45,6 +45,7 @@
           </ul>
           <button data-bind="jqButton, click: createMote">Create New</button>
           <br/>
+          <p><b>Currently Definted Motes:</b></p>
           <div data-bind="template: { name: 'mote-template', foreach: allMotes }"></div>
       </div>
 
@@ -110,7 +111,7 @@
               <div data-bind="template: { name: 'tax-mote-template', foreach: taxMoteList }"></div>
             </div>
 
-            <h3>Transcript view</h3>
+            <h3>Playback Widgets</h3>
             <div>
               Audio Source: <select data-bind="value: edTrnsAudio, options: soundMoteNames"></select><br/>
               Video Source: <select data-bind="value: edTrnsVideo, options: ytMoteNames"></select><br/>
@@ -169,7 +170,6 @@
 
 <script type="text/html" id="mote-template">
     <li>
-        Mote <span data-bind="text: $index"></span>
         <b><span data-bind="text: name"></span></b> of type <i><span data-bind="text: type"></span></i> from
         <span data-bind="text: cf"></span>, delimiter [ <span data-bind="text: delim"></span> ]
         <button data-bind="jqButton, click: $parent.editMote">Edit</button>

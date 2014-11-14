@@ -130,8 +130,6 @@ var dhpTimeline = {
             // Create placeholder for Legend menu
         jQuery('#dhp-controls').append(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
 
-        jQuery(document).foundation();
-
             // Create SVG and frame for graphics
             // svgMargin is for space inside of dhp-timeline occupied by #svg-container
         dhpTimeline.svgMargin = { top: 6, right: 22, bottom: 6, left: 6 };
@@ -171,6 +169,8 @@ var dhpTimeline = {
         dhpTimeline.chart = dhpTimeline.svg.append("g")
                 .attr("class", "chart")
                 .attr("clip-path", "url(#chart-area)" );
+
+        jQuery(document).foundation();
 
         jQuery.ajax({
             type: 'POST',
