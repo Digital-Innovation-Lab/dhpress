@@ -612,12 +612,13 @@ jQuery(document).ready(function($) {
 
 
       // User-editable values
-    self.edMoteType = ko.observable('Short Text');
+    self.edMoteType = ko.observable('- choose -');
     self.edMoteName = ko.observable('');
-    self.edMoteCF = ko.observable();
+    self.edMoteCF = ko.observable('- choose -');
     self.edMoteDelim = ko.observable('');
 
-    self.optionsCF = allCustomFields;
+      // Insert empty custom field to front of list
+    self.optionsCF = ['- choose -'].concat(allCustomFields);
 
       // Configurable data
     self.allMotes = ko.observableArray([]);
@@ -680,6 +681,19 @@ jQuery(document).ready(function($) {
 
       // PURPOSE: Create new mote definition via user interface
     self.createMote = function() {
+        // Make sure valid CF and mote type chosen
+      if (self.edMoteType() === '- choose -' || self.edMoteCF()  === '- choose -') {
+        $("#mdl-def-mote").dialog({
+          modal: true,
+          buttons: {
+            OK: function() {
+              $(this).dialog('close');
+            }
+          }
+        });
+        return;        
+      }
+
         // Abort everything if there are no custom motes
       if (self.optionsCF.length == 0) {
         $("#mdl-no-cfs").dialog({
@@ -730,8 +744,8 @@ jQuery(document).ready(function($) {
             self.allMotes.push(new Mote(newName, self.edMoteType(), self.edMoteCF(), self.edMoteDelim()));
               // reset GUI default values
             self.edMoteName('');
-            self.edMoteType('Short Text');
-            self.edMoteCF('');
+            self.edMoteType('- choose -');
+            self.edMoteCF('- choose -');
             self.edMoteDelim('');
 
             self.settingsDirty(true);

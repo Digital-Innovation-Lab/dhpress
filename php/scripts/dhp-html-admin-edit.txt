@@ -27,6 +27,7 @@
             <li>
             	Mote Type:
             	<select data-bind="value: edMoteType">
+                    <option value="- choose -">- choose -</option>
                     <option value="Short Text">Short Text</option>
                     <option value="Long Text">Long Text</option>
                     <option value="Lat/Lon Coordinates">Lat/Lon Coordinates</option>
@@ -45,7 +46,7 @@
           </ul>
           <button data-bind="jqButton, click: createMote">Create New</button>
           <br/>
-          <p><b>Currently Definted Motes:</b></p>
+          <p><b>Currently Defined Motes:</b></p>
           <div data-bind="template: { name: 'mote-template', foreach: allMotes }"></div>
       </div>
 
@@ -283,21 +284,21 @@
 
 <script type="text/html" id="cards-content-template">
     <li>
-        Cards content mote <span data-bind="text: $index"></span>: <select data-bind="value: name, options: $root.cardContentMoteNames"></select>
+        <b>Cards content mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.cardContentMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delCardContent($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="cards-filter-template">
     <li>
-        Cards filter mote <span data-bind="text: $index"></span>: <select data-bind="value: name, options: $root.compMoteNames"></select>
+        <b>Cards filter mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delCardFilter($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="cards-sort-template">
     <li>
-        Cards sort mote <span data-bind="text: $index"></span>: <select data-bind="value: name, options: $root.compMoteNames"></select>
+        <b>Cards sort mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delCardSort($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -449,7 +450,7 @@
             <input data-bind="value: theEP.settings.width" type="number" size="4"/>
             Height (in pixels) <input data-bind="value: theEP.settings.height" type="number" size="4"/>
         </li>
-        <li>Facet Flow views require at least 2 Short Text motes to work</li>
+        <li>Facet Flow views require at least 2 Short Text mote Legends to work</li>
         <div data-bind="template: { name: 'flow-mote-template', foreach: theEP.settings.motes }"></div>
         <button data-bind="jqButton, click: $root.addFlowMote.bind(theEP)">Add Mote to Flow</button>
     </ul>
@@ -457,7 +458,7 @@
 
 <script type="text/html" id="flow-mote-template">
     <li>
-        Mote <span data-bind="text: $index"></span>: <select data-bind="value: name, options: $root.stMoteNames"></select>
+        <b>Legend <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delFlowMote($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -492,7 +493,7 @@
 
 <script type="text/html" id="browser-mote-template">
     <li>
-        Mote <span data-bind="text: $index"></span>: <select data-bind="value: name, options: $root.compMoteNames"></select>
+        <b>Mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delBrowserMote($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -537,6 +538,10 @@
 
     <div id="mdl-del-mote" title="Delete mote?">
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Are you sure you wish to delete the mote definition and all references to it?</p>
+    </div>
+
+    <div id="mdl-def-mote" title="Select Mote Parameters">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>You must select a valid Custom Field and Mote Type before you can create a mote.</p>
     </div>
 
     <div id="mdl-no-cfs" title="No Custom Fields">
