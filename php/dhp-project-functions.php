@@ -1113,6 +1113,8 @@ function dhp_bind_tax_to_markers($projObj, $custom_field, $parent_id, $rootTaxNa
 			}
 			$theseTerms = array();
 			foreach ($tempMoteArray as $value) {
+					// Make sure spaces are removed
+				$value = trim($value);
 					// Since we are specifying $parent_id, term_exists() will return 0/NULL or hash
 				$term = term_exists($value, $rootTaxName, $parent_id);
 	   		 	if ($term !== 0 && $term !== null) {
