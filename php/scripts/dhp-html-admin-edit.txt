@@ -510,21 +510,21 @@
 
 <script type="text/html" id="sel-mote-template">
     <li>
-        <b>Modal mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
+        <b>Modal content mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delSelMote($index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="post-mote-template">
     <li>
-        <b>Modal mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
+        <b>Post content mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delPostMote($index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="tax-mote-template">
     <li>
-        <b>Modal mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
+        <b>Taxonomy/Archive content mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delTaxMote($index()); }">Delete</button>
     </li>
 </script>

@@ -11,8 +11,7 @@
 //              (^string$)|(, ?string$)|(^string,)|(, ?string,)
 //              exact matches are necessary because of false substring matches ('me' would match 'name')
 // USES:    JavaScript libraries jQuery, Isotope, Underscore
-// TO DO:   Support filter & sort on hierarchical Legend values in Short Text motes!
-//          When numeric motes supported, sort will need to convert strings to integers
+// TO DO:   When numeric motes supported, sort will need to convert strings to integers
 //          Could possibly speed up filter of Short Text mote types, given that category values
 //              come with each Marker
 
@@ -77,6 +76,9 @@ var dhpCardsView = {
                         // Remove whatever was active previously
                     jQuery('#dhp-cards-sort > .active').removeClass('active');
                     jQuery(newSortMenu).parent().addClass('active');
+                        // Remove any fades from CSS
+                    // jQuery('.card').removeClass('fade');
+                        // Make cursor busy while sort done
                     dhpCardsView.currentSort = newSortMote;
                     jQuery('body').css('cursor', 'progress');
                     jQuery('#card-container').isotope( { sortBy: newSortMote } );
@@ -736,6 +738,17 @@ var dhpCardsView = {
                             return jQuery(itemElem).find('.datamote'+index).text().toLowerCase();
                         } } )(moteIndex) );
                     break;
+                    // Long has additional consideration of fading out if card has ~|~ value
+                // case 'Long Text':
+                //     moteIDs.push((function(index) {
+                //         return function(itemElem) {
+                //             var txt = jQuery(itemElem).find('.datamote'+index).text().toLowerCase();
+                //             if (txt === '~|~') {
+                //                 jQuery(itemElem).addClass('fade');
+                //             }
+                //             return txt;
+                //         } } )(moteIndex) );
+                //     break;
                 case 'Date':
                     var today = new Date(), dateStr, thisEvent;
 

@@ -83,6 +83,13 @@ p {
     width: 300px;
 }
 
+    /* for fading out cards irrelevant from sort criterion */
+
+/*
+.card.fade {
+    opacity: 0.5;
+}
+*/
 
     /* Material on the cards */
 

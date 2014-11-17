@@ -905,6 +905,11 @@ var dhpServices = {
             case 'Transcript':
                 builtHTML = '<div><a href="'+mVal+'" target="_blank">Look at Transcript file</a></div>';
                 break;
+            case 'Long Text':
+                if (mVal === '~|~') {
+                    break;
+                }
+                // else, fall through to default logic
             default:
                 if (moteName == 'the_content') {
                     builtHTML = '<div>'+mVal+'</div>';
