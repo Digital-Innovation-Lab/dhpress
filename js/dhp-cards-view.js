@@ -49,8 +49,6 @@ var dhpCardsView = {
             jQuery('#dhp-visual').attr('style','background-color:'+dhpCardsView.cardsEP.bckGrd);
         }
 
-        jQuery('#dhp-visual').prepend(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
-
             // Create nav bar menus --------------------
 
             // Add Sort By controls
@@ -76,8 +74,6 @@ var dhpCardsView = {
                         // Remove whatever was active previously
                     jQuery('#dhp-cards-sort > .active').removeClass('active');
                     jQuery(newSortMenu).parent().addClass('active');
-                        // Remove any fades from CSS
-                    // jQuery('.card').removeClass('fade');
                         // Make cursor busy while sort done
                     dhpCardsView.currentSort = newSortMote;
                     jQuery('body').css('cursor', 'progress');
@@ -651,6 +647,7 @@ var dhpCardsView = {
 
             // Create Legend for colors (if colors exist)
         if (dhpCardsView.colorValues && dhpCardsView.colorValues.length > 1) {
+            jQuery('#dhp-visual').prepend(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
             dhpServices.create1Legend(dhpCardsView.cardsEP.color, dhpCardsView.colorValues);
         } // if colorValues
 
@@ -738,17 +735,6 @@ var dhpCardsView = {
                             return jQuery(itemElem).find('.datamote'+index).text().toLowerCase();
                         } } )(moteIndex) );
                     break;
-                    // Long has additional consideration of fading out if card has ~|~ value
-                // case 'Long Text':
-                //     moteIDs.push((function(index) {
-                //         return function(itemElem) {
-                //             var txt = jQuery(itemElem).find('.datamote'+index).text().toLowerCase();
-                //             if (txt === '~|~') {
-                //                 jQuery(itemElem).addClass('fade');
-                //             }
-                //             return txt;
-                //         } } )(moteIndex) );
-                //     break;
                 case 'Date':
                     var today = new Date(), dateStr, thisEvent;
 
