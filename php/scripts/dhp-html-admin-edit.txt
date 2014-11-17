@@ -95,21 +95,22 @@
               	</select><br/>
               <div data-bind="template: { name: 'widget-template', foreach: widgetList }"></div>
 
-              Motes to show:  <button data-bind="jqButton, click: addSelMote">Add</button> this mote: <select id="selModalMote" data-bind="options: allMoteNames"></select><br/>
               <div data-bind="template: { name: 'sel-mote-template', foreach: selMoteList }"></div>
+              <button data-bind="jqButton, click: addSelMote">Add Content Mote to Select Modal</button>
             </div>
 
             <h3>Post view (Marker pages)</h3>
             <div>
               Page title: <select data-bind="value: edPostTitle, options: anyTxtDMoteNames"></select><br/>
-              Motes to show:  <button data-bind="jqButton, click: addPostMote">Add</button> this mote: <select id="selPostMote" data-bind="options: allMoteNames"></select><br/>
+
               <div data-bind="template: { name: 'post-mote-template', foreach: postMoteList }"></div>
+              <button data-bind="jqButton, click: addPostMote">Add Content Mote to Post Pages</button><br/>
             </div>
 
             <h3>Taxonomy/Archive/Category view</h3>
             <div>
-              Motes to show:  <button data-bind="jqButton, click: addTaxMote">Add</button> this mote: <select id="selTaxMote" data-bind="options: allMoteNames"></select><br/>
               <div data-bind="template: { name: 'tax-mote-template', foreach: taxMoteList }"></div>
+              <button data-bind="jqButton, click: addTaxMote">Add Content Mote to Tax/Archive Pages</button><br/>
             </div>
 
             <h3>Playback Widgets</h3>
@@ -221,7 +222,7 @@
             <select data-bind="value: theLayer.id, options: $root.baseLayers, optionsText: 'name', optionsValue: 'layerID'"></select>
         </span>
         <span data-bind="if: $index() > 0">
-            <b>Overlay Layer <span data-bind="text: $index"></span></b>
+            <b>Overlay Layer</b>
             <select data-bind="value: theLayer.id, options: $root.overLayers, optionsText: 'name', optionsValue: 'layerID'"></select>
             <button data-bind="jqButton, click: function() { $root.delMapLayer($data, theEP, $index()); }">Delete</button>
         </span>
@@ -232,7 +233,7 @@
 
 <script type="text/html" id="map-legend-template">
     <li>
-        <b>Legend <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
+        <b>Legend</b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delMapLegend($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -284,21 +285,21 @@
 
 <script type="text/html" id="cards-content-template">
     <li>
-        <b>Cards content mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.cardContentMoteNames"></select>
+        <b>Content mote</b>: <select data-bind="value: name, options: $root.cardContentMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delCardContent($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="cards-filter-template">
     <li>
-        <b>Cards filter mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
+        <b>Filter mote</b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delCardFilter($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="cards-sort-template">
     <li>
-        <b>Cards sort mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
+        <b>Sort mote</b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delCardSort($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -354,7 +355,7 @@
 
 <script type="text/html" id="pin-layer-template">
     <li>
-      <b>SVG Layer File <span data-bind="text: $index"></span></b>
+      <b>SVG Layer File</b> 
       <input data-bind="value: theLayer.label" type="text" size="12" placeholder="Label"/> </input>
       <input data-bind="value: theLayer.file" type="text" size="48" placeholder="File URL"/> </input>
       <button data-bind="jqButton, click: function() { $root.delPinLayer($data, theEP, $index()); }">Delete</button>
@@ -363,7 +364,7 @@
 
 <script type="text/html" id="pin-legend-template">
     <li>
-        <b>Legend <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
+        <b>Legend</b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delPinLegend($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -458,7 +459,7 @@
 
 <script type="text/html" id="flow-mote-template">
     <li>
-        <b>Legend <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
+        <b>Legend</b>: <select data-bind="value: name, options: $root.stMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delFlowMote($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -493,7 +494,7 @@
 
 <script type="text/html" id="browser-mote-template">
     <li>
-        <b>Mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
+        <b>Mote</b>: <select data-bind="value: name, options: $root.compMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delBrowserMote($data, theEP, $index()); }">Delete</button>
     </li>
 </script>
@@ -502,28 +503,28 @@
 <!-- Views Data -->
 <script type="text/html" id="widget-template">
     <li>
-        <b>Widget <span data-bind="text: $index"></span></b>: <span data-bind="text: name"></span>
+        <b>Widget</b>: <span data-bind="text: name"></span>
         <button data-bind="jqButton, click: function() { $root.delWidget($index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="sel-mote-template">
     <li>
-        <b>Modal mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
+        <b>Modal mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delSelMote($index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="post-mote-template">
     <li>
-        <b>Modal mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
+        <b>Modal mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delPostMote($index()); }">Delete</button>
     </li>
 </script>
 
 <script type="text/html" id="tax-mote-template">
     <li>
-        <b>Modal mote <span data-bind="text: $index"></span></b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
+        <b>Modal mote</b>: <select data-bind="value: name, options: $root.allMoteNames"></select>
         <button data-bind="jqButton, click: function() { $root.delTaxMote($index()); }">Delete</button>
     </li>
 </script>

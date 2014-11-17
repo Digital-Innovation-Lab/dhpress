@@ -1946,18 +1946,8 @@ jQuery(document).ready(function($) {
 
       // PURPOSE: Handle user selection to add widget
     self.addSelMote = function() {
-      var selection;
-
-      selection = $("#selModalMote").val();
-      if (selection) {
-          // Don't add if already exists
-        if (ko.utils.arrayFirst(self.selMoteList(), function (mote) 
-                                { return mote.name() == selection}) == null) 
-        {
-          self.selMoteList.push(new ArrayString(selection));
-          self.settingsDirty(true);
-        }
-      }
+        self.selMoteList.push(new ArrayString(''));
+        self.settingsDirty(true);
     };
 
     self.delSelMote = function(index) {
@@ -1968,18 +1958,8 @@ jQuery(document).ready(function($) {
 
       // PURPOSE: Handle user selection to add widget
     self.addPostMote = function() {
-      var selection;
-
-      selection = $("#selPostMote").val();
-      if (selection) {
-          // Don't add if already exists
-        if (ko.utils.arrayFirst(self.postMoteList(), function (mote) 
-                                { return mote.name() == selection}) == null) 
-        {
-          self.postMoteList.push(new ArrayString(selection));
-          self.settingsDirty(true);
-        }
-      }
+      self.postMoteList.push(new ArrayString(''));
+      self.settingsDirty(true);
     };
 
     self.delPostMote = function(index) {
@@ -1990,18 +1970,8 @@ jQuery(document).ready(function($) {
 
       // PURPOSE: Handle user selection to add widget
     self.addTaxMote = function() {
-      var selection;
-
-      selection = $("#selTaxMote").val();
-      if (selection) {
-          // Don't add if already exists
-        if (ko.utils.arrayFirst(self.taxMoteList(), function (mote) 
-                                { return mote.name() == selection}) == null) 
-        {
-          self.taxMoteList.push(new ArrayString(selection));
-          self.settingsDirty(true);
-        }
-      }
+        self.taxMoteList.push(new ArrayString(''));
+        self.settingsDirty(true);
     };
 
     self.delTaxMote = function(index) {
@@ -2458,7 +2428,7 @@ jQuery(document).ready(function($) {
     // Add new functionality for jQueryUI slider
   ko.bindingHandlers.opacitySlider = {
     init: function (element, valueAccessor, allBindingsAccessor) {
-      $(element).slider({min: 0, max: 1, orientation: 'horizontal', range: false, step: 0.1 });
+      $(element).slider({min: 0, max: 1.0, orientation: 'horizontal', range: false, step: 0.1 });
 
       ko.utils.registerEventHandler(element, 'slidechange', function (event, ui) {
         var observable = valueAccessor();
