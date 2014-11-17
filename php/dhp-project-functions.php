@@ -2244,7 +2244,8 @@ function dhp_perform_tests()
 							// marker, but this would likely break the WP Query loop -- so ignore for now
 						break;
 					case 'Date':
-						if (preg_match("/^(open|-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
+							// Single Date or Range, inc. fuzzy
+						if (preg_match("/^(open|~?-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|~?-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
 							$results .= '<p>Invalid Date range';
 							$error = true;
 						}
