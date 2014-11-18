@@ -2428,7 +2428,7 @@ jQuery(document).ready(function($) {
     // Add new functionality for jQueryUI slider
   ko.bindingHandlers.opacitySlider = {
     init: function (element, valueAccessor, allBindingsAccessor) {
-      $(element).slider({min: 0, max: 1.0, orientation: 'horizontal', range: false, step: 0.1 });
+      $(element).slider({min: 0, max: 1, orientation: 'horizontal', range: false, step: 0.05 });
 
       ko.utils.registerEventHandler(element, 'slidechange', function (event, ui) {
         var observable = valueAccessor();
