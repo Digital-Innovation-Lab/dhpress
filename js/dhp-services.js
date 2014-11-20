@@ -862,9 +862,14 @@ var dhpServices = {
         } // dateExplain()
 
         var builtHTML='';
+        var mVal = markerData.properties.content[moteName];
+
+            // As these are not motes, need to catch first
+        if (moteName === 'the_title' || moteName === 'the_content') {
+            return '<div>'+mVal+'</div>';
+        }
 
         var moteDef = dhpServices.findMoteByName(moteName);
-        var mVal = markerData.properties.content[moteName];
 
         if (mVal) {
             switch (moteDef.type) {
@@ -911,7 +916,7 @@ var dhpServices = {
                 }
                 // else, fall through to default logic
             default:
-                if (moteName == 'the_content') {
+                if (moteName === 'the_content') {
                     builtHTML = '<div>'+mVal+'</div>';
                 } else {
                     builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+mVal+'</div>';
