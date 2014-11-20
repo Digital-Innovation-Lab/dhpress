@@ -342,62 +342,52 @@ function dhp_slug_from_name($theName)
 
 
 // Save the Data
-// function save_dhp_marker_settings($post_id) {
-//     global $dhp_marker_settings_fields;
-// 	$parent_id = wp_is_post_revision( $post_id );
-	
-// 	// verify nonce
-// 	if (!wp_verify_nonce($_POST['dhp_marker_settings_box_nonce'], basename(__FILE__)))
-// 		return $post_id;
-// 	// check autosave
-// 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-// 		return $post_id;
-// 	// check permissions
-// 	if ('page' == $_POST['post_type']) {
-// 		if (!current_user_can('edit_page', $post_id))
-// 			return $post_id;
-// 		} elseif (!current_user_can('edit_post', $post_id)) {
-// 			return $post_id;
-// 	}
-// 	if ( $parent_id ) {
-// 		// loop through fields and save the data
-// 		$parent  = get_post( $parent_id );		
-// 		foreach ($dhp_marker_settings_fields as $field) {
-// 			$old = get_post_meta( $parent->ID, $field['id'], true);
-// 			$new = $_POST[$field['id']];
-// 			if ($new && $new != $old) {
-// 				update_metadata( 'post', $post_id, $field['id'], $new);
-// 			} elseif ('' == $new && $old) {
-// 				delete_metadata( 'post', $post_id, $field['id'], $old);
-// 			}
-// 		} // end foreach
-// 	}
-// 	else {
-// 		// loop through fields and save the data
-// 		foreach ($dhp_marker_settings_fields as $field) {
-// 			$old = get_post_meta($post_id, $field['id'], true);
-// 			$new = $_POST[$field['id']];
-// 			if ($new && $new != $old) {
-// 				update_post_meta($post_id, $field['id'], $new);
-// 			} elseif ('' == $new && $old) {
-// 				delete_post_meta($post_id, $field['id'], $old);
-// 			}
-// 		} // end foreach
-// 	}
-// }
-//add_action('save_post', 'save_dhp_marker_settings');  
 
+function save_dhp_marker_settings($post_id) {
+    global $dhp_marker_settings_fields;
+	$parent_id = wp_is_post_revision( $post_id );
 
-// function get_project_icons( $project_id ){
-// 		$icons = get_metadata( 'post', $project_id, 'project_icons', true);
-// 		$icon_array = explode(',',$icons);
-// 		echo '<div id="icon-cats"><ul>';
-// 			for ($i=0; $i<count($icon_array)-2; $i=$i+3) {
-// 		echo '<li><img src="'.$icon_array[$i+2].'"/><span>'.$icon_array[$i+1].'</span>';
-// 			}
-//         echo  '</ul></div>';
-		 
-// 	}
+	// verify nonce
+	if (!wp_verify_nonce($_POST['dhp_marker_settings_box_nonce'], basename(__FILE__)))
+		return $post_id;
+	// check autosave
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+		return $post_id;
+	// check permissions
+	if ('page' == $_POST['post_type']) {
+		if (!current_user_can('edit_page', $post_id))
+			return $post_id;
+		} elseif (!current_user_can('edit_post', $post_id)) {
+			return $post_id;
+	}
+	if ( $parent_id ) {
+		// loop through fields and save the data
+		$parent  = get_post( $parent_id );		
+		foreach ($dhp_marker_settings_fields as $field) {
+			$old = get_post_meta( $parent->ID, $field['id'], true);
+			$new = $_POST[$field['id']];
+			if ($new && $new != $old) {
+				update_metadata( 'post', $post_id, $field['id'], $new);
+			} elseif ('' == $new && $old) {
+				delete_metadata( 'post', $post_id, $field['id'], $old);
+			}
+		} // end foreach
+	}
+	else {
+		// loop through fields and save the data
+		foreach ($dhp_marker_settings_fields as $field) {
+			$old = get_post_meta($post_id, $field['id'], true);
+			$new = $_POST[$field['id']];
+			if ($new && $new != $old) {
+				update_post_meta($post_id, $field['id'], $new);
+			} elseif ('' == $new && $old) {
+				delete_post_meta($post_id, $field['id'], $old);
+			}
+		} // end foreach
+	}
+}
+
+add_action('save_post', 'save_dhp_marker_settings');  
 
 
 

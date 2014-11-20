@@ -2532,7 +2532,7 @@ function dhp_page_template( $page_template )
 	$dependencies = array('jquery', 'underscore');
 
 	$blog_id = get_current_blog_id();
-	$dev_url = get_admin_url( $blog_id ,'admin-ajax.php');
+	$ajax_url = get_admin_url( $blog_id ,'admin-ajax.php');
 	$post_type = get_query_var('post_type');
 
 		// Viewing a Project?
@@ -2705,10 +2705,18 @@ function dhp_page_template( $page_template )
 	    	// Enqueue page JS last, after we've determine what dependencies might be
 		wp_enqueue_script('dhp-public-project-script', plugins_url('/js/dhp-project-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );
 
+			// Set up the marker query and get first post just to get the base URL for markers
+		$loop = $projObj->setAllMarkerLoop();
+		$loop->the_post();
+		$marker_url = get_post_permalink(0, true);
+			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
+		$marker_url = substr($marker_url, 0, strlen($marker_url)-14);
+
 		wp_localize_script('dhp-public-project-script', 'dhpData', array(
-			'ajax_url'   => $dev_url,
+			'ajax_url'   => $ajax_url,
 			'vizParams'  => $vizParams,
-			'settings'   => $allSettings
+			'settings'   => $allSettings,
+			'marker_url' => $marker_url
 		) );
 
 		// Looking at a Marker/Data entry?
@@ -2727,10 +2735,16 @@ function dhp_page_template( $page_template )
 						array('jquery', 'underscore'), DHP_PLUGIN_VERSION );
 		wp_enqueue_script('dhp-marker-script', plugins_url('/js/dhp-marker-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION);
 
+			// System already geared to marker posts
+		$marker_url = get_post_permalink(0, true);
+			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
+		$marker_url = substr($marker_url, 0, strlen($marker_url)-14);
+
 		wp_localize_script('dhp-marker-script', 'dhpData', array(
-			'ajax_url' => $dev_url,
+			'ajax_url' => $ajax_url,
 			'settings' => $projObj->getAllSettings(),
-			'proj_id' => $project_id
+			'proj_id' => $project_id,
+			'marker_url' => $marker_url
 		) );
     } // else if ($post_type == 'dhp-markers')
 
@@ -2749,7 +2763,7 @@ add_filter( 'archive_template', 'dhp_tax_template' );
 function dhp_tax_template( $page_template )
 {
 	$blog_id = get_current_blog_id();
-	$dev_url = get_admin_url( $blog_id ,'admin-ajax.php');
+	$ajax_url = get_admin_url( $blog_id ,'admin-ajax.php');
 
 		// For building list of handles upon which page is dependent
 	$dependencies = array('jquery', 'underscore');
@@ -2804,12 +2818,20 @@ function dhp_tax_template( $page_template )
 			// Enqueue last, after dependencies have been determined
 		wp_enqueue_script('dhp-tax-script', plugins_url('/js/dhp-tax-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );
 
+			// Set up the marker query and get first post just to get the base URL for markers
+		$loop = $projObj->setAllMarkerLoop();
+		$loop->the_post();
+		$marker_url = get_post_permalink(0, true);
+			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
+		$marker_url = substr($marker_url, 0, strlen($marker_url)-14);
+
 		wp_localize_script('dhp-tax-script', 'dhpData', array(
 				'project_id' => $projectID,
-				'ajax_url' => $dev_url,
+				'ajax_url' => $ajax_url,
 				'tax' => $term,
 				'project_settings' => $project_settings,
-				'isTranscript' => $isTranscript
+				'isTranscript' => $isTranscript,
+				'marker_url' => $marker_url
 			) );
 	}
 	return $page_template;

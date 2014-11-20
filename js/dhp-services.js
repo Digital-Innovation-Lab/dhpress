@@ -151,15 +151,17 @@ var dhpServices = {
     projectID: null,
     projSettings: null,         // Project Settings
     pngData: null,
+    markerURL: null,
 
     parseTimeCode: /(\d\d)\:(\d\d)\:(\d\d)\.(\d\d?)/,         // an exacting regular expression for parsing time
 
         // PURPOSE: Provide data about DH Press needed to carry out other services
-    initialize: function(theAjaxURL, theProjID, theSettings)
+    initialize: function(theAjaxURL, theProjID, theSettings, theMarkerURL)
     {
         ajaxURL = theAjaxURL;
         projectID = theProjID;
         projSettings = theSettings;
+        markerURL = theMarkerURL;
     }, // initialize()
 
 
@@ -909,6 +911,15 @@ var dhpServices = {
                 break;
             case 'Transcript':
                 builtHTML = '<div><a href="'+mVal+'" target="_blank">Look at Transcript file</a></div>';
+                break;
+            case 'Pointer':
+                var parsed;
+                if (moteDef.delim && moteDef.delim !== '' && moteDef.delim !== ' ') {
+                    parsed = mVal.split(moteDef.delim);
+                } else {
+                    parsed = [mVal];
+                }
+                builtHTML = '<div><a href="'+markerURL+parsed[0]+'" target="_blank"> See '+moteName+' webpage</a></div>';
                 break;
             case 'Long Text':
                 if (mVal === '~|~') {

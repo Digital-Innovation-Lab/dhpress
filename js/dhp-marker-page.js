@@ -23,7 +23,7 @@ jQuery(document).ready(function($) {
 		}
 	}
 
-	dhpServices.initialize(ajax_url, projID, dhpSettings);
+	dhpServices.initialize(ajax_url, projID, dhpSettings, dhpData.marker_url);
 
 		// Load specified mote data for each Marker via AJAX
 	$('.dhp-post').each(function() {
