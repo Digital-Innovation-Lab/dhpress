@@ -303,10 +303,9 @@ function show_dhp_marker_settings_box()
 	} // end foreach
 	echo '</table>'; // end table
 
-
-	$markerMeta = get_post_meta( $post->ID );
+	// $markerMeta = get_post_meta( $post->ID );
 	//print_r($markerMeta);
-	echo dhp_build_marker_meta_fields($markerMeta);
+	// echo dhp_build_marker_meta_fields($markerMeta);
 } // show_dhp_marker_settings_box()
 
 
@@ -314,18 +313,19 @@ function show_dhp_marker_settings_box()
 // INPUT:	$theMeta = array (provided by WP) of key-pairs: [ field-name, field-value ]
 // RETURNS:	HTML string the data in $theMeta as unordered list
 // NOTE:	CSS class delete-mote was used by (now dead) JavaScript code
+//          This could be resurrected if desired to create custom meta-boxes for editing in this section
 
-function dhp_build_marker_meta_fields($theMeta)
-{
-	$markerHtml ='<ul class="marker-fields">';
-	foreach ($theMeta as $key => $value) {
-		if(($key!="_edit_lock") && ($key!="_edit_last")) {
-			$markerHtml .='<li id="'.dhp_slug_from_name($key).'" class="motes"><label>'.$key.' </label><textarea class="mote-value">'.$value[0].'</textarea><a class="delete-mote">X</a></li>';			
-		}
-	}
-	$markerHtml .='</ul>';
-	// return $markerHtml;
-} // dhp_build_marker_meta_fields()
+// function dhp_build_marker_meta_fields($theMeta)
+// {
+// 	$markerHtml ='<ul class="marker-fields">';
+// 	foreach ($theMeta as $key => $value) {
+// 		if (($key !== "_edit_lock") && ($key !== "_edit_last")) {
+// 			$markerHtml .='<li id="'.dhp_slug_from_name($key).'" class="motes"><label>'.$key.' </label><textarea class="mote-value">'.$value[0].'</textarea><a class="delete-mote">X</a></li>';			
+// 		}
+// 	}
+// 	$markerHtml .='</ul>';
+// 	return $markerHtml;
+// } // dhp_build_marker_meta_fields()
 
 
 // PURPOSE:	Create WP slug corresonding custom field
