@@ -248,7 +248,6 @@ var dhpPinboardView = {
             // var splitTranscript = transcriptData.trim().split(/\r\n|\r|\n/g);       // More efficient but not working!
 
             if (splitTranscript) {
-                var index = 0;
                 var lastStamp=0;
 
                 _.each(splitTranscript, function(val) {

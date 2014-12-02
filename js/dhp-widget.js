@@ -2,7 +2,7 @@
 // ASSUMES: Transcript modal is closed with button of class close-reveal-modal
 // USES:    JavaScript libraries jQuery, Underscore, SoundCloud [optional], YouTube [optional]
 //          Also relies upon dhpServices methods
-// NOTES:   Use of audio & video does not require transcriptions, but transcriptions cannot exist w/o audio or video
+// NOTES:   Audio & video widgets are independent of transcriptions (which also doesn't require A/V)
 //          Use of embedded YouTube requires a function named onYouTubeIframeAPIReady -- provided in dhp-project-page.js
 
 var dhpWidget = {
@@ -368,20 +368,20 @@ var dhpWidget = {
     {
         var match;
 
-        _.find(dhpWidget.tcArray, function(timecode, index) {
-            match = (millisecond<timecode);
+        _.find(dhpWidget.tcArray, function(tcEntry, index) {
+            match = (tcEntry.start <= millisecond && millisecond <= tcEntry.end);
             if (match) {
                 if (dhpWidget.rowIndex != index) {
                     dhpWidget.rowIndex = index;
                         // Should we synchronize audio and text transcript?
                     if (document.getElementById("transcSyncOn").checked) {
-                        var topDiff = jQuery('.transcript-list div.type-timecode').eq(index).offset().top - jQuery('.transcript-list').offset().top;
+                        var topDiff = jQuery('.transcript-list div[data-tcindex="'+index+'"]').offset().top - jQuery('.transcript-list').offset().top;
                         var scrollPos = jQuery('.transcript-list').scrollTop() + topDiff;
                         jQuery('.transcript-list').animate({ scrollTop: scrollPos }, 300);
                     }
+                    jQuery('.transcript-list div.type-timecode').removeClass('current-clip');
+                    jQuery('.transcript-list div[data-tcindex="'+index+'"]').addClass('current-clip');
                 }
-                jQuery('.transcript-list div.type-timecode').removeClass('current-clip');
-                jQuery('.transcript-list div.type-timecode').eq(index).addClass('current-clip');
             }
             return match;
         });
@@ -393,48 +393,54 @@ var dhpWidget = {
         // RETURNS: HTML for transcription 
     formatTranscript: function (transcriptData)
     {
-        var transcript_html='';
             // split transcript text into array by line
         var splitTranscript = new String(transcriptData);
         splitTranscript = splitTranscript.trim().split(/\r\n|\r|\n/g);
         // var splitTranscript = transcriptData.trim().split(/\r\n|\r|\n/g);       // More efficient but not working!
-            // empty time code array
+
+            // empty time code array -- each entry has start & end
         dhpWidget.tcArray = [];
-        // console.log(splitTranscript)
+
         if (splitTranscript) {
             transcriptHtml = jQuery('<div class="transcript-list"/>');
 
-            var index = 0;
-            var timecode;
-            var textBlock;
-            var lineClass = ['','odd-line'];
-            var oddEven;
+            var tcIndex = 0;
+            var timeCode, lastCode=0, lastStamp=0;
+            var textBlock='';
             _.each(splitTranscript, function(val) {
                 val = val.trim();
-                oddEven = index % 2;
-                    // Skip values with line breaks...basically empty items
+                    // Skip empty entries, which were line breaks
                 if (val.length>1) {
-                        // Does it begin with a timecode?
-                    if (val[0]==='[' && val[1]==='0') {
-                        if (index>0) {
-                            jQuery('.row', transcriptHtml).eq(index-1).append('<div class="type-text">'+textBlock+'</div>');
+                        // Encountered timestamp -- compile previous material, if any
+                    if (val.charAt(0) === '[') {
+                        timeCode = dhpServices.tcToMilliSeconds(val);
+                        if (textBlock.length) {
+                                // Append timecode entry once range is defined
+                            if (lastStamp) {
+                                dhpWidget.tcArray.push({ start: lastCode, end: timeCode });
+                            }
+                            jQuery(transcriptHtml).append('<div class="row"><div class="type-timecode" data-timecode="'+
+                                    lastCode+'" data-tcindex="'+tcIndex++ +'">'+lastStamp+'</div><div class="type-text">'+textBlock+'</div></div>')
+                            textBlock = '';
                         }
-                        index++;
-                        textBlock = ''; 
-                        timecode = dhpServices.tcToMilliSeconds(val);
-                        transcriptHtml.append('<div class="row '+lineClass[oddEven]+'"><div class="type-timecode" data-timecode="'+timecode+'">'+val+'</div></div>');
-                        dhpWidget.tcArray.push(timecode);
-                    }
-                    else {
+                        lastStamp = val;
+                        lastCode = timeCode;
+
+                        // Encountered textblock
+                    } else {
                         textBlock += val;
                     }
-                }
-            });
-        }
-            // Shift array of timecodes so that entry is end-time rather than start-time of associated section
-        dhpWidget.tcArray.shift();
-            // Append very large number to end to ensure can't go past last item! 9 hours * 60 minutes * 60 seconds * 1000 milliseconds = 
-        dhpWidget.tcArray.push(32400000);
+                } // if length
+            }); // each()
+
+                // Handle any dangling text
+            if (textBlock.length) {
+                    // Append very large number to ensure can't go past last item! 9 hours * 60 minutes * 60 seconds * 1000 milliseconds
+                dhpWidget.tcArray.push({ start: lastStamp, end: 32400000 });
+                jQuery(transcriptHtml).append('<div class="row"><div class="type-timecode" data-timecode="'+
+                                    lastCode+'" data-tcindex="'+tcIndex+'">'+lastStamp+'</div><div class="type-text">'+textBlock+'</div></div>');
+            }
+        } // if split
 
             // Now that transcript sections are inserted, we can bind code to use them to seek in play stream
         dhpWidget.bindTranscSeek();
@@ -443,27 +449,25 @@ var dhpWidget = {
     }, // formatTranscript()
 
 
+        // PURPOSE: Insert parallel 2nd transcript into DOM
     attachSecondTranscript: function(transcriptData)
     {
-        //target $('.transcript-list')
         var splitTranscript = new String(transcriptData);
         splitTranscript = splitTranscript.trim().split(/\r\n|\r|\n/g);
         // var split_transcript = transcriptData.trim().split(/\r\n|\r|\n/g);       // More efficient but not working!
 
         jQuery('.transcript-list').addClass('two-column');
-        var firstTranscriptHTML = jQuery('.transcript-list .type-text');
-        // console.log(splitTranscript)
+
         var textArray = [];
         var textBlock;
         var index = 0;
-        var lineClass;
 
         if (splitTranscript) {
-            _.each(splitTranscript, function(val){
+            _.each(splitTranscript, function(val) {
                     // Skip values with line breaks...basically empty items
                 val = val.trim();
                 if (val.length>1) {
-                    if (val[0]==='['&&val[1]==='0') {
+                    if (val.charAt(0) === '[') {
                         if(index>0) {
                             textArray.push(textBlock);
                         }
@@ -478,11 +482,7 @@ var dhpWidget = {
 
             // Loop thru HTML for left-side transcript and add right-side text
          _.each(textArray, function(val, index) {
-            lineClass = '';
-            if (jQuery(firstTranscriptHTML).eq(index).hasClass('odd-line')) {
-                lineClass = 'odd-line';
-            }
-            jQuery(firstTranscriptHTML).eq(index).after('<div class="type-text '+lineClass+'">'+val+'</div>')
+            jQuery('.transcript-list div[data-tcindex="'+index+'"]').after('<div class="type-text">'+val+'</div>');
          });
     }, // attachSecondTranscript()
 

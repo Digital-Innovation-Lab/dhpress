@@ -1,58 +1,45 @@
 /** CSS styles specific to rendering transcriptions in DH Press
  **/
 
-
 .transcript-list {
+    display: table;
 	max-height: 300px;
 	overflow-y: scroll;
 	resize: both;
+/*	border-spacing: 4px; */
 }
 
 .transcript-list .row {
 	display: table-row;
+	margin: 4px;
 }
 
-.type-timecode {
-	width: 20%;
-	display: table-cell;
-	padding: 2%;
-	cursor: pointer;
-}
-
-.odd-line .type-timecode,
-.odd-line .type-text,
-.type-timecode.odd-line,
-.type-text.odd-line {
+	/* Create odd-even background toggle */
+.transcript-list .row:nth-child(odd) {
 	background: #ddd;
 }
 
-.type-timecode.odd-line.current-clip,
+.transcript-list .type-timecode {
+	display: table-cell;
+	line-height: 1.2em;
+	padding: 4px;
+	cursor: pointer;
+}
+
+	/* playhead */
 .type-timecode.current-clip {
 	background-color: #007fff;
-	font-weight: bold;
 	color: #fff;
 }
 
 .type-timecode:hover {
 	background-color: #0055bb;
-	font-weight: bold;
 	color: #fff;
 }
 
 .transcript-list .type-text {
-	line-height: 1.2em;
-
-	width: 76%;
 	display: table-cell;
 	vertical-align: top;
-	padding: 2%;
-}
-
-.transcript-list.two-column .type-text {
 	line-height: 1.2em;
-
-	width: 40%;
-	display: table-cell;
-	vertical-align: top;
-	padding: 2%;
+	padding: 4px;
 }
