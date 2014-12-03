@@ -2680,8 +2680,14 @@ function dhp_page_template( $page_template )
 	    	break;
 	    }
 
-	    	// Transcript specific
-	    if ($projObj->selectModalHas('scloud') || $projObj->selectModalHas('youtube')) {
+	    	// Any playback widgets?
+		if (($allSettings->views->transcript->audio && $allSettings->views->transcript->audio != '' &&
+			$allSettings->views->transcript->audio != 'disable') ||
+			($allSettings->views->transcript->video && $allSettings->views->transcript->video != '' &&
+			$allSettings->views->transcript->video != 'disable') ||
+			($allSettings->views->transcript->transcript && $allSettings->views->transcript->transcript != '' &&
+			$allSettings->views->transcript->transcript != 'disable'))
+		{
 			wp_enqueue_style('dhp-transcript-css', plugins_url('/css/transcriptions.css',  dirname(__FILE__)) );
 			wp_enqueue_script('dhp-widget', plugins_url('/js/dhp-widget.js',  dirname(__FILE__)),
 				 array('jquery', 'underscore') );

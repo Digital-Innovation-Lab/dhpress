@@ -412,7 +412,8 @@ var dhpWidget = {
                     // Skip empty entries, which were line breaks
                 if (val.length>1) {
                         // Encountered timestamp -- compile previous material, if any
-                    if (val.charAt(0) === '[') {
+                    if (val.charAt(0) === '[' && (val.charAt(1) >= '0' && val.charAt(1) <= '9'))
+                    {
                         timeCode = dhpServices.tcToMilliSeconds(val);
                         if (textBlock.length) {
                                 // Append timecode entry once range is defined

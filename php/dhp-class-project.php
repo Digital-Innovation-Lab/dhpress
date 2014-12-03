@@ -154,6 +154,7 @@
 		    	}
 		        "transcript" : {
 					"audio" 	: Name of mote (that contains last part of URL to audio file)
+					"video" 	: Name of mote (that contains YouTube video code)
 					"transcript" : Name of mote (that contains URL to textual transcription of original),
 					"transcript2" : Name of mote (that contains URL to textual transcription of any translation),
 					"timecode" : 'disable' | Name of mote (that contains the timestamp),
