@@ -3,6 +3,10 @@
 
 @charset "UTF-8";
 
+	/* For busy cursor */
+body.waiting * {
+    cursor: wait !important;
+}
 
 	/* FIX: Adjusts foundations nowrap style for code blocks */
 code {

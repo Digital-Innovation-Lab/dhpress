@@ -76,9 +76,9 @@ var dhpCardsView = {
                     jQuery(newSortMenu).parent().addClass('active');
                         // Make cursor busy while sort done
                     dhpCardsView.currentSort = newSortMote;
-                    jQuery('body').css('cursor', 'wait');
+                    jQuery('body').addClass('waiting');
                     jQuery('#card-container').isotope( { sortBy: newSortMote } );
-                    jQuery('body').css('cursor', 'default');
+                    jQuery('body').removeClass('waiting');
                 }
             });
         } // if sortMotes
@@ -483,7 +483,7 @@ var dhpCardsView = {
             }
         }
 
-        jQuery('body').css('cursor', 'wait');
+        jQuery('body').addClass('waiting');
 
         switch(moteDef.type) {
         case 'Short Text':
@@ -563,7 +563,7 @@ var dhpCardsView = {
             dhpCardsView.doDateFilter();
             break;
         }
-        jQuery('body').css('cursor', 'default');
+        jQuery('body').removeClass('waiting');
     }, // doFilter()
 
 

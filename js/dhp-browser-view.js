@@ -371,7 +371,7 @@ var dhpBrowser = {
 			        .attr("height", facetLabelHeight-1)
 			        .on("click", function(d) {
 			            if (theFacet.selected != -1) {
-                    		jQuery('body').css('cursor', 'wait');
+			            	jQuery('body').addClass('waiting');
 			                theFacet.selected = -1;
 			                computeRestrainedSet();
 			                updateAllValButtons();
@@ -383,7 +383,7 @@ var dhpBrowser = {
 			                var resetSel = fbSVG.select("#reset-"+theFacet.index);
 			                    resetSel.classed('inactive', true);
 			                populateList();
-                    		jQuery('body').css('cursor', 'default');
+                    		jQuery('body').removeClass('waiting');
 			            }
 			        });
 
@@ -410,7 +410,7 @@ var dhpBrowser = {
 			        .attr("class", "facet-val" )
 			        .attr("id", function(d, i) { return "facet-"+theFacet.index+"-"+i; } )
 			        .on("click", function(d) {
-                    	jQuery('body').css('cursor', 'wait');
+			            jQuery('body').addClass('waiting');
 			            theFacet.selected = d.index;
 			            computeRestrainedSet();
 			            updateAllValButtons();
@@ -423,7 +423,7 @@ var dhpBrowser = {
 			            var resetSel = fbSVG.select("#reset-"+theFacet.index);
 			            resetSel.classed('inactive', false);
 			            populateList();
-                    	jQuery('body').css('cursor', 'default');
+			            jQuery('body').removeClass('waiting');
 			        });
 
 			    facetSel
@@ -483,7 +483,6 @@ var dhpBrowser = {
             },
             success: function(data, textStatus, XMLHttpRequest)
             {
-				jQuery('body').css('cursor', 'wait');
                 rawData = JSON.parse(data);
 
 				    // compute facet data
@@ -505,7 +504,6 @@ var dhpBrowser = {
 				jQuery('#list-scroll').width(intHeight <= extHeight ? width : width+resizeW);
 
 				createSVG();
-				jQuery('body').css('cursor', 'default');
 
 				    // Capture clicks on select list and redirect to open associated marker
 				jQuery('#marker-list').click(function(evt) {
