@@ -1479,24 +1479,29 @@ add_action('wp_ajax_nopriv_dhpGetTranscriptClip', 'dhp_get_transcript_json');
 
 // PURPOSE:	Retrieve section of text file for transcript
 // INPUT:	$tran = full text of transcript
-//			$clip = String containing from-end time of segment
+//			$clip = String containing from-end time of segment, or -1 if entire transcript needed
 // RETURNS:	Excerpt of $tran within the time frame specified by $clip (not encoded as UTF8)
 //			This text must begin with the beginning timestamp and end with the final timestamp
 
 function dhp_get_transcript_clip($transcript, $clip)
 {
+		// Is entire transcript to be used?
+	if ($clip == -1 || $clip == '-1') {
+		return $transcript;
+	}
+
 	$codedTranscript  = utf8_encode($transcript);
 	$clipArray        = explode("-", $clip);
 	$clipStart        = mb_strpos($codedTranscript, $clipArray[0]);
 	$clipEnd          = mb_strpos($codedTranscript, $clipArray[1]);
 		// length must include start and end timestamps
 	$clipLength       = ($clipEnd + strlen($clipArray[1]) + 1) - ($clipStart - 1) + 1;
-
+		// If no errors in finding timestamps
 	if (($clipStart !== false) && ($clipEnd !== false)) {
 		$codedClip  = mb_substr($codedTranscript, $clipStart-1, $clipLength, 'UTF-8');
 		$returnClip = utf8_decode($codedClip);
-	}
-	else {
+		// Otherwise, return array with clipping info
+	} else {
 		$returnClip = array('clipStart'=> $clipStart,'clipEnd'=> $clipEnd, 'clipArrayend' => $clipArray[1]);
 	}
 	return $returnClip;
@@ -1520,7 +1525,7 @@ function dhp_load_transcript_from_file($fileUrl)
 // PURPOSE: AJAX function to retrieve section of transcript when viewing a Marker
 // INPUT:	$_POST['project'] = ID of Project post
 //			$_POST['transcript'] = URL to file containing contents of transcript
-//			$_POST['timecode'] = timestamp specifying excerpt of transcript to return
+//			$_POST['timecode'] = timestamp specifying excerpt of transcript to return, or -1 = full transcript
 // RETURNS:	JSON-encoded section of transcription
 
 function dhp_get_transcript_json()
@@ -1530,7 +1535,7 @@ function dhp_get_transcript_json()
 	$dhp_clip = $_POST['timecode'];
 
 	$dhp_transcript = dhp_load_transcript_from_file($dhp_transcript_field);
-	$dhp_transcript_clip = dhp_get_transcript_clip($dhp_transcript,$dhp_clip);
+	$dhp_transcript_clip = dhp_get_transcript_clip($dhp_transcript, $dhp_clip);
 
 	die(json_encode($dhp_transcript_clip));
 } // dhp_get_transcript_json()

@@ -625,7 +625,7 @@ var dhpServices = {
             }
 
             dhpWidget.initialize(widgetSettings);
-            dhpWidget.prepareOneTranscript(ajaxURL, projectID, '#markerModal .modal-body');
+            dhpWidget.prepareOneTranscript(ajaxURL, projectID, '#markerModal .modal-body', true);
         } // playback widgets
 
             // Create HTML for all of the data related to the Marker

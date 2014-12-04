@@ -25,7 +25,7 @@ var dhpWidget = {
         // INPUT:   wParams = object whose fields specify data about transcription:
         //              stream (URL) = widget URL stream
         //              playerType = 'youtube' | 'scloud'
-        //              transcript (URL), transcript2 (URL),
+        //              transcript (URL or text), transcript2 (URL or text),
         //              timecode (from-to), startTime (in milliseconds), endTime (in milliseconds)
         //              timecode = -1 if full transcript (not excerpt), transcript and transcript2 already loaded
         // NOTES:   This is called each time a new widget will be displayed
@@ -67,10 +67,10 @@ var dhpWidget = {
         // PURPOSE: Build all HTML and initialize controls for a specific player and transcript
         // INPUT:   ajaxURL = URL to use for loading data (or null if already loaded)
         //          htmlID = jQuery selector to specify where resulting HTML should be appended
-    prepareOneTranscript: function (ajaxURL, projectID, htmlID)
+        //          urls = true if wParams.transcript are URLs rather than actual text
+    prepareOneTranscript: function (ajaxURL, projectID, htmlID, urls)
     {
         var appendPos, usingAV = false, haveTransc = false;
-        var fullTranscript = (dhpWidget.wParams.timecode == -1);
 
         appendPos = jQuery(htmlID);
         if (appendPos == null) {
@@ -116,28 +116,28 @@ var dhpWidget = {
             // Is there any primary transcript data?
         if (dhpWidget.wParams.transcript && dhpWidget.wParams.transcript!=='') {
             haveTransc = true;
-            if (fullTranscript) {
-                dhpWidget.attachTranscript(dhpWidget.wParams.transcript, 0);
-            } else {
+            if (urls) {
                 dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript, dhpWidget.wParams.timecode, 0);
+            } else {
+                dhpWidget.attachTranscript(dhpWidget.wParams.transcript, 0);
             }
         }
             // Is there 2ndary transcript data? If only 2nd, treat as 1st
         if (dhpWidget.wParams.transcript==='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='') {
             haveTransc = true;
-            if (fullTranscript) {
-                dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 0);
-            } else {
+            if (urls) {
                 dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript2, dhpWidget.wParams.timecode, 0);
+            } else {
+                dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 0);
             }
         }
             // Otherwise, add 2nd to 1st
         else if (dhpWidget.wParams.transcript!=='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='') {
             haveTransc = true;
-            if (fullTranscript) {
-                dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 1);
-            } else {
+            if (urls) {
                 dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript2, dhpWidget.wParams.timecode, 1);
+            } else {
+                dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 1);
             }
         }
 
@@ -307,8 +307,9 @@ var dhpWidget = {
                 transcript: transcript,
                 tax_term: taxTerm
             },
-            success: function(data, textStatus, XMLHttpRequest){
+            success: function(data, textStatus, XMLHttpRequest) {
                 if (data != null && data !== '') {
+                        // At this point, we actually have the transcription texts
                     var results = JSON.parse(data);
                     var wParams = {
                         stream: null,
@@ -326,9 +327,10 @@ var dhpWidget = {
                         wParams.stream = results.video;
                         wParams.playerType = 'youtube';
                     }
-                    if (wParams.playerType) {
+                        // If A/V or transcripts
+                    if (wParams.playerType || results.transcript || results.transcript2) {
                         dhpWidget.initialize(wParams);
-                        dhpWidget.prepareOneTranscript(null, projectID, htmlID);
+                        dhpWidget.prepareOneTranscript(null, projectID, htmlID, false);
                     }
                 }
             },
@@ -341,6 +343,9 @@ var dhpWidget = {
 
 // ==================== INTERNAL FUNCTIONS (only used by the functions above) ==============
 
+        // PURPOSE: Load (potential) extract from longer transcription file
+        // INPUT:   transcriptName = URL to transcript file
+        //          clip = from-to timecode, or -1 if entire transcript
     loadTranscriptClip: function(ajaxURL, projectID, transcriptName, clip, order)
     {
         jQuery.ajax({
@@ -352,10 +357,10 @@ var dhpWidget = {
                 transcript: transcriptName,
                 timecode: clip
             },
-            success: function(data, textStatus, XMLHttpRequest){
+            success: function(data, textStatus, XMLHttpRequest) {
                 dhpWidget.attachTranscript(JSON.parse(data), order);
             },
-            error: function(XMLHttpRequest, textStatus, errorThrown){
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
                alert(errorThrown);
             }
         });
@@ -369,7 +374,7 @@ var dhpWidget = {
         var match;
 
         _.find(dhpWidget.tcArray, function(tcEntry, index) {
-            match = (tcEntry.start <= millisecond && millisecond <= tcEntry.end);
+            match = (tcEntry.start <= millisecond && millisecond < tcEntry.end);
             if (match) {
                 if (dhpWidget.rowIndex != index) {
                     dhpWidget.rowIndex = index;
@@ -494,7 +499,6 @@ var dhpWidget = {
     attachTranscript: function(transcriptData, order)
     {
         dhpWidget.transcriptData[order] = transcriptData;
-
             // Don't process 2nd transcript unless 1st is loaded and attached
         if (order==1) {
             if (dhpWidget.readyFor2nd) {

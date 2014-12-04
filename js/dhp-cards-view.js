@@ -76,7 +76,7 @@ var dhpCardsView = {
                     jQuery(newSortMenu).parent().addClass('active');
                         // Make cursor busy while sort done
                     dhpCardsView.currentSort = newSortMote;
-                    jQuery('body').css('cursor', 'progress');
+                    jQuery('body').css('cursor', 'wait');
                     jQuery('#card-container').isotope( { sortBy: newSortMote } );
                     jQuery('body').css('cursor', 'default');
                 }
@@ -483,7 +483,7 @@ var dhpCardsView = {
             }
         }
 
-        jQuery('body').css('cursor', 'progress');
+        jQuery('body').css('cursor', 'wait');
 
         switch(moteDef.type) {
         case 'Short Text':
