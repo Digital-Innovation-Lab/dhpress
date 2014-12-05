@@ -1451,6 +1451,12 @@ function dhp_get_tax_content()
 
 	$mQuery = new DHPressMarkerQuery($proj_id);
 
+		// Start out with Marker title Mote
+	if ($mQuery->projSettings->general->mTitle != '' && $mQuery->projSettings->general->mTitle != 'disable'
+		&& $mQuery->projSettings->general->mTitle != 'the_title')
+	{
+		array_push($mQuery->selectContent, $mQuery->projSettings->general->mTitle);
+	}
 		// modify select contents so that all post motes are included
 	foreach ($mQuery->projSettings->views->transcript->content as $theMote) {
 		array_push($mQuery->selectContent, $theMote);

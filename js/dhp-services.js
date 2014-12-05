@@ -888,7 +888,7 @@ var dhpServices = {
                     builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+dateStr+'</div>';
                 } else {
                     builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: From '+
-                                dateExplain(start, true)+' To '+dateExplain(dateSegs[1].trim(), false)+'</div>';
+                                dateExplain(start, true)+' to '+dateExplain(dateSegs[1].trim(), false)+'</div>';
                 }
                 break;
             case 'Image':

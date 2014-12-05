@@ -72,7 +72,7 @@ function dhp_markers_activate()
 {
     dhp_marker_init();
     flush_rewrite_rules();
-}
+} // dhp_markers_activate()
 
 
 add_action( 'admin_enqueue_scripts', 'add_dhp_marker_admin_scripts', 10, 1 );
@@ -155,6 +155,7 @@ function dhp_marker_updated_messages( $messages )
   return $messages;
 } // dhp_marker_updated_messages()
 
+
 // PURPOSE: Sorts an array based on value of a specific key
 //			From http://php.net/manual/en/function.sort.php
 // INPUT:	$array = array to sort
@@ -230,7 +231,6 @@ function dhp_get_projects()
 	$projects_array = dhp_array_sort( $projects_array, 'label' );
 	return $projects_array;
 } // dhp_get_projects()
-
 
 
 add_action('add_meta_boxes', 'add_dhp_marker_settings_box');

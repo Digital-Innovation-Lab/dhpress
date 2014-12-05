@@ -1,5 +1,4 @@
 // PURPOSE: Handle viewing Marker content pages: Loaded by dhp_page_template() in dhp-project-functions.php
-//			Also used for taxonomy pages, so there may be many entries 
 // ASSUMES: dhpData is used to pass parameters to this function via wp_localize_script()
 //			Title for page marked by DIV CLASS="entry-title" or "post-title"
 //			Content for each set of data marked by DIV CLASS="dhp-post" and has ID of marker

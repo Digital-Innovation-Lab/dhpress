@@ -2188,8 +2188,8 @@ jQuery(document).ready(function($) {
           break;
         case 'Lat/Lon Coordinates':
           if (theMote.delim == ',') {
-            $('#testResults').append('<p>The comma has been assigned as the delimiter character for the Lat-Lon Coordinate Mote named '+
-                                  theMote.name+'; its use is reserved for separating Lat from Lon and cannot be used to form Polygons.</p>');
+            $('#testResults').append('<p>You have specified the commas as the delimiter character for the Lat-Lon Coordinate Mote named '+
+                                  theMote.name+'; you cannot use it as a delimiter, as it is reserved for separating Lat from Lon and cannot be used to form Polygons.</p>');
           }
           break;
         } // switch()
@@ -2352,17 +2352,10 @@ jQuery(document).ready(function($) {
 
         // Anamoly: If no selection possible, edTrnsTime() == undefined; added '' for extra protection
 
-        // If configured for transcripts, must have supplied an audio or video source
-      if (self.edTrnsTransc() !== 'disable' || (self.edTrnsTime() != undefined && self.edTrnsTime() !== '')) {
-        if (self.edTrnsAudio() === 'disable' && self.edTrnsVideo() === 'disable') {
-          $('#testResults').append('<p>Although you have enabled transcripts, you have not selected an audio or video URL mote.</p>');
-        }
-      }
-
         // If Transcript Source mote selected, ensure other settings are as well
       if (self.edTrnsSrc() !== 'disable') {
-        if ((self.edTrnsAudio() === 'disable' && self.edTrnsVideo() === 'disable') || self.edTrnsTransc() === 'disable' || (self.edTrnsTime() == undefined || self.edTrnsTime() === '')) {
-          $('#testResults').append('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified the other necessary transcript settings.</p>');
+        if ((self.edTrnsAudio() === 'disable' && self.edTrnsVideo() === 'disable') || self.edTrnsTransc() === 'disable') {
+          $('#testResults').append('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>');
         }
       }
 

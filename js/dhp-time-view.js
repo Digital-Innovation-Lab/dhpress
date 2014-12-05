@@ -204,6 +204,8 @@ var dhpTimeline = {
                     component.redraw();
                 });
                 dhpServices.remLoadingModal();
+                    // Force recognition of new height of window
+                jQuery('body').trigger('resize');
             },
             error: function(XMLHttpRequest, textStatus, errorThrown)
             {
@@ -307,16 +309,16 @@ var dhpTimeline = {
                     // Create three variants of each color
                 gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
                 gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
-                gradDef.append('stop').attr('offset', '7%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
                 gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
                 gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
                 gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
-                gradDef.append('stop').attr('offset', '93%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
                 gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
                 gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
                 gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
-                gradDef.append('stop').attr('offset', '7%').attr('stop-color', color);
-                gradDef.append('stop').attr('offset', '93%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+                gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
                 gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
             }
         });

@@ -27,6 +27,14 @@ jQuery(document).ready(function($) {
         dhpWidget.prepareTaxTranscript(ajax_url, project_id, ".dhp-transcript-content", taxTerm.taxonomy, taxTerm.slug);
 	}
 
+    var markerTitle = dhpSettings.views.post.title;
+    if (markerTitle === '' || markerTitle === 'disable' || markerTitle === 'the_title')
+    {
+        markerTitle = null;
+    }
+
+    var titleDOM=null;
+
         // Load specified mote data for each Marker via AJAX
     $('.dhp-post').each(function() {
             postID = $(this).attr('id');
@@ -39,6 +47,21 @@ jQuery(document).ready(function($) {
         // INPUT:   postID = ID of the Marker (also ID of DIV of CLASS "dhp-post")
         //          response = Hash of field name / value of Custom Fields read from Marker Page
     function addContentToDiv(postID, markerData) {
+            // If assigned Marker title, insert into DOM
+        if (markerTitle) {
+            var val = markerData.properties.content[markerTitle];
+            if (val) {
+                var domTitle = $('article.post-'+postID+' .entry-header .entry-title a');
+                    // If no match, may be old WP DOM structure
+                if (!domTitle) {
+                    domTitle = $('article.post-'+postID+' .entry-header .post-title a');
+                }
+                if (domTitle) {
+                    $(domTitle).text(val);
+                }
+            }
+        }
+
             // Marker values to be enclosed in this new DIV
         var contentHTML = '';
 
