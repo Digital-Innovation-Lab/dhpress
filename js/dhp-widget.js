@@ -114,7 +114,7 @@ var dhpWidget = {
         } // playerType
 
             // Is there any primary transcript data?
-        if (dhpWidget.wParams.transcript && dhpWidget.wParams.transcript!=='') {
+        if (dhpWidget.wParams.transcript && dhpWidget.wParams.transcript!=='' && dhpWidget.wParams.transcript!=='disable') {
             haveTransc = true;
             if (urls) {
                 dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript, dhpWidget.wParams.timecode, 0);
@@ -122,17 +122,18 @@ var dhpWidget = {
                 dhpWidget.attachTranscript(dhpWidget.wParams.transcript, 0);
             }
         }
+
             // Is there 2ndary transcript data? If only 2nd, treat as 1st
-        if (dhpWidget.wParams.transcript==='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='') {
-            haveTransc = true;
-            if (urls) {
-                dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript2, dhpWidget.wParams.timecode, 0);
-            } else {
-                dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 0);
-            }
-        }
-            // Otherwise, add 2nd to 1st
-        else if (dhpWidget.wParams.transcript!=='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='') {
+        // if (dhpWidget.wParams.transcript==='' && dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='' && dhpWidget.wParams.transcript2!=='disable') {
+        //     haveTransc = true;
+        //     if (urls) {
+        //         dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript2, dhpWidget.wParams.timecode, 0);
+        //     } else {
+        //         dhpWidget.attachTranscript(dhpWidget.wParams.transcript2, 0);
+        //     }
+        // } else
+            // Add 2nd to 1st
+        if (dhpWidget.wParams.transcript2 && dhpWidget.wParams.transcript2!=='' && dhpWidget.wParams.transcript2!=='disable') {
             haveTransc = true;
             if (urls) {
                 dhpWidget.loadTranscriptClip(ajaxURL, projectID, dhpWidget.wParams.transcript2, dhpWidget.wParams.timecode, 1);

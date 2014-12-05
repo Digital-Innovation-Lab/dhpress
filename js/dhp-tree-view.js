@@ -21,6 +21,7 @@ var dhpTreeView = {
         //                  icons (Object with properties that are SNAP path defs)
         //                      ballon, magGlass, thumbtack
 
+        //                  genWidth = x-space for each generation in flat tree
         //                  tRadius = radius of radial tree
         //                  m0 = original mouse click coordinate (rotating radial tree)
         //                  rotate = degree to which radial tree currently rotated
@@ -77,6 +78,7 @@ var dhpTreeView = {
                 .style("font-size", dhpTreeView.fSize+'px')
                 .attr("transform", "translate("+treeEP.padding+",0)");
 
+            dhpTreeView.genWidth = 10;  // fake default amount
             dhpTreeView.tree = d3.layout.cluster().size([dhpTreeView.iHeight, dhpTreeView.iWidth - (treeEP.padding*2)]);
             dhpTreeView.diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
             break;
@@ -213,11 +215,48 @@ var dhpTreeView = {
         var nodes, links, link, node;
         var paths, labels, aLabel;
 
+        if (nodeData == undefined) {
+            console.log("Error: Tree is empty.");
+            return;
+        }
+
         switch (dhpTreeView.treeEP.form) {
-        case 'flat': 
-                // The cluser algorithms will create placement in x and y fields
+        case 'flat':
+            var maxDepth = 0;
+            function getMaxDepth(node, curDepth)
+            {
+                if (node == null || node == undefined) {
+                    return;
+                }
+                if (curDepth > maxDepth) {
+                    maxDepth = curDepth;
+                }
+                if (!node.children) {
+                    return;
+                }
+                node.children.forEach(function(child) { getMaxDepth(child, curDepth+1); });
+            } // getMaxDepth()
+            getMaxDepth(nodeData, 1);
+
+            dhpTreeView.genWidth = (dhpTreeView.iWidth - dhpTreeView.padding)/maxDepth;
+
+                // The cluster algorithms will create placement in x and y fields
             nodes = dhpTreeView.tree.nodes(nodeData);
             links = dhpTreeView.tree.links(nodes);
+
+                // Change the Y coordinate according to depth
+            function setYDepth(node)
+            {
+                if (node == null || node == undefined) {
+                    return;
+                }
+                node.y = node.depth * dhpTreeView.genWidth;
+                if (!node.children) {
+                    return;
+                }
+                node.children.forEach(function(child) { setYDepth(child); });
+            } // setYDepth()
+            setYDepth(nodes);
 
                 // Create branches ("links") between markers ("nodes")
             link = dhpTreeView.vis.selectAll(".link").data(links)

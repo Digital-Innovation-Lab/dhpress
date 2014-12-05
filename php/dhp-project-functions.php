@@ -889,7 +889,9 @@ function dhp_get_markers()
 
 // PURPOSE: Retrieve all of the relevant info about this node and all call recursively for all of its children
 // INPUT:   $nodeName = the name of the custom post
-//			$eps = Entry Point settings
+//			$mQuery = query used for this project
+//			$childrenCF = custom field that contains values that point to each generation
+//			$childrenDelim = character delimiter for children Mote value
 // RETURNS: Nested Array for $nodeName and all of its children
 
 function dhp_create_tree_node($nodeName, $mQuery, $childrenCF, $childrenDelim)
@@ -1034,7 +1036,8 @@ function dhp_get_marker_tree()
 	$mQuery->selectContent = array_unique($mQuery->selectContent);
 
 		// Begin with head node
-	$markers = dhp_create_tree_node($eps->settings->head, $mQuery, $childrenCF, $childrenDelim);
+	$head_note = trim($eps->settings->head);
+	$markers = dhp_create_tree_node($head_note, $mQuery, $childrenCF, $childrenDelim);
 
 	array_push($json_Object, $markers);
 
