@@ -888,20 +888,25 @@ function dhp_get_markers()
 // TREE MARKER CODE ==================
 
 // PURPOSE: Retrieve all of the relevant info about this node and all call recursively for all of its children
-// INPUT:   $nodeName = the name of the custom post
+// INPUT:   $cf_key = custom field to use as primary key
+//			$node_id = unique primary key value for the Marker/custom post
 //			$mQuery = query used for this project
 //			$childrenCF = custom field that contains values that point to each generation
 //			$childrenDelim = character delimiter for children Mote value
 // RETURNS: Nested Array for $nodeName and all of its children
 
-function dhp_create_tree_node($nodeName, $mQuery, $childrenCF, $childrenDelim)
+function dhp_create_tree_node($cf_key, $node_id, $mQuery, $childrenCF, $childrenDelim)
 {
 		// Get the WP post corresponding to this marker
 	$args = array( 
 		'post_type' => 'dhp-markers', 
 		'posts_per_page' => 1,
-		'name' => $nodeName,
-		array( 'meta_key' => 'project_id', 'meta_value' => $mQuery->projID )
+		// 'name' => $nodeName,
+		// array( 'meta_key' => 'project_id', 'meta_value' => $mQuery->projID )
+		'meta_query' => array(
+			array('key' => 'project_id', 'value' => $mQuery->projID),
+			array('key' => $cf_key, 'value' => $node_id)
+		)
 	);
 	$loop = new WP_Query($args);
 
@@ -939,7 +944,7 @@ function dhp_create_tree_node($nodeName, $mQuery, $childrenCF, $childrenDelim)
 		$children = array();
 		foreach($childName as $theChildName) {
 			$trimName = trim($theChildName);
-			$theChildData = dhp_create_tree_node($trimName, $mQuery, $childrenCF, $childrenDelim);
+			$theChildData = dhp_create_tree_node($cf_key, $trimName, $mQuery, $childrenCF, $childrenDelim);
 				// Don't add if data error (name not found)
 			if ($theChildData != null) {
 				array_push($children, $theChildData);
@@ -1006,6 +1011,12 @@ function dhp_get_marker_tree()
 	$mQuery = new DHPressMarkerQuery($projectID);
 	$projObj = $mQuery->projObj;
 	$eps = $mQuery->projSettings->eps[$index];
+	$cf_key = $mQuery->projSettings->general->mKey;
+
+	if (is_null($cf_key) || $cf_key == 'disable') {
+		trigger_error("Marker primary key not set");
+		die("Marker primary key not set");
+	}
 
 		// Prepare for fetching markers' children pointer
 	$childrenMote = $projObj->getMoteByName($eps->settings->children);
@@ -1036,8 +1047,7 @@ function dhp_get_marker_tree()
 	$mQuery->selectContent = array_unique($mQuery->selectContent);
 
 		// Begin with head node
-	$head_note = trim($eps->settings->head);
-	$markers = dhp_create_tree_node($head_note, $mQuery, $childrenCF, $childrenDelim);
+	$markers = dhp_create_tree_node($cf_key, trim($eps->settings->head), $mQuery, $childrenCF, $childrenDelim);
 
 	array_push($json_Object, $markers);
 

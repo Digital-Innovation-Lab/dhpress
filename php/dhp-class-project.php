@@ -15,6 +15,7 @@
 		        "homeLabel": String,
 		        "homeURL": String,
 		        "mTitle": String 									// Mote to use for title of Markers, or the_title
+		        "mKey": String,										// custom field that provides primary key for Markers
 		    },
 		    "motes": [
 		        {
@@ -579,7 +580,7 @@ class DHPressMarkerQuery
 				$this->timecode   = $projObj->getCustomFieldForMote($projSettings->views->transcript->timecode);
 			}
 		}
-		
+
 			// Link parent enables linking to either the Post page for this Marker,
 			//	or to the category/taxonomy which includes this Marker
 		$this->linkParent = $projSettings->views->select->link;

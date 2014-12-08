@@ -912,19 +912,19 @@ var dhpServices = {
             case 'Transcript':
                 builtHTML = '<div><a href="'+mVal+'" target="_blank">Look at Transcript file</a></div>';
                 break;
-            case 'Pointer':
-                var parsed;
-                if (moteDef.delim && moteDef.delim !== '' && moteDef.delim !== ' ') {
-                    parsed = mVal.split(moteDef.delim);
-                } else {
-                    parsed = [mVal];
-                }
-                builtHTML = '<div><a href="'+markerURL+parsed[0]+'" target="_blank"> See '+moteName+' webpage</a></div>';
-                break;
             case 'Long Text':
                 if (mVal === '~|~') {
                     break;
                 }
+            // case 'Pointer':
+            //     var parsed;
+            //     if (moteDef.delim && moteDef.delim !== '' && moteDef.delim !== ' ') {
+            //         parsed = mVal.split(moteDef.delim);
+            //     } else {
+            //         parsed = [mVal];
+            //     }
+            //     builtHTML = '<div><a href="'+markerURL+parsed[0]+'" target="_blank"> See '+moteName+' webpage</a></div>';
+            //     break;
                 // else, fall through to default logic
             default:
                 if (moteName === 'the_content') {

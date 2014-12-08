@@ -242,7 +242,6 @@ var dhpTreeView = {
 
                 // The cluster algorithms will create placement in x and y fields
             nodes = dhpTreeView.tree.nodes(nodeData);
-            links = dhpTreeView.tree.links(nodes);
 
                 // Change the Y coordinate according to depth
             function setYDepth(node)
@@ -257,6 +256,7 @@ var dhpTreeView = {
                 node.children.forEach(function(child) { setYDepth(child); });
             } // setYDepth()
             setYDepth(nodes);
+            links = dhpTreeView.tree.links(nodes);
 
                 // Create branches ("links") between markers ("nodes")
             link = dhpTreeView.vis.selectAll(".link").data(links)
@@ -268,6 +268,7 @@ var dhpTreeView = {
             node = dhpTreeView.vis.selectAll(".node").data(nodes)
                         .enter().append("g")
                         .attr("class", "node")
+                        // .attr("transform", function(d) { return "translate(" + d.depth*dhpTreeView.genWidth + "," + d.x + ")"; })
                         .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
                         .on("click", function(d) {
                             dhpServices.showMarkerModal(d);

@@ -17,7 +17,8 @@ jQuery(document).ready(function($) {
           version: 3,
           homeLabel: '',
           homeURL: '',
-          mTitle: 'the_title'
+          mTitle: 'the_title',
+          mKey: 'disable'
         },
         motes: [],
         eps: [],
@@ -377,6 +378,7 @@ jQuery(document).ready(function($) {
       projSettings.general.homeLabel = self.edHomeBtnLbl();
       projSettings.general.homeURL = self.edHomeURL();
       projSettings.general.mTitle = self.edMTitle();
+      projSettings.general.mKey = self.edMKey();
 
       projSettings.motes = [];
       ko.utils.arrayForEach(self.allMotes(), function(theMote) {
@@ -572,16 +574,20 @@ jQuery(document).ready(function($) {
 
     self.settingsDirty = ko.observable(false);
 
+    self.keyNames = ['disable'].concat(allCustomFields);
+
       // User-editable values
     self.edHomeBtnLbl = ko.observable('');
     self.edHomeURL = ko.observable('');
     self.edMTitle = ko.observable('the_title');
+    self.edMKey = ko.observable('disable');
 
       // Methods
     self.setDetails = function(theDetails) {
       self.edHomeBtnLbl(theDetails.homeLabel);
       self.edHomeURL(theDetails.homeURL);
       self.edMTitle(theDetails.mTitle);
+      self.edMKey(theDetails.mKey);
     };
 
 //-------------------------------------- Motes --------------------------------------

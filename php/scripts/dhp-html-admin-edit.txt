@@ -15,6 +15,7 @@
     	    <li>Label for Home Button: <input data-bind="value: edHomeBtnLbl" type="text" size="12" placeholder="Home"/></li>
     	    <li>Home URL: <input data-bind="value: edHomeURL" type="text" size="30" placeholder="http://"/></li>
           <li>Marker Labels: <select data-bind="options: mTitleMoteNames, value: edMTitle" ></select>
+          <li>Primary Key (unique identifier used only for Pointers): <select data-bind="options: keyNames, value: edMKey" ></select>
     	  </ul></div>
 
 
