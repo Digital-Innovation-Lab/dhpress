@@ -489,7 +489,7 @@ var dhpWidget = {
 
             // Loop thru HTML for left-side transcript and add right-side text
          _.each(textArray, function(val, index) {
-            jQuery('.transcript-list div[data-tcindex="'+index+'"]').after('<div class="type-text">'+val+'</div>');
+            jQuery('.transcript-list div[data-tcindex="'+index+'"]').next().after('<div class="type-text">'+val+'</div>');
          });
     }, // attachSecondTranscript()
 
