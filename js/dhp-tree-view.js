@@ -345,6 +345,7 @@ var dhpTreeView = {
                 // Enable up to three word segments in label
             aLabel.append("tspan")
                 .attr("x", 0)
+                .attr("dy", "-0.5em")
                 .text(function(d) { return d.title.split(" ")[0]; });
             aLabel.append("tspan")
                 .attr("x", 0)
