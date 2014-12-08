@@ -282,6 +282,7 @@ jQuery(document).ready(function($) {
 
             // Create drop-down menu for visualizations
             // Place at start (left end) of right side (??)
+        var vizTitle = '';
         if (dhpData.vizParams.menu.length > 1) {
                 // Insert slot into nav-bar
             $('.top-bar-section .right').prepend(Handlebars.compile($('#dhp-script-epviz-menu').html()));
@@ -309,9 +310,11 @@ jQuery(document).ready(function($) {
             var menuHTML, active, linkStr;
             _.each(dhpData.vizParams.menu, function(mItem, index) {
                     // Don't need to create menu for this current visualization, and select shouldn't do anything
+                    // But save it for later addition to project name
                 if (vizIndex == index) {
                     active = ' class="active"';
                     linkStr = '<a href="#">'+mItem+'</a>';
+                    vizTitle = mItem;
                 } else {
                     active = '';
                     linkStr = '<a href="'+baseURL.replace(vizPattern, 'viz='+index)+'">'+mItem+'</a>';
@@ -319,12 +322,14 @@ jQuery(document).ready(function($) {
                 menuHTML = '<li'+active+'>'+linkStr+'</li>';
                 $('.dropdown.epviz-dropdown').append(menuHTML);
             });
+        } else {
+            vizTitle = $('.entry-title').text();
         }
 
-            // Get name of Project and put on Nav Bar
-        var projName = $('.entry-title').text();
-        if (projName && projName.length) {
-            $('.dhp-nav .title-area .name h1 a').text(projName);
+            // vizTitle will either be title of Entry Point (if multiple) or Project
+        if (vizTitle && vizTitle.length) {
+            if (vizTitle.length > 20) { vizTitle = vizTitle.substring(0,20) + '...'; }
+            $('.dhp-nav .title-area .name h1 a').text(vizTitle);
         }
 
             // handle toggling fullscreen mode
