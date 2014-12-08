@@ -79,7 +79,7 @@ var dhpTreeView = {
                 .attr("transform", "translate("+treeEP.padding+",0)");
 
             dhpTreeView.genWidth = 10;  // fake default amount
-            dhpTreeView.tree = d3.layout.cluster().size([dhpTreeView.iHeight, dhpTreeView.iWidth - (treeEP.padding*2)]);
+            dhpTreeView.tree = d3.layout.tree().size([dhpTreeView.iHeight, dhpTreeView.iWidth - (treeEP.padding*2)]);
             dhpTreeView.diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
             break;
 
@@ -222,40 +222,8 @@ var dhpTreeView = {
 
         switch (dhpTreeView.treeEP.form) {
         case 'flat':
-            var maxDepth = 0;
-            function getMaxDepth(node, curDepth)
-            {
-                if (node == null || node == undefined) {
-                    return;
-                }
-                if (curDepth > maxDepth) {
-                    maxDepth = curDepth;
-                }
-                if (!node.children) {
-                    return;
-                }
-                node.children.forEach(function(child) { getMaxDepth(child, curDepth+1); });
-            } // getMaxDepth()
-            getMaxDepth(nodeData, 1);
-
-            dhpTreeView.genWidth = (dhpTreeView.iWidth - dhpTreeView.padding)/maxDepth;
-
                 // The cluster algorithms will create placement in x and y fields
             nodes = dhpTreeView.tree.nodes(nodeData);
-
-                // Change the Y coordinate according to depth
-            function setYDepth(node)
-            {
-                if (node == null || node == undefined) {
-                    return;
-                }
-                node.y = node.depth * dhpTreeView.genWidth;
-                if (!node.children) {
-                    return;
-                }
-                node.children.forEach(function(child) { setYDepth(child); });
-            } // setYDepth()
-            setYDepth(nodes);
             links = dhpTreeView.tree.links(nodes);
 
                 // Create branches ("links") between markers ("nodes")
@@ -268,7 +236,6 @@ var dhpTreeView = {
             node = dhpTreeView.vis.selectAll(".node").data(nodes)
                         .enter().append("g")
                         .attr("class", "node")
-                        // .attr("transform", function(d) { return "translate(" + d.depth*dhpTreeView.genWidth + "," + d.x + ")"; })
                         .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
                         .on("click", function(d) {
                             dhpServices.showMarkerModal(d);
@@ -283,7 +250,6 @@ var dhpTreeView = {
             node.append("text")
                   .attr("dx", function(d) { return d.children ? -8 : 8; })
                   .attr("dy", 3)
-                  // .style("font-size", dhpTreeView.fSize+'px')
                   .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
                   .text(function(d) { return d.title; });
             break;
