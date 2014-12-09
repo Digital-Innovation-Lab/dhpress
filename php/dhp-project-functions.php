@@ -101,11 +101,11 @@ function dhp_project_init()
 
 
 // add support for theme-specific feature
-if ( function_exists( 'add_theme_support' ) ) {
+if (function_exists('add_theme_support')) {
 		// enable use of thumbnails
-	add_theme_support( 'post-thumbnails' );
+	add_theme_support('post-thumbnails');
 		// default Post Thumbnail dimensions
-	set_post_thumbnail_size( 32, 37 ); 
+	set_post_thumbnail_size(32, 37);
 }
 
 
@@ -117,17 +117,17 @@ function dhp_project_activate()
 {
 	dhp_register_project_cpt();
 	flush_rewrite_rules();
-}
+} // dhp_project_activate()
+
 
 // ================== Produce Admin Panel Header ==================
 
 // admin_head action called to create header for admin panel
-add_action('admin_head', 'plugin_header');
+add_action('admin_head', 'dhp_plugin_header');
 
-// plugin_header()
 // PURPOSE: Insert DH Press icon into top of administration panel
 
-function plugin_header()
+function dhp_plugin_header()
 { ?>
 		<style>
 		    #icon-dhp-top-level-handle { background:transparent url('<?php echo DHP_PLUGIN_URL .'/images/dhpress-plugin-icon.png';?>') no-repeat; }     
@@ -135,6 +135,16 @@ function plugin_header()
 <?php
 } // plugin_header()
 
+
+// PURPOSE: Increase maximum number of custom fields that can show up in the Dashboard dropdown menus
+
+function dhp_cf_limit_increase($limit)
+{
+	$limit = 100;
+	return $limit;
+} // dhp_cf_limit_increase()
+
+add_filter('postmeta_form_limit', 'dhp_cf_limit_increase');
 
 // ================== DHP Maps =====================
 
@@ -2736,17 +2746,17 @@ function dhp_page_template( $page_template )
 		wp_enqueue_script('dhp-public-project-script', plugins_url('/js/dhp-project-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );
 
 			// Set up the marker query and get first post just to get the base URL for markers
-		$loop = $projObj->setAllMarkerLoop();
-		$loop->the_post();
-		$marker_url = get_post_permalink(0, true);
-			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
-		$marker_url = substr($marker_url, 0, strlen($marker_url)-14);
+		// $loop = $projObj->setAllMarkerLoop();
+		// $loop->the_post();
+		// $marker_url = get_post_permalink(0, true);
+		// 	// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
+		// $marker_url = substr($marker_url, 0, strlen($marker_url)-14);
 
 		wp_localize_script('dhp-public-project-script', 'dhpData', array(
 			'ajax_url'   => $ajax_url,
 			'vizParams'  => $vizParams,
-			'settings'   => $allSettings,
-			'marker_url' => $marker_url
+			// 'marker_url' => $marker_url,
+			'settings'   => $allSettings
 		) );
 
 		// Looking at a Marker/Data entry?
@@ -2766,15 +2776,15 @@ function dhp_page_template( $page_template )
 		wp_enqueue_script('dhp-marker-script', plugins_url('/js/dhp-marker-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION);
 
 			// System already geared to marker posts
-		$marker_url = get_post_permalink(0, true);
+		// $marker_url = get_post_permalink(0, true);
 			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
-		$marker_url = substr($marker_url, 0, strlen($marker_url)-14);
+		// $marker_url = substr($marker_url, 0, strlen($marker_url)-14);
 
 		wp_localize_script('dhp-marker-script', 'dhpData', array(
 			'ajax_url' => $ajax_url,
 			'settings' => $projObj->getAllSettings(),
-			'proj_id' => $project_id,
-			'marker_url' => $marker_url
+			// 'marker_url' => $marker_url,
+			'proj_id' => $project_id
 		) );
     } // else if ($post_type == 'dhp-markers')
 

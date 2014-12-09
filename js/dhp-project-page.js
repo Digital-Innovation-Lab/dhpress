@@ -40,7 +40,8 @@ jQuery(document).ready(function($) {
 
     vizIndex       = dhpData.vizParams.current;
 
-    dhpServices.initialize(ajaxURL, projectID, dhpSettings, dhpData.marker_url);
+    dhpServices.initialize(ajaxURL, projectID, dhpSettings);
+    // dhpServices.initialize(ajaxURL, projectID, dhpSettings, dhpData.marker_url);
 
         // Inform dhpServices of any PNG images
     if (typeof(dhpData.vizParams.pngs) !== 'undefined') {

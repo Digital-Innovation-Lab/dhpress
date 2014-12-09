@@ -17,7 +17,8 @@ jQuery(document).ready(function($) {
         // Insert name of taxonomy on top of page, where A/V widget will go
 	$('#content').prepend('<h1>'+taxTerm.name+'</h1><div class="dhp-transcript-content"></div>');
 
-    dhpServices.initialize(ajax_url, project_id, dhpSettings, dhpData.marker_url);
+    dhpServices.initialize(ajax_url, project_id, dhpSettings);
+    // dhpServices.initialize(ajax_url, project_id, dhpSettings, dhpData.marker_url);
 
         // Check to see if this is a transcript taxonomy
 	if (isTranscript) {
