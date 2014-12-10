@@ -464,7 +464,6 @@ var dhpCardsView = {
             }
           }
         });
-
     }, // doDateFilter()
 
 
@@ -473,15 +472,17 @@ var dhpCardsView = {
     doFilter: function(moteDef)
     {
             // RETURNS: Regular expression for searching for theVal in multiple value string
-            // NOTE:    If multi-value mote, must allow for variations: (^string$)|(, ?string$)|(^string,)|(, ?string,)
+            // NOTE:    Must prefix any special reg-exp characters
+            //          If multi-value mote, must allow for variations: (^string$)|(, ?string$)|(^string,)|(, ?string,)
         function regExpSearchString(theVal, delim)
         {
-            if (delim != '') {
-                return '(^'+theVal+'$)|('+delim+' ?'+theVal+'$)|(^'+theVal+delim+')|('+delim+' ?'+theVal+delim+')';
+            var cleanedStr = theVal.replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1");
+            if (delim !== '') {
+                return '(^'+cleanedStr+'$)|('+delim+' ?'+cleanedStr+'$)|(^'+cleanedStr+delim+')|('+delim+' ?'+cleanedStr+delim+')';
             } else {
-                return '(^'+theVal+'$)';
+                return '(^'+cleanedStr+'$)';
             }
-        }
+        } // regExpSearchString(()
 
         jQuery('body').addClass('waiting');
 
@@ -525,6 +526,8 @@ var dhpCardsView = {
                             filterText += '|';
                         }
                         filterText += regExpSearchString(theValue, delim);
+                            // If a 1st-level parent selected, any of its 2ndary-level children
+                            //  should also cause match
                         var childVals = dhpCardsView.getSTParentsChildVals(moteDef.name, theValue);
                         _.each(childVals, function(childVal) {
                             filterText += '|'+regExpSearchString(childVal, delim);
