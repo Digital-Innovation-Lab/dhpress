@@ -350,7 +350,7 @@ jQuery(document).ready(function($) {
 
       // PURPOSE: Handle user selection to save Project Settings to WP
     self.saveSettings = function() {
-      $('#btnSaveSettings').button({ disabled: true });
+      $('#btnSaveSettings').button('disable');
       var currentSettings = self.bundleSettings();
       var settingsData = JSON.stringify(currentSettings);
 
@@ -1438,13 +1438,13 @@ jQuery(document).ready(function($) {
         buttons: {
           'Rebuild': function() {
               // Disable button until AJAX call returns
-            $(event.target).button("disable");
-            rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim, event.target);
+            $('#btnRebuildMote').button('disable');
+            rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
 
-            $( this ).dialog('close');
+            $(this).dialog('close');
           },
           Cancel: function() {
-            $( this ).dialog('close');
+            $(this).dialog('close');
           }
         }
       });
@@ -1993,7 +1993,7 @@ jQuery(document).ready(function($) {
       var cfDefValue = $('#newCFDefault').val();
       if (cfName && cfName !== '' && cfDefValue && cfDefValue != '') {
           // Disable button until code returns
-        $('#btnNewCF').button({ disabled: true });
+        $('#btnNewCF').button('disable');
         createCustomField(cfName, cfDefValue);
       }
     }; // createNewCF()
@@ -2014,7 +2014,7 @@ jQuery(document).ready(function($) {
           theOption = '<option value="'+theCF+'">'+theCF+'</option>';
           $('#selDelCFList').append(theOption);
         });
-        $("#btnDelOldCF").button({ disabled: false });
+        $("#btnDelOldCF").button('enable');
       }
       dhpGetCustomFields(loadCurrentCFs);
     }; // getDelCurrentCFs()
@@ -2032,7 +2032,7 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: {
             'Delete': function() {
-              $('#btnDelOldCF').button({ disabled: true });
+              $('#btnDelOldCF').button('disable');
               deleteCustomField(this, cfToDelete);
             },
             Cancel: function() {
@@ -2047,7 +2047,7 @@ jQuery(document).ready(function($) {
     self.frFilterValuesLoading = false;           // prevent race conditions
 
       // Execute Find/Replace button is disabled by default (enabled by getFRCurrentCFs)
-    $( "#btnDoFR" ).button({ disabled: true });
+    $("#btnDoFR").button({ disabled: true });
 
       // PURPOSE: Handle user button to retrieve list of custom fields for find/replace
       // NOTES:   Must populate frCustomFields
@@ -2104,7 +2104,7 @@ jQuery(document).ready(function($) {
         $('#getFRFilterCF').change(setMatchBox);
 
           // Enable button now that selections are meaningfully populated
-        $('#btnDoFR').button({ disabled: false });
+        $('#btnDoFR').button('enable');
       } // loadCurrentCFs()
 
       dhpGetCustomFields(loadCurrentCFs);
@@ -2126,7 +2126,7 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: {
             'Execute': function() {
-              $('#btnDoFR').button({ disabled: true });
+              $('#btnDoFR').button('disable');
               $(this).dialog('close');
                 // Which ajax function to call depends on checkboxes checked
               var filterCF = $('#selFRFilterCF').val();
@@ -2157,7 +2157,7 @@ jQuery(document).ready(function($) {
       // PURPOSE: Handle user selection of test button
       // NOTES:   Append all results to testResults DIV
     self.runTests = function() {
-      $('#runTests').button({ disabled: true });
+      $('#runTests').button('disable');
       $('#testResults').empty();
 
         // Check global-level settings --------------
@@ -2469,12 +2469,12 @@ jQuery(document).ready(function($) {
               settings: settingsData
           },
           success: function(data, textStatus, XMLHttpRequest) {
-            $('#btnSaveSettings').button({ disabled: false });
+            $('#btnSaveSettings').button('enable');
             projObj.cleanSettings();
           },
           error: function(XMLHttpRequest, textStatus, errorThrown){
             alert(errorThrown);
-            $('#btnSaveSettings').button({ disabled: false });
+            $('#btnSaveSettings').button('enable');
           }
       });
   } // saveSettingsInWP()
@@ -2537,7 +2537,7 @@ jQuery(document).ready(function($) {
   } // saveLegendValuesInWP()
 
     // PURPOSE: Handle calling WP to rebuild legend, re-enable button when done
-  function rebuildLegendValuesInWP(legendName, moteCF, theDelim, theButton) {
+  function rebuildLegendValuesInWP(legendName, moteCF, theDelim) {
     jQuery.ajax({
           type: 'POST',
           url: ajax_url,
@@ -2549,12 +2549,12 @@ jQuery(document).ready(function($) {
               project: projectID
           },
           success: function(data, textStatus, XMLHttpRequest){
-             console.log("Rebuild Legend results: "+data);
-             $(theButton).button("enable");
+            console.log("Rebuild Legend results: "+data);
+            $('#btnRebuildMote').button('enable');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown){
-             alert(errorThrown);
-             $(theButton).button("enable");
+            alert(errorThrown);
+            $('#btnRebuildMote').button('enable');
           }
       });
   } // rebuildLegendValuesInWP()
@@ -2617,11 +2617,11 @@ jQuery(document).ready(function($) {
           },
           success: function(data, textStatus, XMLHttpRequest) {
               // Re-enable Create button
-              $('#btnNewCF').button({ disabled: false });
+              $('#btnNewCF').button('enable');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
              alert(errorThrown);
-              $('#btnNewCF').button({ disabled: false });
+              $('#btnNewCF').button('enable');
           }
       });
   } // createCustomField()
@@ -2640,11 +2640,12 @@ jQuery(document).ready(function($) {
             $(dialog).dialog('close');
               // Force refresh of custom fields (and keep Delete button disabled)
             $('#selDelCFList').empty();
+            $('#btnDelOldCF').button('enable');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
             $(dialog).dialog('close');
-            $('#btnDelOldCF').button({ disabled: false });
+            $('#btnDelOldCF').button('enable');
           }
       });
   } // deleteCustomField()
@@ -2671,11 +2672,11 @@ jQuery(document).ready(function($) {
       },
       success: function(data, textStatus, XMLHttpRequest) {
           // Re-enable Execute Find/Replace button
-        $('#btnDoFR').button({ disabled: false });
+        $('#btnDoFR').button('enable');
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         alert(errorThrown);
-        $('#btnDoFR').button({ disabled: false });
+        $('#btnDoFR').button('enable');
       }
     });
   } // updateCustomFieldFilter()
@@ -2700,11 +2701,11 @@ jQuery(document).ready(function($) {
       },
       success: function(data, textStatus, XMLHttpRequest) {
         //console.log(textStatus); 
-        $('#btnDoFR').button({ disabled: false });
+        $('#btnDoFR').button('enable');
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         alert(errorThrown);
-        $('#btnDoFR').button({ disabled: false });
+        $('#btnDoFR').button('enable');
       }
     });
   } // replaceCustomFieldFilter()
@@ -2726,11 +2727,11 @@ jQuery(document).ready(function($) {
               replace_value: replaceCFvalue
           },
           success: function(data, textStatus, XMLHttpRequest) {
-              $('#btnDoFR').button({ disabled: false });
+              $('#btnDoFR').button('enable');
               //console.log(textStatus); 
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
-              $('#btnDoFR').button({ disabled: false });
+              $('#btnDoFR').button('enable');
              alert(errorThrown);
           }
       });
@@ -2788,11 +2789,11 @@ jQuery(document).ready(function($) {
           },
           success: function(data, textStatus, XMLHttpRequest) {
             $('#testResults').append(data);
-            $('#runTests').button({ disabled: false });
+            $('#runTests').button('enable');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
-            $('#runTests').button({ disabled: false });
+            $('#runTests').button('enable');
           }
       });
   } // dhpGetFieldValues()

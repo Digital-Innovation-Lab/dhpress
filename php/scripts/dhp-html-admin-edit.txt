@@ -179,7 +179,7 @@
         <button data-bind="jqButton, click: $parent.delMote">Delete</button>
         <span data-bind="if: type == 'Short Text'">
             <button data-bind="jqButton, click: $parent.configCat" class="configCat">Configure</button>
-            <button data-bind="jqButton, click: $parent.rebuildCat" class="rebuildCat">Rebuild</button>
+            <button id="btnRebuildMote" data-bind="jqButton, click: $parent.rebuildCat" class="rebuildCat">Rebuild</button>
         </span>
     </li>
 </script>
@@ -595,7 +595,7 @@
             <button id="viz-type-reset" data-bind="jqButton">Reset All</button>
             <input type="hidden" id="color-picker"></input>
         </div><br/>
-        <button id="add-new-term" data-bind="jqButton">Add Term</button> <input id="ed-new-term" type="text" size="16"/>
+        <button id="add-new-term">Add Term</button> <input id="ed-new-term" type="text" size="16"/>
         <p class="wait-message">Please wait while the category/legend data is loaded.</p>
         <div class="dd" id="category-tree">
             <ol class="dd-list">
