@@ -17,9 +17,9 @@ var dhpBrowser = {
     initialize: function(ajaxURL, projectID, vizIndex, browserEP)
     {
 		var 	// Constants
-	    facetColWidth = 228,
+	    facetColWidth = 260,
 	    facetColHot = facetColWidth/3,		// dragged column scoots other column in first 1/3 of width
-	    facetLabelWidth = 220,
+	    facetLabelWidth = 252,
 	    facetLabel0Height = 26,
 	    facetLabelHeight = 22,
 	    resizeW = 20,			// extra space for resize drag corner / scrollbars
@@ -451,7 +451,10 @@ var dhpBrowser = {
 			        .attr("class", "facet-val-text")
 			        .attr("x", 3)
 			        .attr("y", facetLabelHeight-6)
-			        .text(function(d) { return d.key; });
+			        	// Constrain to 32 chars max
+			        .text(function(d) {
+			        	return d.key.length < 32 ? d.key : d.key.substring(0,31) + '...';;
+			        });
 
 			        // Create percentage text
 			    facetSel

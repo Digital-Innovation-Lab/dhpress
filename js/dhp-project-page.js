@@ -329,7 +329,7 @@ jQuery(document).ready(function($) {
 
             // vizTitle will either be title of Entry Point (if multiple) or Project
         if (vizTitle && vizTitle.length) {
-            if (vizTitle.length > 20) { vizTitle = vizTitle.substring(0,20) + '...'; }
+            if (vizTitle.length > 20) { vizTitle = vizTitle.substring(0,19) + '...'; }
             $('.dhp-nav .title-area .name h1 a').text(vizTitle);
         }
 
