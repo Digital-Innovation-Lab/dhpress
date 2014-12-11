@@ -205,7 +205,7 @@ function dhp_array_sort($array, $on, $order=SORT_ASC)
 function dhp_get_projects()
 {
 
-	// I'm assuming that project titles will have already been trimmed, so I haven't included code to deal with that.  I can if you want.
+	   // Assumes that project titles will have already been trimmed
 	global $wpdb;
 
 	$args = array( 
@@ -256,9 +256,9 @@ function show_dhp_marker_settings_box()
 	// Field Array
 	$prefix = 'marker_';
 
-	//display selected project settings
+	// Display selected project settings
 	$selected_project = get_post_meta($post->ID, 'project_id', true);
-	if($selected_project) {
+	if ($selected_project) {
 		$project_settings = get_post_meta($selected_project, 'project_settings', true);
 		//echo $project_settings;
 	}
@@ -480,14 +480,16 @@ add_action('manage_dhp-markers_posts_custom_column', 'dhp_markers_custom_column'
 function dhp_markers_custom_column($column, $post_id)
 {
     $post_type = get_query_var('post_type');
-    if ( $post_type == 'dhp-markers' )
-    {
-        $meta_project = get_post_meta( $post_id, 'project_id', true );
-        $project_name = get_the_title($meta_project);
-        
+    if ($post_type == 'dhp-markers')
+    {        
         switch ($column)
         {
             case 'project':
+                $meta_project = get_post_meta($post_id, 'project_id', true);
+                $project_name = get_the_title($meta_project);
+                if (strlen($project_name) == 0) {
+                    $project_name = '(orphan)';
+                }
                 echo $project_name;
             	break;
             case 'category':
