@@ -3,6 +3,10 @@
 
 @charset "UTF-8";
 
+body {
+	cursor: auto;
+}
+
 	/* For busy cursor */
 body.waiting * {
     cursor: wait !important;

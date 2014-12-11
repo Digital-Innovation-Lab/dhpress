@@ -372,18 +372,21 @@ var dhpBrowser = {
 			        .on("click", function(d) {
 			            if (theFacet.selected != -1) {
 			            	jQuery('body').addClass('waiting');
-			                theFacet.selected = -1;
-			                computeRestrainedSet();
-			                updateAllValButtons();
-			                    // Make all buttons in this column active
-			                var btnSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
-			                    .data(theFacet.vals)
-			                    .classed('inactive', false);
-			                    // Make RESET button inactive
-			                var resetSel = fbSVG.select("#reset-"+theFacet.index);
-			                    resetSel.classed('inactive', true);
-			                populateList();
-                    		jQuery('body').removeClass('waiting');
+			            		// Return control to browser briefly to ensure cursor updated
+							window.setTimeout(function() {
+								theFacet.selected = -1;
+								computeRestrainedSet();
+								updateAllValButtons();
+									// Make all buttons in this column active
+								var btnSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
+									.data(theFacet.vals)
+									.classed('inactive', false);
+									// Make RESET button inactive
+								var resetSel = fbSVG.select("#reset-"+theFacet.index);
+								resetSel.classed('inactive', true);
+								populateList();
+								jQuery('body').removeClass('waiting');
+							}, 10);
 			            }
 			        });
 
@@ -404,26 +407,28 @@ var dhpBrowser = {
 			        .data(theFacet.vals)
 			        .enter()
 			        .append("g")
-
 			        	// Must move down one for RESET button
 			        .attr("transform", function(d, i) { return "translate(0," + (facetLabel0Height+1+((i+1)*facetLabelHeight)) +  ")"; } )
 			        .attr("class", "facet-val" )
 			        .attr("id", function(d, i) { return "facet-"+theFacet.index+"-"+i; } )
 			        .on("click", function(d) {
 			            jQuery('body').addClass('waiting');
-			            theFacet.selected = d.index;
-			            computeRestrainedSet();
-			            updateAllValButtons();
-			                // Make all buttons in this column inactive, but this one
-			            var btnSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
-			                .data(theFacet.vals)
-			                .classed('inactive', function(thisBtn) { return d.index != thisBtn.index } );
+			            	// Return control briefly to browser to ensure cursor changed
+			            window.setTimeout(function() {
+							theFacet.selected = d.index;
+							computeRestrainedSet();
+							updateAllValButtons();
+							    // Make all buttons in this column inactive, but this one
+							var btnSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
+							    .data(theFacet.vals)
+							    .classed('inactive', function(thisBtn) { return d.index != thisBtn.index } );
 
-			                // Make this row's RESET button active
-			            var resetSel = fbSVG.select("#reset-"+theFacet.index);
-			            resetSel.classed('inactive', false);
-			            populateList();
-			            jQuery('body').removeClass('waiting');
+							    // Make this row's RESET button active
+							var resetSel = fbSVG.select("#reset-"+theFacet.index);
+							resetSel.classed('inactive', false);
+							populateList();
+							jQuery('body').removeClass('waiting');
+						}, 10);
 			        });
 
 			    facetSel

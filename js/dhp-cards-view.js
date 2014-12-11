@@ -77,8 +77,11 @@ var dhpCardsView = {
                         // Make cursor busy while sort done
                     dhpCardsView.currentSort = newSortMote;
                     jQuery('body').addClass('waiting');
-                    jQuery('#card-container').isotope( { sortBy: newSortMote } );
-                    jQuery('body').removeClass('waiting');
+                        // Have to return control back to browser momentarily to get cursor to change
+                    window.setTimeout(function() {
+                        jQuery('#card-container').isotope( { sortBy: newSortMote } );
+                        jQuery('body').removeClass('waiting');
+                    }, 10);
                 }
             });
         } // if sortMotes
@@ -128,7 +131,12 @@ var dhpCardsView = {
             jQuery('#filterModal a.close-select-modal').click(function() {
               jQuery('#filterModal').foundation('reveal', 'close');
               if (jQuery(this).text() === 'Apply') {
-                dhpCardsView.doFilter(dhpServices.findMoteByName(dhpCardsView.currentFilter));
+                jQuery('body').addClass('waiting');
+                    // Return control to browser briefly to ensure cursor is changed
+                window.setTimeout(function() {
+                    dhpCardsView.doFilter(dhpServices.findMoteByName(dhpCardsView.currentFilter));
+                    jQuery('body').removeClass('waiting');
+                }, 10);
               }
             });
 
@@ -205,11 +213,14 @@ var dhpCardsView = {
     resetFilter: function()
     {
         dhpCardsView.curFilterVal = null;
-        jQuery('#card-container').isotope({
-          filter: function() {
-            return true;
-          }
-        });
+        jQuery('body').addClass('waiting');
+            // Return control briefly to browser to guarantee cursor will be updated
+        window.setTimeout(function() {
+            jQuery('#card-container').isotope({
+              filter: function() { return true; }
+            });
+            jQuery('body').removeClass('waiting');
+        }, 10);
     }, // resetFilter()
 
 
@@ -484,8 +495,6 @@ var dhpCardsView = {
             }
         } // regExpSearchString(()
 
-        jQuery('body').addClass('waiting');
-
         switch(moteDef.type) {
         case 'Short Text':
             dhpCardsView.curFilterVal = { };
@@ -566,7 +575,6 @@ var dhpCardsView = {
             dhpCardsView.doDateFilter();
             break;
         }
-        jQuery('body').removeClass('waiting');
     }, // doFilter()
 
 

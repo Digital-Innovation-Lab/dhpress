@@ -2581,7 +2581,7 @@ function dhp_page_template( $page_template )
         wp_enqueue_style('dhp-foundation-style', plugins_url('/lib/foundation-5.1.1/css/foundation.min.css',  dirname(__FILE__)));
         wp_enqueue_style('dhp-foundation-icons', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
 
-		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
+		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), 'dhp-foundation-style', DHP_PLUGIN_VERSION );
 
 		wp_enqueue_script('underscore');
 		wp_enqueue_script('jquery');
