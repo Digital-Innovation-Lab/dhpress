@@ -458,7 +458,7 @@ var dhpBrowser = {
 			        .attr("y", facetLabelHeight-6)
 			        	// Constrain to 32 chars max
 			        .text(function(d) {
-			        	return d.key.length < 32 ? d.key : d.key.substring(0,31) + '...';;
+			        	return d.key.length < 36 ? d.key : d.key.substring(0,35) + '...';
 			        });
 
 			        // Create percentage text

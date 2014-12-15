@@ -24,6 +24,8 @@ Building DH Press on WordPress offers the following important benefits:
 	
 Thus, building DH Press on top of the WordPress CMS results in a truly sustainable, open-source, and extensible toolkit that can be used and re-used across the globe.
 
+For DH Press version 2.0 and earlier, see https://github.com/jehope/dhpress
+
 == Installation ==
 
 1. Rename folder to 'dhpress'
