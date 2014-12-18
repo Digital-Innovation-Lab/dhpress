@@ -307,8 +307,8 @@ function show_tax_on_project_markers()
 {
 	global $post;
 
-	$projectID = get_post_meta($post->ID,'project_id');
-	$project = get_post($projectID[0]);
+	$projectID = get_post_meta($post->ID, 'project_id', true);
+	$project = get_post($projectID);
 	$projectRootTaxName = DHPressProject::ProjectIDToRootTaxName($project->ID);
 	$dhpTaxs = get_taxonomies();
 
@@ -1969,7 +1969,7 @@ function dhp_get_attached_PNGs($pID)
 {
 	$pngs = array();
 
-	$images = get_attached_media('image/png', $post->ID);
+	$images = get_attached_media('image/png', $pID);
 	foreach($images as $image) {
 	    $onePNG = array();
 	    $onePNG['id'] = $image->ID;
