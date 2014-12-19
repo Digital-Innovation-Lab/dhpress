@@ -153,11 +153,13 @@ function show_dhp_map_settings_box()
     global $post, $dhp_map_custom_fields;
 
         // Setup nonce
-    echo '<input type="hidden" name="dhp_map_settings_box_nonce" value="'.wp_create_nonce(basename(__FILE__)).'" />';
+    echo '<input type="hidden" name="dhp_nonce" id="dhp_nonce" value="'.wp_create_nonce('dhp_nonce'.$post->ID).'" />';
 
         // Fetch all custom fields for this Map
     $mapAttributes = dhp_get_map_custom_fields($post->ID, $dhp_map_custom_fields);
 
+        // define select types but leave empty by default
+    $selectWMS = $selectBlank = $selectKML = $selectDHP = $selectOSM = $selectTMS = $selectType = '';
     switch($mapAttributes['dhp_map_type']) {
     case 'WMS':
         $selectWMS = 'selected';
@@ -185,6 +187,7 @@ function show_dhp_map_settings_box()
         break;
     }
 
+    $selectBaseLayer = $selectOverlay = $selectCategory = '';
     switch ($mapAttributes['dhp_map_category']) {
     case 'base layer':
         $selectBaseLayer = 'selected';
@@ -237,18 +240,22 @@ function save_dhp_map_settings($post_id)
 {
     global $dhp_map_custom_fields;
 
-    // verify nonce
-    if (!wp_verify_nonce($_POST['dhp_map_settings_box_nonce'], basename(__FILE__)))
+    if (!isset($_POST['dhp_nonce']))
         return $post_id;
+
+    // verify nonce
+    if (!wp_verify_nonce($_POST['dhp_nonce'], 'dhp_nonce'.$post_id))
+        return $post_id;
+
     // check autosave
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
         return $post_id;
+
     // check permissions
-    if ('page' == $_POST['post_type']) {
-        if (!current_user_can('edit_page', $post_id))
+    if ($_POST['post_type'] == 'page') {
+        if (!current_user_can('edit_page', $post_id)) {
             return $post_id;
-        } elseif (!current_user_can('edit_post', $post_id)) {
-            return $post_id;
+        }
     }
 
     dhp_update_map_from_post($post_id, $dhp_map_custom_fields);

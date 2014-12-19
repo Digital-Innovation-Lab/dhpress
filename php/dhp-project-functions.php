@@ -299,7 +299,7 @@ function dhp_create_tax($taxID,$taxName,$taxSlug)
 // admin_head called when compiling header of admin panel
 add_action( 'admin_head' , 'show_tax_on_project_markers' );
 
-// PURPOSE: Called when compiling project admin panel to remove the editing boxes for
+// PURPOSE: Called when creating admin panel for Markers to remove the editing boxes for
 //			all taxonomies other than those connected to this project
 // ASSUMES:	$post is set to a project (i.e., that we are editing or viewing project)
 
@@ -307,14 +307,16 @@ function show_tax_on_project_markers()
 {
 	global $post;
 
-	$projectID = get_post_meta($post->ID, 'project_id', true);
-	$project = get_post($projectID);
-	$projectRootTaxName = DHPressProject::ProjectIDToRootTaxName($project->ID);
-	$dhpTaxs = get_taxonomies();
+	if ($post && $post->post_type == 'dhp-markers') {
+		$projectID = get_post_meta($post->ID, 'project_id', true);
+		$project = get_post($projectID);
+		$projectRootTaxName = DHPressProject::ProjectIDToRootTaxName($project->ID);
+		$dhpTaxs = get_taxonomies();
 
-	foreach ($dhpTaxs as $key => $value) {
-		if($value!=$projectRootTaxName) {
-			remove_meta_box( $value.'div', 'dhp-markers', 'side' );
+		foreach ($dhpTaxs as $key => $value) {
+			if ($value != $projectRootTaxName) {
+				remove_meta_box($value.'div', 'dhp-markers', 'side');
+			}
 		}
 	}
 } // show_tax_on_project_markers()
@@ -367,7 +369,7 @@ function show_dhp_project_admin_edit()
 	echo $projscript;
 
 		// Use nonce for verification
-	echo '<input type="hidden" name="dhp_project_settings_box_nonce" value="'.wp_create_nonce(basename(__FILE__)).'" />';
+	echo '<input type="hidden" name="dhp_nonce" id="dhp_nonce" value="'.wp_create_nonce('dhp_nonce'.$post->ID).'" />';
 
 		// Insert HTML for special Project Settings
 	echo '<table class="project-form-table">';
@@ -399,11 +401,11 @@ add_action('save_post', 'save_dhp_project_settings');
 
 function save_dhp_project_settings($post_id)
 {
-    	// is this an update of existing Project post?
-	$parent_id = wp_is_post_revision( $post_id );
-	
+	if (!isset($_POST['dhp_nonce']))
+		return $post_id;
+
 	// verify nonce
-	if (!wp_verify_nonce($_POST['dhp_project_settings_box_nonce'], basename(__FILE__)))
+	if (!wp_verify_nonce($_POST['dhp_nonce'], 'dhp_nonce'.$post_id))
 		return $post_id;
 
 	// check autosave
@@ -412,14 +414,16 @@ function save_dhp_project_settings($post_id)
 
 	// check permissions
 	if ($_POST['post_type'] == 'page') {
-		if (!current_user_can('edit_page', $post_id))
+		if (!current_user_can('edit_page', $post_id)) {
 			return $post_id;
-		} elseif (!current_user_can('edit_post', $post_id)) {
-			return $post_id;
+		}
 	}
 
+		// is this an update of existing Project post?
+	$parent_id = wp_is_post_revision( $post_id );
+
 		// If there was a previous version (not a new Project)
-	if ( $parent_id ) {
+	if ($parent_id) {
 		// loop through fields and save the data
 		$parent  = get_post( $parent_id );
 		$srcToCheck = $parent->ID;

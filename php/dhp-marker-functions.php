@@ -263,7 +263,7 @@ function show_dhp_marker_settings_box()
 		//echo $project_settings;
 	}
 	// Use nonce for verification
-	echo '<input type="hidden" name="dhp_marker_settings_box_nonce" value="'.wp_create_nonce(basename(__FILE__)).'" />';
+	echo '<input type="hidden" name="dhp_nonce" id="dhp_nonce" value="'.wp_create_nonce('dhp_nonce'.$post->ID).'" />';
 
 	// Begin the field table and loop
 	echo '<table class="form-table dhp_marker_project" id="'.$selected_project.'">';
@@ -345,22 +345,28 @@ function dhp_slug_from_name($theName)
 
 function save_dhp_marker_settings($post_id) {
     global $dhp_marker_settings_fields;
-	$parent_id = wp_is_post_revision( $post_id );
+
+    if (!isset($_POST['dhp_nonce']))
+        return $post_id;
 
 	// verify nonce
-	if (!wp_verify_nonce($_POST['dhp_marker_settings_box_nonce'], basename(__FILE__)))
+    if (!wp_verify_nonce($_POST['dhp_nonce'], 'dhp_nonce'.$post_id))
 		return $post_id;
+
 	// check autosave
 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
 		return $post_id;
+
 	// check permissions
-	if ('page' == $_POST['post_type']) {
-		if (!current_user_can('edit_page', $post_id))
+	if ($_POST['post_type'] == 'page') {
+		if (!current_user_can('edit_page', $post_id)) {
 			return $post_id;
-		} elseif (!current_user_can('edit_post', $post_id)) {
-			return $post_id;
+		}
 	}
-	if ( $parent_id ) {
+
+    $parent_id = wp_is_post_revision($post_id);
+
+	if ($parent_id) {
 		// loop through fields and save the data
 		$parent  = get_post( $parent_id );		
 		foreach ($dhp_marker_settings_fields as $field) {
@@ -385,7 +391,7 @@ function save_dhp_marker_settings($post_id) {
 			}
 		} // end foreach
 	}
-}
+} // save_dhp_marker_settings()
 
 add_action('save_post', 'save_dhp_marker_settings');  
 
