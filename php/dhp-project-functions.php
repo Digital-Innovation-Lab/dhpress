@@ -120,6 +120,17 @@ function dhp_project_activate()
 } // dhp_project_activate()
 
 
+// PURPOSE: Ensure that txt and png files are able to be added to the Media Library
+function dhp_add_mime_types($mime_types)
+{
+    $mime_types['txt'] = 'text/plain';
+    $mime_types['png'] = 'image/png';
+    return $mime_types;
+} // dhp_add_mime_types()
+
+add_filter('upload_mimes', 'dhp_add_mime_types', 1, 1);
+
+
 // ================== Produce Admin Panel Header ==================
 
 // admin_head action called to create header for admin panel
