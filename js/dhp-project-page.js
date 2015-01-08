@@ -367,7 +367,7 @@ jQuery(document).ready(function($) {
             animation_speed: 250,
             close_on_background_click: false,
             close_on_esc: false,
-            dismiss_modal_class: 'close-reveal-modal',
+            // dismiss_modal_class: 'close-reveal-modal',
             bg_class: 'loading-reveal-modal-bg',
             bg : $('.loading-reveal-modal-bg'),
             css : {
@@ -383,10 +383,7 @@ jQuery(document).ready(function($) {
                 }
             }
         });
-        // $('#loading').modal({backdrop:false});
-        // $('#loading').modal('show');
         $('#loading').foundation('reveal', 'open');
-        // $('.loading-reveal-modal-bg').remove();
     } // createLoadingMessage()
 }); // project page bootstrap
 

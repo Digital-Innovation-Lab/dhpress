@@ -548,7 +548,8 @@ var dhpServices = {
     {
         return (_.find(projSettings.views.select.widgets,
                         function(theName) { return (theName == modalName); }) != undefined);
-    },
+    }, // modalViewHas()
+
 
         // PURPOSE: Remove the Loading pop-up modal dialog
     remLoadingModal: function()

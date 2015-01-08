@@ -35,7 +35,8 @@ var dhpBrowser = {
 		facetData,      		// All compiled Facet Data
 		fbSVG,          		// D3 object for top-level SVG
 		constrainedSet, 		// array of indices resulting from current constraints
-		rawData;
+		rawData,				// all raw data returned by AJAX
+		featureSet;
 
 
 		    // FacetData = [ 
@@ -193,7 +194,7 @@ var dhpBrowser = {
 			// PURPOSE: Reset selection to all possible markers
 		function resetSelectedSet()
 		{
-			var numMarkers = rawData[rawData.length-1]['features']['length'];
+			var numMarkers = featureSet.length;
 
 		    constrainedSet = [];
 		    for (var i=0; i<numMarkers; i++) {
@@ -277,13 +278,12 @@ var dhpBrowser = {
 		    // PURPOSE: Fill list-box with markers in current selection
 		function populateList()
 		{
-			var features = rawData[rawData.length-1]['features'];
 		      // Clear out display
 		    jQuery('#marker-list').empty();
 		      // Populate with names of items and create data index
 		    constrainedSet.forEach(function(i) {
 		        // Get each item referred to by index and create entry in data window
-		      var item = features[i];
+		      var item = featureSet[i];
 		      jQuery('#marker-list').append('<div class="marker-item" data-index="'+i+'">'+item.title+'</div>');
 		    });
 		} // populateList()
@@ -386,7 +386,7 @@ var dhpBrowser = {
 								resetSel.classed('inactive', true);
 								populateList();
 								jQuery('body').removeClass('waiting');
-							}, 10);
+							}, 100);
 			            }
 			        });
 
@@ -428,7 +428,7 @@ var dhpBrowser = {
 							resetSel.classed('inactive', false);
 							populateList();
 							jQuery('body').removeClass('waiting');
-						}, 10);
+						}, 100);
 			        });
 
 			    facetSel
@@ -492,10 +492,11 @@ var dhpBrowser = {
             success: function(data, textStatus, XMLHttpRequest)
             {
                 rawData = JSON.parse(data);
+                featureSet = rawData[rawData.length-1]['features'];
 
 				    // compute facet data
 				resetSelectedSet();
-				facetData = compileFacetData(browserEP.motes, rawData[rawData.length-1]['features']);
+				facetData = compileFacetData(browserEP.motes, featureSet);
 
 				    // Initially all objects enabled
 				populateList();
@@ -530,7 +531,7 @@ var dhpBrowser = {
 				        // Convert cardID to index of feature in marker array
 				    index = parseInt(jQuery(targetItem).data('index'));
 
-				    selectedFeature = rawData[rawData.length-1]['features'][index];
+				    selectedFeature = featureSet[index];
 				    dhpServices.showMarkerModal(selectedFeature);
 				});
 

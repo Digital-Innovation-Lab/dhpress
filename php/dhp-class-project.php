@@ -606,7 +606,7 @@ class DHPressMarkerQuery
 		if ($this->linkParent2) {
 			if ($this->linkParent2=='marker') {
 				$this->childTerms2 = 'marker';
-			} elseif ($linkParent2=='disable') {
+			} elseif ($this->linkParent2=='disable') {
 				$this->childTerms2 = 'disable';
 			}
 				// Link to mote value

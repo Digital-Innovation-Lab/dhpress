@@ -702,6 +702,9 @@ function dhp_get_markers()
 	$projObj = $mQuery->projObj;
 	$eps = $mQuery->projSettings->eps[$index];
 
+		// Create NULL values for conditions dependent on EP type
+	$mapCF = $pinCF = $dateCF = null;
+
 		// Does each Marker need a "type": "Feature" property?  Yes if GeoJSON
 	$addFeature = false;
 

@@ -81,7 +81,7 @@ var dhpCardsView = {
                     window.setTimeout(function() {
                         jQuery('#card-container').isotope( { sortBy: newSortMote } );
                         jQuery('body').removeClass('waiting');
-                    }, 10);
+                    }, 100);
                 }
             });
         } // if sortMotes
@@ -136,7 +136,7 @@ var dhpCardsView = {
                 window.setTimeout(function() {
                     dhpCardsView.doFilter(dhpServices.findMoteByName(dhpCardsView.currentFilter));
                     jQuery('body').removeClass('waiting');
-                }, 10);
+                }, 100);
               }
             });
 
@@ -220,7 +220,7 @@ var dhpCardsView = {
               filter: function() { return true; }
             });
             jQuery('body').removeClass('waiting');
-        }, 10);
+        }, 100);
     }, // resetFilter()
 
 
