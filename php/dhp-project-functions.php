@@ -125,6 +125,8 @@ function dhp_add_mime_types($mime_types)
 {
     $mime_types['txt'] = 'text/plain';
     $mime_types['png'] = 'image/png';
+    $mime_types['csv'] = 'text/csv';
+
     return $mime_types;
 } // dhp_add_mime_types()
 
