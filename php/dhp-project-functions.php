@@ -492,6 +492,8 @@ function dhp_export_as_csv()
 
     	// This opens up the output buffer as a "file"
     $fp = fopen('php://output', 'w');
+    	// Hack to write as UTF-8 format
+    fwrite($fp, pack("CCC",0xef,0xbb,0xbf));
 
     $cfs = $projObj->getAllCustomFieldNames();
     $firstLine = array_merge(array('csv_post_title', 'csv_post_type' ), $cfs);
@@ -508,11 +510,11 @@ function dhp_export_as_csv()
 		$values = array(get_the_title(), 'dhp-marker' );
 
 		foreach ($cfs as $theCF) {
-			$content_val = utf8_encode(get_post_meta($markerID, $theCF, true));
+			$content_val = get_post_meta($markerID, $theCF, true);
 			array_push($values, $content_val);
 		} // foreach
 
-		array_push($values, utf8_encode(get_the_content()));
+		array_push($values, get_the_content());
 
     	fputcsv($fp, $values);
 	endwhile;
