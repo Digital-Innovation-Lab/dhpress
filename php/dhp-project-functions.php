@@ -508,11 +508,11 @@ function dhp_export_as_csv()
 		$values = array(get_the_title(), 'dhp-marker' );
 
 		foreach ($cfs as $theCF) {
-			$content_val = get_post_meta($markerID, $theCF, true);
+			$content_val = utf8_encode(get_post_meta($markerID, $theCF, true));
 			array_push($values, $content_val);
 		} // foreach
 
-		array_push($values, get_the_content());
+		array_push($values, utf8_encode(get_the_content()));
 
     	fputcsv($fp, $values);
 	endwhile;

@@ -573,7 +573,7 @@ class DHPressMarkerQuery
 		if ($projSettings->views->transcript->transcript !== '' && $projSettings->views->transcript->transcript !== 'disable') {
 			$this->transcript = $projObj->getCustomFieldForMote($projSettings->views->transcript->transcript);
 				// Only need to check 2nd transcript and timecode if primary transcript set
-			if ($projSettings->views->transcript->transcripts2 !== '') {
+			if ($projSettings->views->transcript->transcript2 !== '') {
 				$this->transcript2= $projObj->getCustomFieldForMote($projSettings->views->transcript->transcript2);
 			}
 			if ($projSettings->views->transcript->timecode !== '' && $projSettings->views->transcript->timecode !== 'disable') {
@@ -726,7 +726,7 @@ class DHPressMarkerQuery
 		if ($this->linkParent && $this->childTerms && $this->childTerms != 'disable') {
 			if ($this->childTerms=='marker') {
 				$term_links = get_permalink();
-			} elseif (strpos($link_parent, '(Mote)') !== FALSE) {
+			} elseif (strpos($this->linkParent, '(Mote)') !== FALSE) {
 				$term_links = get_post_meta($markerID, $this->childTerms->cf, true);
 			} else {
 				$term_links = $this->getTermByParent($this->childTerms, $post_terms);

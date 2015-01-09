@@ -263,7 +263,7 @@ var dhpWidget = {
                 // Allow user to click anywhere in player area; check if timecode, go to corresponding time
             jQuery('#player-widget').click(function(evt) {
                 if (jQuery(evt.target).hasClass('type-timecode') && dhpWidget.playWidget) {
-                    var seekToTime = jQuery(evt.target).closest('.type-timecode').data('timecode');
+                    var seekToTime = jQuery(evt.target).data('timecode');
 
                         // seekTo doesn't work unless sound is already playing
                     switch(dhpWidget.wParams.playerType) {
@@ -378,15 +378,17 @@ var dhpWidget = {
             match = (tcEntry.start <= millisecond && millisecond < tcEntry.end);
             if (match) {
                 if (dhpWidget.rowIndex != index) {
-                    dhpWidget.rowIndex = index;
                         // Should we synchronize audio and text transcript?
+                    var transBox = jQuery('.transcript-list');
                     if (document.getElementById("transcSyncOn").checked) {
-                        var topDiff = jQuery('.transcript-list div[data-tcindex="'+index+'"]').offset().top - jQuery('.transcript-list').offset().top;
-                        var scrollPos = jQuery('.transcript-list').scrollTop() + topDiff;
-                        jQuery('.transcript-list').animate({ scrollTop: scrollPos }, 300);
+                        var tsEntry = transBox.find('[data-tcindex="'+index+'"]');
+                        var topDiff = tsEntry.offset().top - transBox.offset().top;
+                        var scrollPos = transBox.scrollTop() + topDiff;
+                        transBox.animate({ scrollTop: scrollPos }, 300);
                     }
-                    jQuery('.transcript-list div.type-timecode').removeClass('current-clip');
-                    jQuery('.transcript-list div[data-tcindex="'+index+'"]').addClass('current-clip');
+                    transBox.find('[data-tcindex="'+dhpWidget.rowIndex+'"]').removeClass('current-clip');
+                    transBox.find('[data-tcindex="'+index+'"]').addClass('current-clip');
+                    dhpWidget.rowIndex = index;
                 }
             }
             return match;

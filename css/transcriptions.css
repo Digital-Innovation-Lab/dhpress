@@ -2,7 +2,7 @@
  **/
 
 .transcript-list {
-    display: table;
+/*    display: table; */
 	max-height: 300px;
 	overflow-y: scroll;
 	resize: both;
