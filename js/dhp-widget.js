@@ -445,7 +445,7 @@ var dhpWidget = {
                 // Handle any dangling text
             if (textBlock.length) {
                     // Append very large number to ensure can't go past last item! 9 hours * 60 minutes * 60 seconds * 1000 milliseconds
-                dhpWidget.tcArray.push({ start: lastStamp, end: 32400000 });
+                dhpWidget.tcArray.push({ start: lastCode, end: 32400000 });
                 jQuery(transcriptHtml).append('<div class="row"><div class="type-timecode" data-timecode="'+
                                     lastCode+'" data-tcindex="'+tcIndex+'">'+lastStamp+'</div><div class="type-text">'+textBlock+'</div></div>');
             }
