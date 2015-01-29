@@ -29,7 +29,7 @@ var dhpMapsView = {
         //                  makiIcons = array of maki icons, indexed by name
         //                  pngIcons = array of PNG image icons, indexed by name
 
-        //                  mapLayers = array of map overlay data to display (compiled in this code)
+        //                  mapLayers = array of map layer data to display
         //                  mapLeaflet = Leaflet map object
         //                  control = Leaflet map layer selection controller
         //                  useParent = if true (always true!), actions on parent term affect child terms

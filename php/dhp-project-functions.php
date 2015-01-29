@@ -164,25 +164,33 @@ add_filter('postmeta_form_limit', 'dhp_cf_limit_increase');
 	// PURPOSE: Return list of map attributes, given list of items to load
 	// INPUT: 	$mapID = custom post ID of map in DH Press library
 	//			$mapMetaList = hash [key to use in resulting array : custom field name]
-function dhp_get_map_metadata($mapID, $mapMetaList)
+	//			$bounds = true if swBounds and neBounds values need to be constructed
+function dhp_get_map_metadata($mapID, $mapMetaList, $bounds)
 {
 	$thisMetaSet = array();
 
 	foreach ($mapMetaList as $arrayKey => $metaName) {
 		$thisMetaData = get_post_meta($mapID, $metaName, true);
 		$thisMetaSet[$arrayKey] = $thisMetaData;
+		if ($bounds) {
+			$south = get_post_meta($mapID, 'dhp_map_s_bounds', true);
+			$west = get_post_meta($mapID, 'dhp_map_w_bounds', true);
+			$north = get_post_meta($mapID, 'dhp_map_n_bounds', true);
+			$east = get_post_meta($mapID, 'dhp_map_e_bounds', true);
+			$thisMetaSet['swBounds'] = array(floatval($south), floatval($west));
+			$thisMetaSet['neBounds'] = array(floatval($north), floatval($east));
+		}
 	}
 	return $thisMetaSet;
 } // dhp_get_map_metadata()
 
 
-	// PURPOSE: Return list of all dhp-maps in DHP site
-	// RETURNS: array [layerID, layerName, layerCat, layerType, layerTypeId]
+	// PURPOSE: Return list of all dhp-maps in DHP site (for Project Admin)
+	// RETURNS: array [id, sname, layerCat, layerType, layerTypeId]
 function dhp_get_map_layer_list()
 {
 	$layers = array();
-	$theMetaSet = array('layerName' => 'dhp_map_shortname', 'layerCat' => 'dhp_map_category',
-						'layerType' => 'dhp_map_type', 'layerTypeId' => 'dhp_map_typeid' );
+	$theMetaSet = array('sname' => 'dhp_map_sname', 'id' => 'dhp_map_id' );
 
 	$args = array( 'post_type' => 'dhp-maps', 'posts_per_page' => -1 );
 	$loop = new WP_Query( $args );
@@ -190,13 +198,16 @@ function dhp_get_map_layer_list()
 	//var $tempLayers = array();
 		$layer_id = get_the_ID();
 
-		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet);
-		$mapMetaData['layerID']		= $layer_id;
+		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
+		// $mapMetaData['layerID']		= $layer_id;
 		// $mapMetaData['layerName']	= get_the_title();
 		array_push($layers, $mapMetaData);
 
 	endwhile;
 	wp_reset_query();
+
+		// Sort array according to map IDs
+	usort($layers, 'cmp_map_ids');
 
 	return $layers;
 } // dhp_get_map_layer_list()
@@ -2453,34 +2464,63 @@ function add_dhp_project_admin_scripts( $hook )
 } // add_dhp_project_admin_scripts()
 
 
-// PURPOSE: Extract DHP custom map data from Map Library so they can be rendered
-// INPUT:	$mapLayers = array of EP Map layers (each containing Hash ['mapType'], ['id' = WP post ID])
-// RETURNS: Array of data about map layers
-// ASSUMES:	Custom Map data has been loaded into WP DB
-// TO DO:	Further error handling if necessary map data doesn't exist?
+	// PURPOSE: Compare map IDs for sort function
+function cmp_map_ids($a, $b)
+{
+	return strcmp($a["id"], $b["id"]);
+} // cmp_map_ids()
 
+
+	// PURPOSE: Extract DHP custom map data from Map Library so they can be rendered in Map view
+	// INPUT:	$mapLayers = array of EP Map layers (each containing ['id' = unique Map ID])
+	// RETURNS: Array of data about map layers
+	// ASSUMES:	Custom Map data has been loaded into WP DB
+	// TO DO:	Further error handling if necessary map data doesn't exist?
 function dhp_get_map_layer_data($mapLayers)
 {
-	$mapMetaList = array(	"dhp_map_shortname"  => "dhp_map_shortname",
-							"dhp_map_typeid"     => "dhp_map_typeid",  "dhp_map_category"  => "dhp_map_category" ,
-							"dhp_map_type"       => "dhp_map_type",     "dhp_map_url"      => "dhp_map_url",
-							"dhp_map_subdomains" => "dhp_map_subdomains", "dhp_map_source" => "dhp_map_source",
-							"dhp_map_n_bounds"   => "dhp_map_n_bounds", "dhp_map_s_bounds" => "dhp_map_s_bounds",
-							"dhp_map_e_bounds"   => "dhp_map_e_bounds", "dhp_map_w_bounds" => "dhp_map_w_bounds",
-							"dhp_map_min_zoom"   => "dhp_map_min_zoom", "dhp_map_max_zoom" => "dhp_map_max_zoom",
-							"dhp_map_cent_lat"   => "dhp_map_cent_lat", "dhp_map_cent_lon" => "dhp_map_cent_lon"
+	$mapMetaList = array(	"sname"  	=> "dhp_map_sname",
+							"id"     	=> "dhp_map_id",
+							"url" 		=> "dhp_map_url",
+							"subd" 		=> "dhp_map_subdomains",
+							"credits"	=> "dhp_map_credits",
+							"desc"		=> "dhp_map_desc",
+							"minZoom"   => "dhp_map_min_zoom",
+							"maxZoom" 	=> "dhp_map_max_zoom"
 						);
 	$mapArray = array();
 
 		// Loop thru all map layers, collecting essential data to pass
 	foreach($mapLayers as $layer) {
-		$mapData = dhp_get_map_metadata($layer->id, $mapMetaList);
+			// Search for Map entry based on map ID
+		$args = array( 
+			'post_type' => 'dhp-maps', 
+			'posts_per_page' => 1,
+			'meta_query' => array(
+				array('key' => 'dhp_map_id', 'value' => $layer->id)
+			)
+		);
+		$loop = new WP_Query($args);
+			// We can only abort if not found
+		if (!$loop->have_posts()) {
+			trigger_error("Map ID cannot be found");
+			return null;
+		}
+
+		$loop->the_post();
+		$map_id = get_the_ID();
+
+		$mapData = dhp_get_map_metadata($map_id, $mapMetaList, true);
+		wp_reset_query();
+
 			// Do basic error checking to ensure necessary fields exist
-		if ($mapData['dhp_map_typeid'] == '') {
+		if ($mapData['id'] == '') {
 			trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
 		}
 		array_push($mapArray, $mapData);
 	}
+		// Sort array according to map IDs
+	usort($mapArray, 'cmp_map_ids');
+
 	return $mapArray;
 } // dhp_get_map_layer_data()
 

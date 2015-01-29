@@ -7,11 +7,11 @@
  **			 Settings is an array/JSON object, whose structure depends on version;
  **				conversion between them is done by ensureSettings().
  
- **		VERSION 3 (DH Press 2.0+)
+ **		VERSION 4 (DH Press 2.6)
  **			"general": {
 		        "id": Integer,										// ID of Project
 		        "name": String,
-		        "version": Integer,									// Must be 3
+		        "version": Integer,									// Must be 4
 		        "homeLabel": String,
 		        "homeURL": String,
 		        "mTitle": String 									// Mote to use for title of Markers, or the_title
@@ -37,11 +37,11 @@
 		                "size": Character,							// "s" | "m" | "l"
 		                "layers": [
 		                    Index: {
+		                        "id": Number,						// Map ID (no longer WP Post-ID)
 		                		"opacity": Number,
-		                        "id": Number,
-		                        "name": String,
-		                        "mapType": String ("type-Blank", "type-OSM", "type-DHP"),
-		                        "mapTypeId": String,
+		                        "name": String,						// is this needed? ##
+		                        "mapTypeId": String,				// ## delete !!
+		                        "mapType": String ("type-Blank", "type-OSM", "type-DHP")  // ## delete ! Not needed
 		                    }, ...
 		                ],
 		                "coordMote": String (name of mote),			// Mote used for geo coord
@@ -52,7 +52,7 @@
 									// Topic Cards settings are as follows
 		            "settings" : {
 		            	"titleOn": Boolean,							// true if marker title is to be shown as card title on top
-		            	"width" : String,							// card width: "auto", thin", "med-width", "wide"
+		            	"width" : String,							// card width: "auto", "thin", "med-width", "wide"
 		            	"height" : String,							// card height: "auto", "short", "med-height", "tall"
 						"color": String (name of mote),				// to determine color of card
 						"defColor" : String (CSS color to use),		// as default when no mote value

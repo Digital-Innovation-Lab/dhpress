@@ -1,7 +1,7 @@
 // PURPOSE: Handle functions for Edit Project admin page
 //          This file loaded by add_dhp_project_admin_scripts() in dhp-project-functions.php
 // ASSUMES: dhpDataLib is used to pass parameters to this function via wp_localize_script()
-//          Hidden data in DIV ID hidden-layers for info about map layers
+//          Hidden data in DIV ID map-layers for info about map layers
 //          Initial project settings embedded in HTML in DIV ID project_settings by show_dhp_project_settings_box()
 // USES:    Libraries jQuery, Underscore, Knockout, jQuery UI, jQuery.nestable, jquery-colorpicker
 // NOTES:   Relies on some HTML data generated in show_dhp_project_settings_box() of dhp-project-functions.php
@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
       // Constants
   var _blankSettings = {
         general: {
-          version: 3,
+          version: 4,
           homeLabel: '',
           homeURL: '',
           mTitle: 'the_title',
@@ -67,7 +67,8 @@ jQuery(document).ready(function($) {
   var mapLayersParam = $('#map-layers').text();
   if (mapLayersParam.length > 2) {
     mapLayersParam = JSON.parse(mapLayersParam);
-    mapLayersParam = normalizeArray(mapLayersParam);
+    // mapLayersParam = normalizeArray(mapLayersParam);
+    dhpMapServices.init(mapLayersParam);
   } else {
     mapLayersParam = [];
   }
@@ -289,20 +290,16 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.id        = theLayer.id;
-    self.name      = theLayer.name;
+    // self.name      = theLayer.name;
     self.opacity   = ko.observable(theLayer.opacity).extend({ onedigit: false });
-    self.mapType   = theLayer.mapType;
-    self.mapTypeId = theLayer.mapTypeId;
   } // MapLayer()
 
     // Object to store data about Maps in map library (both base and overlay types)
-  var MapOption = function(name, mapType, typeID, layerID) {
+  var MapOption = function(name, id) {
     var self = this;
 
-    self.name    = name;
-    self.mapType = mapType;
-    self.typeID  = typeID;
-    self.layerID = layerID;
+    self.name = name;
+    self.id   = id;
   } // MapOption()
 
     // Create new "blank" layer to store in Pinboard entry point
@@ -318,8 +315,7 @@ jQuery(document).ready(function($) {
 
     // PURPOSE: "Controller" Object that coordinates between Knockout and business layer
     // INPUT:   allCustomFields = array of custom fields used by Project
-    //          allMapLayers = complete list of all map selections
-  var ProjectSettings = function(allCustomFields, allMapLayers) {
+  var ProjectSettings = function(allCustomFields) {
     var self = this;
 
       // Need to copy map layers into separate arrays according to Base and Overlay
@@ -2411,7 +2407,7 @@ jQuery(document).ready(function($) {
 
     // Need to Initialize project here first so that object properties and methods visible when
     //    Knockout is activated
-  var projObj = new ProjectSettings(customFieldsParam, mapLayersParam);
+  var projObj = new ProjectSettings(customFieldsParam);
 
     // Manually load the Project Settings object from JSON string
   projObj.setDetails(savedSettings.general);
