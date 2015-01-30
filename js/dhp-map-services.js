@@ -28,7 +28,7 @@ var dhpMapServices = (function () {
 	var baseLayers	= [
 		{ id: '.blank', sname: 'Blank', url: '', subd: '', credits: '', desc: 'Blank Base Map' },
 		{	id: '.mq-aerial', sname: 'MQ OpenAerial',
-			baseurl: 'http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg',
+			url: 'http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg',
 			subd: 'otile1|otile2|otile3|otile4', credits: 'MapQuest', desc: 'MapQuest Open Aerial Base Map'
 		},
 		{	id: '.mq-base', sname: 'Map Quest OSM Base',
@@ -115,21 +115,21 @@ var dhpMapServices = (function () {
 			// RETURNS: Object representing Leaflet layer with fields
 			//				leafletLayer
 			//				options
-			//					opacity
-			//					layerName
-			//					isBaseLayer [true|false]
+			//				opacity
+			//				layerName
+			//				isBaseLayer [true|false]
 		createMapLayer: function(id, opacity, leafMap, control)
 		{
-			var layerDef, newLayerRec, newLeafLayer, subDomains;
+			var layerDef, newLeafLayer, subDomains;
 
 				// Prepare return layer data
-			newLayerRec = { };
-			newLayerRec.options = { };
-			newLayerRec.options.opacity = opacity;
 
 			if (id === '.blank') {
-				newLayerRec.options.layerName = 'Blank';
-				newLayerRec.options.isBaseLayer = true;
+				newLeafLayer = { };
+				newLeafLayer.options = { };
+				newLeafLayer.options.opacity = opacity;
+				newLeafLayer.options.layerName = 'Blank';
+				newLeafLayer.options.isBaseLayer = true;
 				if (leafMap) {
 					leafMap.minZoom = 1;
 					leafMap.maxZoom = 20;	
@@ -138,8 +138,6 @@ var dhpMapServices = (function () {
 			} else if (id.charAt(0) === '.') {
 				layerDef = doGetBaseByID(id);
 
-				newLayerRec.options.isBaseLayer = true;
-
 				subDomains = (layerDef.subd && layerDef.subd !== '') ? layerDef.subd.split('|') : [];
 				if (subDomains.length>1) {
 					newLeafLayer = L.tileLayer(layerDef.url, {
@@ -155,17 +153,14 @@ var dhpMapServices = (function () {
 						opacity: opacity
 					});
 				}
-				newLayerRec.leafletLayer = newLeafLayer;
-
+				newLeafLayer.options.isBaseLayer = true;
+				newLeafLayer.options.layerName = layerDef.sname;
 				if (leafMap)
 					newLeafLayer.addTo(leafMap);
 				if (control)
                 	control.addBaseLayer(newLeafLayer, layerDef.sname);
-
 			} else {
 				layerDef = doGetOverlayByID(id);
-
-				newLayerRec.options.isBaseLayer = false;
 
 				subDomains = (layerDef.subd && layerDef.subd !== '') ? layerDef.subd.split('|') : [];
 				if (subDomains.length>1) {
@@ -186,14 +181,16 @@ var dhpMapServices = (function () {
 						bounds: L.latLngBounds(layerDef.swBounds, layerDef.neBounds)
 					});
 				}
-				newLayerRec.leafletLayer = newLeafLayer;
+				newLeafLayer.options.isBaseLayer = false;
+				newLeafLayer.options.layerName = layerDef.sname;
 
 				if (leafMap)
 					newLeafLayer.addTo(leafMap);
 				if (control)
 					control.addOverlay(newLeafLayer, layerDef.sname);
 			}
-			return newLayerRec;
+			newLeafLayer.options.id = id;
+			return newLeafLayer;
 		} // createMapLayer()
 	} // return
 

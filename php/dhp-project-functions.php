@@ -186,23 +186,19 @@ function dhp_get_map_metadata($mapID, $mapMetaList, $bounds)
 
 
 	// PURPOSE: Return list of all dhp-maps in DHP site (for Project Admin)
-	// RETURNS: array [id, sname, layerCat, layerType, layerTypeId]
+	// RETURNS: array [id, sname]
 function dhp_get_map_layer_list()
 {
 	$layers = array();
-	$theMetaSet = array('sname' => 'dhp_map_sname', 'id' => 'dhp_map_id' );
+	$theMetaSet = array('id' => 'dhp_map_id', 'sname' => 'dhp_map_sname');
 
-	$args = array( 'post_type' => 'dhp-maps', 'posts_per_page' => -1 );
+	$args = array('post_type' => 'dhp-maps', 'posts_per_page' => -1);
 	$loop = new WP_Query( $args );
 	while ( $loop->have_posts() ) : $loop->the_post();
-	//var $tempLayers = array();
 		$layer_id = get_the_ID();
 
 		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
-		// $mapMetaData['layerID']		= $layer_id;
-		// $mapMetaData['layerName']	= get_the_title();
 		array_push($layers, $mapMetaData);
-
 	endwhile;
 	wp_reset_query();
 
@@ -518,7 +514,7 @@ function dhp_export_as_csv()
 	while ( $loop->have_posts() ) : $loop->the_post();
 		$markerID = get_the_ID();
 
-		$values = array(get_the_title(), 'dhp-marker' );
+		$values = array(get_the_title(), 'dhp-markers' );
 
 		foreach ($cfs as $theCF) {
 			$content_val = get_post_meta($markerID, $theCF, true);
@@ -2439,9 +2435,11 @@ function add_dhp_project_admin_scripts( $hook )
 
 			wp_enqueue_script('knockout', plugins_url('/lib/knockout-3.1.0.js', dirname(__FILE__)) );
 
+			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)) );
+
 				// Custom JavaScript for Admin Edit Panel
 			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'jquery-colorpicker',
-								'knockout');
+								'knockout', 'dhp-map-services');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
 			$pngs = dhp_get_attached_PNGs($postID);
@@ -2474,6 +2472,7 @@ function cmp_map_ids($a, $b)
 	// PURPOSE: Extract DHP custom map data from Map Library so they can be rendered in Map view
 	// INPUT:	$mapLayers = array of EP Map layers (each containing ['id' = unique Map ID])
 	// RETURNS: Array of data about map layers
+	// NOTE:    If id begins with '.' it is a base layer and does not need to be loaded
 	// ASSUMES:	Custom Map data has been loaded into WP DB
 	// TO DO:	Further error handling if necessary map data doesn't exist?
 function dhp_get_map_layer_data($mapLayers)
@@ -2482,41 +2481,43 @@ function dhp_get_map_layer_data($mapLayers)
 							"id"     	=> "dhp_map_id",
 							"url" 		=> "dhp_map_url",
 							"subd" 		=> "dhp_map_subdomains",
-							"credits"	=> "dhp_map_credits",
-							"desc"		=> "dhp_map_desc",
 							"minZoom"   => "dhp_map_min_zoom",
-							"maxZoom" 	=> "dhp_map_max_zoom"
+							"maxZoom" 	=> "dhp_map_max_zoom",
+							"credits"	=> "dhp_map_credits"
 						);
 	$mapArray = array();
 
 		// Loop thru all map layers, collecting essential data to pass
 	foreach($mapLayers as $layer) {
-			// Search for Map entry based on map ID
-		$args = array( 
-			'post_type' => 'dhp-maps', 
-			'posts_per_page' => 1,
-			'meta_query' => array(
-				array('key' => 'dhp_map_id', 'value' => $layer->id)
-			)
-		);
-		$loop = new WP_Query($args);
-			// We can only abort if not found
-		if (!$loop->have_posts()) {
-			trigger_error("Map ID cannot be found");
-			return null;
+			// Ignore base maps
+		if ($layer->id[0] != '.') {
+				// Search for Map entry based on map ID
+			$args = array( 
+				'post_type' => 'dhp-maps', 
+				'posts_per_page' => 1,
+				'meta_query' => array(
+					array('key' => 'dhp_map_id', 'value' => $layer->id)
+				)
+			);
+			$loop = new WP_Query($args);
+				// We can only abort if not found
+			if (!$loop->have_posts()) {
+				trigger_error("Map ID cannot be found");
+				return null;
+			}
+
+			$loop->the_post();
+			$map_id = get_the_ID();
+
+			$mapData = dhp_get_map_metadata($map_id, $mapMetaList, true);
+			wp_reset_query();
+
+				// Do basic error checking to ensure necessary fields exist
+			if ($mapData['id'] == '') {
+				trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
+			}
+			array_push($mapArray, $mapData);
 		}
-
-		$loop->the_post();
-		$map_id = get_the_ID();
-
-		$mapData = dhp_get_map_metadata($map_id, $mapMetaList, true);
-		wp_reset_query();
-
-			// Do basic error checking to ensure necessary fields exist
-		if ($mapData['id'] == '') {
-			trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
-		}
-		array_push($mapArray, $mapData);
 	}
 		// Sort array according to map IDs
 	usort($mapArray, 'cmp_map_ids');
@@ -2682,7 +2683,7 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
 
 			wp_enqueue_script('dhp-maps-view', plugins_url('/js/dhp-maps-view.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
-			wp_enqueue_script('dhp-custom-maps', plugins_url('/js/dhp-custom-maps.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
+			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
 
 				// Get any DHP custom map parameters
 			$layerData = dhp_get_map_layer_data($thisEP->settings->layers);
@@ -2691,7 +2692,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-	    	array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-custom-maps',
+	    	array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-map-services',
 	    							'dhp-jquery-ui');
 	    	break;
 

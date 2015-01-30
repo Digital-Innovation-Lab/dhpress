@@ -66,8 +66,8 @@ jQuery(document).ready(function($) {
 
   var mapLayersParam = $('#map-layers').text();
   if (mapLayersParam.length > 2) {
+      // Get overlay maps from embedded HTML and pass to initialize map services
     mapLayersParam = JSON.parse(mapLayersParam);
-    // mapLayersParam = normalizeArray(mapLayersParam);
     dhpMapServices.init(mapLayersParam);
   } else {
     mapLayersParam = [];
@@ -294,14 +294,6 @@ jQuery(document).ready(function($) {
     self.opacity   = ko.observable(theLayer.opacity).extend({ onedigit: false });
   } // MapLayer()
 
-    // Object to store data about Maps in map library (both base and overlay types)
-  var MapOption = function(name, id) {
-    var self = this;
-
-    self.name = name;
-    self.id   = id;
-  } // MapOption()
-
     // Create new "blank" layer to store in Pinboard entry point
   var PinLayer = function(theLayer) {
     var self = this;
@@ -319,24 +311,8 @@ jQuery(document).ready(function($) {
     var self = this;
 
       // Need to copy map layers into separate arrays according to Base and Overlay
-    self.baseLayers = [ ];
-    self.overLayers = [ ];
-
-    ko.utils.arrayForEach(allMapLayers, function(theLayer) {
-      var newLayer = new MapOption(theLayer.layerName, theLayer.layerType, theLayer.layerTypeId,
-                                  theLayer.layerID);
-      switch (theLayer.layerCat) {
-      case 'base layer':
-        self.baseLayers.push(newLayer);
-        break;
-      case 'overlay':
-        self.overLayers.push(newLayer);
-        break;
-      default:
-        throw new Error('Unsupported map category '+theLayer.layerCat);
-        break;
-      }
-    });
+    self.baseLayers = dhpMapServices.getBaseLayers();
+    self.overLayers = dhpMapServices.getOverlays();
 
       // PURPOSE: For debug -- spit out all of the editable data
     self.showSettings = function() {
@@ -405,17 +381,6 @@ jQuery(document).ready(function($) {
 
             savedLayer.opacity   = theLayer.opacity();
             savedLayer.id        = theLayer.id;
-
-              // Copy name, mapType and mapTypeId values given ID by searching in original maplayer arrays
-            ko.utils.arrayFirst(allMapLayers, function(layerItem) {
-              if (theLayer.id != layerItem.layerID) {
-                return false;
-              }
-              savedLayer.name      = layerItem.layerName;
-              savedLayer.mapType   = layerItem.layerType;
-              savedLayer.mapTypeId = layerItem.layerTypeId;
-              return true;
-            });
             savedEP.settings.layers.push(savedLayer);
           } );
           savedEP.settings.coordMote = theEP.settings.coordMote();
@@ -2375,6 +2340,7 @@ jQuery(document).ready(function($) {
     // Initialize jQuery components
   $("#accordion, #subaccordion").accordion({ collapsible: true, heightStyle: 'content' });
 
+
     // Add decimal formatting extension (X.X) for observable (opacity)
   ko.extenders.onedigit = function(target) {
     //create a writeable computed observable to intercept writes to our observable
@@ -2439,6 +2405,7 @@ jQuery(document).ready(function($) {
       $(element).slider('value', value);
     }
   }; // bindingHandlers.opacitySlider
+
 
     // Add minimal functionality for jQueryUI button
   ko.bindingHandlers.jqButton = {

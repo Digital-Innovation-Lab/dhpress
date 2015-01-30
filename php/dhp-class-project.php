@@ -11,7 +11,7 @@
  **			"general": {
 		        "id": Integer,										// ID of Project
 		        "name": String,
-		        "version": Integer,									// Must be 4
+		        "version": Integer,									// 4 as of DH Press 2.6
 		        "homeLabel": String,
 		        "homeURL": String,
 		        "mTitle": String 									// Mote to use for title of Markers, or the_title
@@ -38,10 +38,7 @@
 		                "layers": [
 		                    Index: {
 		                        "id": Number,						// Map ID (no longer WP Post-ID)
-		                		"opacity": Number,
-		                        "name": String,						// is this needed? ##
-		                        "mapTypeId": String,				// ## delete !!
-		                        "mapType": String ("type-Blank", "type-OSM", "type-DHP")  // ## delete ! Not needed
+		                		"opacity": Number
 		                    }, ...
 		                ],
 		                "coordMote": String (name of mote),			// Mote used for geo coord

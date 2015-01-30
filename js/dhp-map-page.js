@@ -32,15 +32,15 @@ jQuery(document).ready(function($) {
     var mpq = dhpMapServices.createMapLayer('.mq-base', 1, dhpMapTest, null);
     var osm = dhpMapServices.createMapLayer('.osm-base', 1, dhpMapTest, null);
     var dhpBaseLayers = {
-        'MapQuest': mpq.leafletLayer,
-        'OpenStreetMap' : osm.leafletLayer
+        'MapQuest': mpq,
+        'OpenStreetMap' : osm
     };    
 
         // Create overlay layer object
     var mapLayer = dhpMapServices.createMapLayer(singleOverlayArray.id, 1, dhpMapTest, null);
 
     var overlay = {
-        'Overlay': mapLayer.leafletLayer
+        'Overlay': mapLayer
     };
 
         // Create controls to turn on and off each layer

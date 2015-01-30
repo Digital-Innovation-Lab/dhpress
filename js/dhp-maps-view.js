@@ -42,10 +42,13 @@ var dhpMapsView = {
         // INPUT:   ajaxURL      = URL to WP
         //          projectID    = ID of project
         //          mapEP        = settings for map entry point (from project settings)
-        //          viewParams   = array of data about map layers (see dhpGetMapLayerData() in dhp-project-functions)
+        //          viewParams   = array of data about map layers
+        //                          (compiled by dhp_get_map_layer_data() in dhp-project-functions.php)
     initialize: function(ajaxURL, projectID, vizIndex, mapEP, viewParams) {
              // Constants
         dhpMapsView.checkboxHeight = 12; // default checkbox height
+
+        dhpMapServices.init(viewParams.layerData);
 
             // Save reset data for later
         dhpMapsView.mapEP          = mapEP;
@@ -149,6 +152,7 @@ var dhpMapsView = {
         // jQuery('#dhp-visual').height(jQuery('#dhp-visual')-45);
     }, // initializeMap2()
 
+
         // PURPOSE: Create base layers and overlays
         // NOTES:   While mapEP.layers specifies which predefined layers to use (and opacity),
         //              vizParams.layerData contains data defining those layers needed by dhp-custom-maps.js
@@ -159,75 +163,33 @@ var dhpMapsView = {
 
             // Compile map layer data into mapLayers array and create with Leaflet
         _.each(dhpMapsView.mapEP.layers, function(layerToUse, index) {
-            layerDef = dhpMapsView.viewParams.layerData[index];
             var newLayer;
 
             opacity = layerToUse.opacity || 1;
 
-            switch (layerDef.dhp_map_type) {
-            case 'OSM':
-                var subDomains = layerDef.dhp_map_subdomains.split('|');
-                if(subDomains.length>1) {
-                    newLayer = L.tileLayer(layerDef.dhp_map_url, {
-                        subdomains: subDomains,
-                        attribution: layerDef.dhp_map_source,
-                        maxZoom: 20,
-                        opacity: opacity,
-                        layerName: layerDef.dhp_map_shortname,
-                        layerType: layerDef.dhp_map_category
-                    });
-                }
-                else {
-                    newLayer = L.tileLayer(layerDef.dhp_map_url, { 
-                        attribution: layerDef.dhp_map_source, 
-                        maxZoom: 20, 
-                        opacity: opacity,
-                        layerName: layerDef.dhp_map_shortname,
-                        layerType: layerDef.dhp_map_category
-                    });
-                }
-
-                newLayer.addTo(dhpMapsView.mapLeaflet);
-                break;
-
-            case 'DHP':
-                dhpCustomMaps.maps.defaultAPI(dhpCustomMaps.maps.API_LEAFLET);
-                var dhpObj = new dhpCustomMaps.maps.Map(layerDef.dhp_map_typeid);
-                newLayer = dhpObj.layer();
-                newLayer.options.opacity = opacity;
-                newLayer.options.attribution = 'Layer data &copy; ' + layerDef.dhp_map_source;
-                newLayer.addTo(dhpMapsView.mapLeaflet);
-                break;
-
-            case 'Blank':
-                newLayer = {};
-                newLayer.options = {};
-                newLayer.options.layerName = 'Blank';
-                newLayer.options.isBaseLayer = true;
-                dhpMapsView.mapLeaflet.minZoom = 1;
-                dhpMapsView.mapLeaflet.maxZoom = 20;
-                break;
-
-            default:
-                throw new Error("Unsupported map type: "+layerDef.dhp_map_type);
-            } // switch
-
+            // newLayer = dhpMapServices.createMapLayer(layerToUse.id, opacity,
+            //                 dhpMapsView.mapLeaflet, dhpMapsView.control);
+            newLayer = dhpMapServices.createMapLayer(layerToUse.id, opacity,
+                            dhpMapsView.mapLeaflet, null);
             dhpMapsView.mapLayers.push(newLayer);
         }); // each sourceLayers
 
             // The control object manages which layers are visible at any time (user selection)
         dhpMapsView.control = L.control.layers();
         dhpMapsView.control.addTo(dhpMapsView.mapLeaflet);
+
             // Add each layer to the map object
         _.each(dhpMapsView.mapLayers, function(theLayer) {
-            if(theLayer.options.isBaseLayer || theLayer.options.layerType == 'base layer') {
-                dhpMapsView.control.addBaseLayer(theLayer, theLayer.options.layerName);
-            }
-            else {
+            if (theLayer.options.isBaseLayer) {
+                if (theLayer.options.id !== '.blank') {
+                    dhpMapsView.control.addBaseLayer(theLayer, theLayer.options.layerName);
+                }
+            } else {
                 dhpMapsView.control.addOverlay(theLayer, theLayer.options.layerName);
             }
         });
     }, // createLayers()
+
 
         // PURPOSE: Create Leaflet map controls
     createMapControls: function() {
@@ -251,6 +213,7 @@ var dhpMapsView = {
             dhpMapsView.resetMap();
         });
     }, // createMapControls()
+
 
         // PURPOSE: Create marker objects for map visualization; called by loadMapMarkers()
         // INPUT:   geoData = all AJAX data as JSON object: Array of ["type", ...]
@@ -492,6 +455,7 @@ var dhpMapsView = {
         return (_.intersection(feature.properties.categories, dhpMapsView.catFilterSelect).length >= 1);
     }, // filterMapMarkers()
 
+
         // PURPOSE: Handle visual impact of change of Legend selection: selecting entirely (new Legend or selection )
     refreshMarkerLayer: function() {
         dhpMapsView.findSelectedCats();
@@ -501,6 +465,7 @@ var dhpMapsView = {
         dhpMapsView.mapLayers.pop();
         dhpMapsView.createMarkerLayer();
     }, // refreshMarkerLayer()
+
 
         // PURPOSE: Handle user selection of legend in navbar menu
         // INPUT:   target = element selected by user
@@ -713,7 +678,7 @@ var dhpMapsView = {
             }
 
                 // Don't create checkbox or opacity slider for Blank layer
-            if (thisLayer.options.layerName != 'Blank') {
+            if (thisLayer.options.id !== '.blank') {
                 jQuery('#layers-panel').append('<div class="layer-set" id="layer'+index+'">'+
                     '<div><input type="checkbox" checked="checked"> '+
                     '<a class="value" id="'+thisLayer.options.id+'">'+label+'</a></div>'+
