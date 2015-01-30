@@ -507,7 +507,7 @@ function dhp_export_as_csv()
 	while ( $loop->have_posts() ) : $loop->the_post();
 		$markerID = get_the_ID();
 
-		$values = array(get_the_title(), 'dhp-marker' );
+		$values = array(get_the_title(), 'dhp-markers' );
 
 		foreach ($cfs as $theCF) {
 			$content_val = get_post_meta($markerID, $theCF, true);
