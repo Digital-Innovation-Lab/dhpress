@@ -859,26 +859,26 @@ function dhp_get_markers()
 				continue;
 			}
 				// Create Polygons? Only if delim given
+				// NOTE: Since no longer passing GeoJSON, coord order is: LatLon
 			if ($mapDelim) {
 				$split = explode($mapDelim, $latlon);
 					// Just treat as Point if only one data item
 				if (count($split) == 1) {
 					$split = explode(',', $latlon);
 					$thisFeature['geometry'] = array("type"=>"Point",
-													"coordinates"=> array((float)$split[1], (float)$split[0]));
+													"coordinates"=> array((float)$split[0], (float)$split[1]));
 				} else {
 					$poly = array();
 					foreach ($split as $thisPt) {
 						$pts = explode(',', $thisPt);
-						array_push($poly, array((float)$pts[1], (float)$pts[0]));
+						array_push($poly, array((float)$pts[0], (float)$pts[1]));
 					}
 					$thisFeature['geometry'] = array("type" => "Polygon", "coordinates" => array($poly));
 				}
 			} else {
 				$split = explode(',', $latlon);
-					// Have to reverse order for GeoJSON
 				$thisFeature['geometry'] = array("type"=>"Point",
-												"coordinates"=> array((float)$split[1],(float)$split[0]));
+												"coordinates"=> array((float)$split[0],(float)$split[1]));
 			}
 		}
 
