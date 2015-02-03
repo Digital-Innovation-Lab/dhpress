@@ -571,15 +571,15 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	$filter_object['terms'] = array();
 
 		// Begin with top-level mote name
+		// TO DO: Remove this??  Probably not used!!
 	$filter_parent['name']     = $parent_term->name;
 	$filter_parent['id']       = intval($parent_term->term_id);
-
 	array_push($filter_object['terms'], $filter_parent);
 
 	$myargs = array( 'orderby'       => 'term_group',
 		 			 'hide_empty'    => false, 
 					 'parent'        => $parent_term->term_id );
-	$children_terms  = get_terms( $taxonomy, $myargs );
+	$children_terms  = get_terms($taxonomy, $myargs);
 
 		// Go through each of the 1st-level values in the category
 	foreach ($children_terms as $child) {
@@ -642,7 +642,7 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	} // for each 1st-level value
 
 		// Update top-level mote pushed near top of function
-	$filter_parent['children'] = $children_terms;
+	// $filter_parent['children'] = $children_terms;
 
 	return $filter_object;
 } // dhp_get_category_vals()

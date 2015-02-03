@@ -202,7 +202,6 @@ var dhpMapsView = {
 
         // PURPOSE: Create marker objects for map visualization; called by loadMapMarkers()
         // INPUT:   geoData = all AJAX data as JSON object: Array of ["type", ...]
-        // SIDE-FX: assigns variables allMarkers, catFilter, rawAjaxData
     createDataObjects: function(data) 
     {
         dhpMapsView.rawAjaxData = data;
@@ -213,7 +212,6 @@ var dhpMapsView = {
         _.each(dhpMapsView.rawAjaxData, function(dataSet) {
             switch(dataSet.type) {
             case 'filter':
-                // legends.push(dhpMapsView.formatTerms(dataSet));
                 legends.push(dhpServices.flattenTerms(dataSet));
                 break;
             case 'FeatureCollection':
@@ -233,37 +231,12 @@ var dhpMapsView = {
     }, // createDataObjects()
 
 
-        // PURPOSE: Called by createDataObjects() to take nested array(s) of terms and convert to flat array
-        //              of items with fields: id, parent, name, icon_url
-        // NOTES:   In array returned by php, parent markers have <id> field but children have <term_id>
-        // TO DO:   This looks very inefficient -- redo
-        // RETURNS: Object with 2 properties: terms and all
-    // formatTerms: function(oldTerms)
-    // {
-    //     var newTerms = dhpServices.flattenTerms(oldTerms);
-    //     var allTerms = [];
-
-    //         // use array of just IDs for speedy intersection checks
-    //     _.each(newTerms.terms, function(theTerm) {
-    //         allTerms.push(theTerm.id);
-    //     });
-    //     newTerms.all = allTerms;
-
-    //     return newTerms;
-    // }, // formatTerms()
-
-
         // PURPOSE: Creates initial Marker Layer (only once -- not the Markers on it)
     createMarkerLayer: function()
     {
-        // dhpMapsView.markerLayer = L.geoJson(dhpMapsView.allMarkers, { 
-        //     onEachFeature: dhpMapsView.onEachFeature,
-        //     pointToLayer: dhpMapsView.pointToLayer,
-        //     // style: dhpMapsView.markerStyle,
-        //     filter: dhpMapsView.filterMapMarkers
-        // });
             // Create Marker Layer
         dhpMapsView.markerLayer = L.featureGroup();
+            // Create options properties if they don't already exist
         dhpMapsView.markerLayer.options = dhpMapsView.markerLayer.options || { };
         dhpMapsView.markerLayer.options.layerName = 'Markers';
 
@@ -273,116 +246,6 @@ var dhpMapsView = {
         dhpMapsView.mapLayers.push(dhpMapsView.markerLayer);
     }, // createMarkerLayer()
 
-
-    // checkOpacity: function() {
-    //     return dhpMapsView.markerOpacity;
-    // },
-
-
-        // PURPOSE: Determine what color to use for marker
-        // INPUT:   cats = the array of legend categories for this marker
-        // TO DO:   Make more efficient: since Legend/Category terms have been flattened & viz info
-        //              copied to children it should not be necessary to find parent
-    // getActiveTermColor: function(cats) {
-    //     var returnColor;
-    //         // Find which of this item's legend values match current legend selection
-    //     var matchID = _.intersection(dhpMapsView.catFilterSelect, cats);
-    //         // For motes with multiple values, we will need to arbitrarily select first match
-    //     if (_.isArray(matchID)) {
-    //         matchID = matchID[0];
-    //     }
-
-    //         // Now, look through the current legend values for which matches first overlap
-    //         // TO DO: Search for flattened term w/ icon_url info
-    //     var term = _.find(dhpMapsView.catFilter.terms, function(item) {
-    //         return (item.id == matchID);
-    //     });
-
-    //         // Does this term have a parent? Get color from parent
-    //     if (term.parent && dhpMapsView.useParent) {
-    //             // Search through filter for parent's term entry
-    //             // NOTE: Further inefficiency: 3rd exhaustive search!!
-    //         var parentTerm = _.find(dhpMapsView.catFilter.terms, function(parent) {
-    //             return (parent.id == term.parent);
-    //         });
-    //         returnColor = parentTerm['icon_url'];
-
-    //         // No parent, get this icon's color
-    //     } else {
-    //         dhpMapsView.parentIcon = term['icon_url'];
-    //         returnColor = term['icon_url'];
-    //     }
-
-    //     return returnColor;
-    // }, // getActiveTermColor()
-
-
-        // PURPOSE: Return style of Markers
-        // NOTES:   This is needed because otherwise Polygons not given any style; however, since it
-        //              is also called for Circle markers, creates much redundant work
-    // markerStyle: function(feature)
-    // {
-    //     var fColor = dhpMapsView.getActiveTermColor(feature.properties.categories);
-    //     switch (feature.geometry.type) {
-    //     case 'Point':
-    //         return {
-    //             fillColor: fColor,
-    //             color: "#000",
-    //             weight: 1,
-    //             opacity: 1
-    //         };
-    //     case 'Polygon':
-    //         return {
-    //             fillColor: fColor,
-    //             fill: true,
-    //             color: "#000",
-    //             weight: 1,
-    //             opacity: 0.8
-    //         };
-    //     default:
-    //         return { color: fColor };
-    //     }
-    // }, // markerStyle()
-
-
-        // PURPOSE: Create the Leaflet feature associated with this entry
-    // pointToLayer: function(feature, latlng) {
-    //         // get the string associated with Legend ID
-    //     var fKey = dhpMapsView.getActiveTermColor(feature.properties.categories);
-    //     switch (fKey.charAt(0)) {
-    //     case '#':
-    //         return L.circleMarker(latlng, {
-    //             radius: dhpMapsView.radius,
-    //             fillColor: fKey,
-    //             color: "#000",
-    //             weight: 1,
-    //             opacity: 1,
-    //             fillOpacity: dhpMapsView.checkOpacity
-    //         });
-    //     case '.':
-    //             // See if maki-icon has already been created and if not create it
-    //         var iName = fKey.substring(1);
-    //         var mIcon = dhpMapsView.makiIcons[iName];
-    //         if (mIcon == undefined || mIcon == null) {
-    //             mIcon = L.MakiMarkers.icon({
-    //                 icon: iName,
-    //                 color: "#12a",
-    //                 size: dhpMapsView.makiSize
-    //             });
-    //             dhpMapsView.makiIcons[iName] = mIcon;
-    //         }
-    //         return L.marker(latlng, { icon: mIcon, riseOnHover: true });
-    //     case '@':
-    //         var pngTitle = fKey.substring(1);
-    //         var pngIcon = dhpMapsView.pngIcons[pngTitle];
-    //         if (pngIcon == undefined || pngIcon === null) {
-    //             throw new Error("Could not find PNG image for: "+pngTitle);
-    //         }
-    //         return L.marker(latlng, { icon: pngIcon, riseOnHover: true });
-    //     default:
-    //         throw new Error("Unsupported feature type: "+fKey);
-    //     }
-    // }, // pointToLayer()
 
 
     markerClick: function(e)
@@ -453,24 +316,6 @@ var dhpMapsView = {
         dhpMapsView.mapLeaflet.setView([dhpMapsView.mapEP.lat, dhpMapsView.mapEP.lon], dhpMapsView.mapEP.zoom);
     }, // resetMap()
 
-        // PURPOSE: Determine which markers to display based on selected array
-        // RETURNS: true or false, depending on if its id is in selected array
-    // filterMapMarkers: function(feature)
-    // {
-    //     return (_.intersection(feature.properties.categories, dhpMapsView.catFilterSelect).length >= 1);
-    // }, // filterMapMarkers()
-
-
-        // PURPOSE: Handle visual impact of change of Legend selection: selecting entirely (new Legend or selection )
-    // refreshMarkerLayer: function() {
-    //     dhpMapsView.findSelectedCats();
-    //     dhpMapsView.control.removeLayer(dhpMapsView.markerLayer);
-    //     dhpMapsView.mapLeaflet.removeLayer(dhpMapsView.markerLayer);
-    //         // since createMarkerLayer() is going to create new marker layer, need to remove from layer array
-    //     dhpMapsView.mapLayers.pop();
-    //     dhpMapsView.createMarkerLayer();
-    // }, // refreshMarkerLayer()
-
 
         // PURPOSE: Create all Markers based on current Legend selection
         // NOTES:   Set options.id in resulting Marker to index of Marker
@@ -484,7 +329,6 @@ var dhpMapsView = {
         markerArray = dhpMapsView.rawAjaxData[dhpMapsView.rawAjaxData.length-1];
         markerArray = markerArray.features;
         _.forEach(markerArray, function(theMarker, markerIndex) {
-// console.log("Marker: "+JSON.stringify(theMarker));
                 // Reset results
             aNewMarker = null;
                 // Find the first Legend match
@@ -507,7 +351,6 @@ var dhpMapsView = {
                     // Color value -- Point or Polygon
                 case '#':
                     if (theMarker.geometry.type === 'Point') {
-// console.log("Create Marker at Point: "+theMarker.geometry.coordinates);
                         aNewMarker = L.circleMarker(theMarker.geometry.coordinates, {
                             id: markerIndex, radius: dhpMapsView.radius, fillColor: fKey,
                             color: "#000", weight: 1, opacity: 1, fillOpacity: 1
@@ -575,6 +418,7 @@ var dhpMapsView = {
 
         // PURPOSE: Create object record for Legend value { id, viz }
         // ASSUMES: curLgndData is set to current legend terms array
+        // NOTES:   The curLgndData has been "flattened" by dhpServices.flattenTerms()
     getLgndData: function(id)
     {
         var lgndData = { id: id };
@@ -590,14 +434,17 @@ var dhpMapsView = {
                     lgndData.viz = term1.icon_url;
                     return lgndData;
                 }
-                term2Size = term1.children.length;
-                for (iTerm2=0; iTerm2<term2Size; iTerm2++) {
-                    term2 = term1.children[iTerm2];
-                    if (term2.id === term_id) {
-                        lgndData.viz = term1.icon_url;
-                        return lgndData;
-                    }
-                }
+                    // The following is not necessary because data is flattened
+                // if (term1.children) {
+                //     term2Size = term1.children.length;
+                //     for (iTerm2=0; iTerm2<term2Size; iTerm2++) {
+                //         term2 = term1.children[iTerm2];
+                //         if (term2.id === id) {
+                //             lgndData.viz = term1.icon_url;
+                //             return lgndData;
+                //         }
+                //     }
+                // }
             }
         }
         return null;
@@ -619,7 +466,6 @@ var dhpMapsView = {
             newSelection.splice(newIndex, 0, dhpMapsView.getLgndData(legID));
         });
         dhpMapsView.selLgnds = newSelection;
-// console.log('Computed selection: '+JSON.stringify(newSelection));
     }, // computeSelLgnds()
 
 
@@ -668,7 +514,10 @@ var dhpMapsView = {
         var filterObj;
 
         if (filterName) {
-            filterObj = _.where(dhpMapsView.rawAjaxData, {type: "filter", name: filterName});
+            filterObj = _.find(dhpMapsView.rawAjaxData, function(item) {
+                return item.type === 'filter' && item.name === filterName;
+            });
+
         } else {
             filterObj = dhpMapsView.rawAjaxData[0];
         }
@@ -677,44 +526,6 @@ var dhpMapsView = {
         dhpMapsView.computeSelLgnds();
         dhpMapsView.createAllMarkers();
     },  // switchFilter()
-
-
-        // PURPOSE: Handle user selection of a legend value, so that only markers with that value shown
-        // INPUT:   singleID = ID of the Legend value to select
-        // RETURNS: Array of term objects from catFilter that match current UI selection based on ID
-        // ASSUMES: catFilter is null or contains lists of terms for current Legend/Filter
-    // findSelectedCats: function(singleID)
-    // {
-    //     var selCatFilter = [];
-    //     var countTerms = 0;
-    //     var i, tempSelCat, tempFilter;
-
-    //     if (dhpMapsView.catFilter) {
-    //         countTerms = Object.keys(dhpMapsView.catFilter.terms).length;
-    //     }
-
-    //     if (singleID) {
-    //         for (i=0;i<countTerms;i++) {
-    //             tempFilter = dhpMapsView.catFilter.terms[i];
-    //             if(tempFilter.id==singleID) {
-    //                 selCatFilter[0] = tempFilter.id;
-    //                 break;
-    //             }
-    //         }
-    //         // unknown, or multiple selection from legend
-    //     } else {
-    //         jQuery('#legends .active-legend .compare input:checked').each(function(index) {
-    //             tempSelCat = jQuery(this).closest('.row').find('.columns .value').data( 'id' );
-    //             for(i=0;i<countTerms;i++) {
-    //                 tempFilter = dhpMapsView.catFilter.terms[i];
-    //                 if(tempFilter.id==tempSelCat) {
-    //                     selCatFilter[index] = tempFilter.id;
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     dhpMapsView.catFilterSelect = selCatFilter;
-    // }, // findSelectedCats()
 
 
         // PURPOSE: Create HTML for all of the legends for this visualization
