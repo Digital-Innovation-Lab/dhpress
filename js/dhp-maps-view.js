@@ -247,11 +247,13 @@ var dhpMapsView = {
     }, // createMarkerLayer()
 
 
-
+        // PURPOSE: Handle click on feature
     markerClick: function(e)
     {
         if (e.target && e.target.options) {
-            alert('Clicked on a object: '+e.target.options.id);
+            var marker = dhpMapsView.rawAjaxData[dhpMapsView.rawAjaxData.length-1];
+            marker = marker.features[e.target.options.id];
+            dhpServices.showMarkerModal(marker);
         }
     }, // markerClick()
 
@@ -299,11 +301,13 @@ var dhpMapsView = {
     //     // }
     // },
 
+
         // PURPOSE: Handle mouse(only!) selection of feature
     // clickFeature: function(e) {
     //     dhpMapsView.currentFeature = e.target.feature;
     //     dhpMapsView.onFeatureSelect();
     // },
+
 
         // PURPOSE: Remove the hover style
     resetHighlight: function(e) {
@@ -352,15 +356,17 @@ var dhpMapsView = {
                 case '#':
                     if (theMarker.geometry.type === 'Point') {
                         aNewMarker = L.circleMarker(theMarker.geometry.coordinates, {
-                            id: markerIndex, radius: dhpMapsView.radius, fillColor: fKey,
-                            color: "#000", weight: 1, opacity: 1, fillOpacity: 1
+                            id: markerIndex, weight: 1, radius: dhpMapsView.radius,
+                            fillColor: fKey, color: "#000",
+                            opacity: dhpMapsView.markerOpacity, fillOpacity: dhpMapsView.markerOpacity
                         });
                     } else {
                         if (theMarker.geometry.type !== 'Polygon') {
                             throw new Error("Bad Marker type: "+theMarker.geometry.type);
                         } else {
                             aNewMarker = L.polygon(theMarker.geometry.coordinates, {
-                                id: markerIndex, color: fKey
+                                id: markerIndex, weight: 1, color: "#000", fillColor: fKey,
+                                opacity: dhpMapsView.markerOpacity, fillOpacity: dhpMapsView.markerOpacity
                             });
                         }
                     }
@@ -373,8 +379,7 @@ var dhpMapsView = {
                     var mIcon = dhpMapsView.makiIcons[iName];
                     if (mIcon == undefined || mIcon == null) {
                         mIcon = L.MakiMarkers.icon({
-                            icon: iName,
-                            color: "#12a",
+                            icon: iName, color: "#12a",
                             size: dhpMapsView.makiSize
                         });
                         dhpMapsView.makiIcons[iName] = mIcon;
