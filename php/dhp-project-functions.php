@@ -571,7 +571,7 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	$filter_object['terms'] = array();
 
 		// Begin with top-level mote name
-		// TO DO: Remove this??  Probably not used!!
+		// Currently only used by Pinboard View
 	$filter_parent['name']     = $parent_term->name;
 	$filter_parent['id']       = intval($parent_term->term_id);
 	array_push($filter_object['terms'], $filter_parent);
@@ -1335,7 +1335,7 @@ function dhp_rebuild_legend_vals()
 
 			// Now delete any Category/Legend values that exist
 		$delete_children = get_term_children($parent_id, $rootTaxName);
-		if ($delete_children != WP_Error) {
+		if (!is_wp_error($delete_children)) {
 			$results['deletedCount'] = count($delete_children);
 			foreach ($delete_children as $delete_term) {
 				wp_delete_term($delete_term, $rootTaxName);
@@ -1394,7 +1394,7 @@ function dhp_create_term_in_tax()
 			// create new term
 		$newTerm = wp_insert_term($dhp_term_name, $projRootTaxName, $args);
 		$results['newTerm'] = $newTerm;
-		if ($newTerm == WP_Error) {
+		if (is_wp_error($newTerm)) {
 			// trigger_error("WP will not create new term ".$dhp_term_name." in taxonomy".$parent_term_name);
 			$results['termID'] = 0;
 		} else {
@@ -1432,7 +1432,7 @@ function dhp_delete_head_term()
 		$dhp_delete_parent_id = $dhp_delete_parent_term->term_id;
 			// Must gather all children and delete them too (first!)
 		$dhp_delete_children = get_term_children($dhp_delete_parent_id, $projRootTaxName);
-		if ($dhp_delete_children != WP_Error) {
+		if (!is_wp_error($dhp_delete_children)) {
 			foreach ($dhp_delete_children as $delete_term) {
 				wp_delete_term($delete_term, $projRootTaxName);
 			}
