@@ -35,6 +35,7 @@
 		                "lon": Number,
 		                "zoom": Number,
 		                "size": Character,							// "s" | "m" | "l"
+		                "cluster": Boolean,							// If true, cluster Markers
 		                "layers": [
 		                    Index: {
 		                        "id": Number,						// Map ID (no longer WP Post-ID)

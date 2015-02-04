@@ -2682,6 +2682,15 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.3/leaflet.js', dirname(__FILE__)));
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
 
+				// Has user specified to use Marker Clustering?
+			if (isset($thisEP->settings->cluster) && $thisEP->settings->cluster) {
+				wp_enqueue_style('dhp-map-cluster-css', plugins_url('/lib/marker-cluster/MarkerCluster.css',  dirname(__FILE__)),
+					'leaflet-css', DHP_PLUGIN_VERSION );
+				wp_enqueue_style('dhp-map-clusterdef-css', plugins_url('/lib/marker-cluster/MarkerCluster.Default.css',  dirname(__FILE__)),
+					'dhp-map-cluster-css', DHP_PLUGIN_VERSION );
+				wp_enqueue_script('dhp-maps-cluster', plugins_url('/lib/marker-cluster/leaflet.markercluster.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
+			}
+
 			wp_enqueue_script('dhp-maps-view', plugins_url('/js/dhp-maps-view.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
 			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
 

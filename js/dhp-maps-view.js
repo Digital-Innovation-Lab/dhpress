@@ -234,8 +234,12 @@ var dhpMapsView = {
         // PURPOSE: Creates initial Marker Layer (only once -- not the Markers on it)
     createMarkerLayer: function()
     {
-            // Create Marker Layer
-        dhpMapsView.markerLayer = L.featureGroup();
+            // Is it a Clustering Marker Layer?
+        if (dhpMapsView.mapEP.cluster) {
+            dhpMapsView.markerLayer = new L.MarkerClusterGroup();
+        } else {
+            dhpMapsView.markerLayer = L.featureGroup();            
+        }
             // Create options properties if they don't already exist
         dhpMapsView.markerLayer.options = dhpMapsView.markerLayer.options || { };
         dhpMapsView.markerLayer.options.layerName = 'Markers';

@@ -142,6 +142,7 @@ jQuery(document).ready(function($) {
     self.settings.lat = ko.observable(epSettings.settings.lat);
     self.settings.lon = ko.observable(epSettings.settings.lon);
     self.settings.zoom = ko.observable(epSettings.settings.zoom);
+    self.settings.cluster = ko.observable(epSettings.settings.cluster);
     self.settings.size = ko.observable(epSettings.settings.size);
     self.settings.layers = ko.observableArray();
     ko.utils.arrayForEach(normalizeArray(epSettings.settings.layers), function(theLayer) {
@@ -290,7 +291,6 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.id        = theLayer.id;
-    // self.name      = theLayer.name;
     self.opacity   = ko.observable(theLayer.opacity).extend({ onedigit: false });
   } // MapLayer()
 
@@ -373,6 +373,7 @@ jQuery(document).ready(function($) {
           savedEP.settings.lat    = theEP.settings.lat();
           savedEP.settings.lon    = theEP.settings.lon();
           savedEP.settings.zoom   = theEP.settings.zoom();
+          savedEP.settings.cluster= theEP.settings.cluster();
           savedEP.settings.size   = theEP.settings.size();
           savedEP.settings.layers = [];
 
@@ -1425,7 +1426,7 @@ jQuery(document).ready(function($) {
         type: 'map',
         label: 'name me',
         settings: {
-            lat: 0, lon: 0, zoom: 10, size: 'm',
+            lat: 0, lon: 0, zoom: 10, cluster: false, size: 'm',
             layers: [ { id: 0, name: '', opacity: 1, mapType: '', mapTypeId: '' } ],
             coordMote: '',
             legends: [ ]
