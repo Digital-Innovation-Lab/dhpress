@@ -7,11 +7,11 @@
  **			 Settings is an array/JSON object, whose structure depends on version;
  **				conversion between them is done by ensureSettings().
  
- **		VERSION 3 (DH Press 2.0+)
+ **		VERSION 4 (DH Press 2.6)
  **			"general": {
 		        "id": Integer,										// ID of Project
 		        "name": String,
-		        "version": Integer,									// Must be 3
+		        "version": Integer,									// 4 as of DH Press 2.6
 		        "homeLabel": String,
 		        "homeURL": String,
 		        "mTitle": String 									// Mote to use for title of Markers, or the_title
@@ -35,13 +35,11 @@
 		                "lon": Number,
 		                "zoom": Number,
 		                "size": Character,							// "s" | "m" | "l"
+		                "cluster": Boolean,							// If true, cluster Markers
 		                "layers": [
 		                    Index: {
-		                		"opacity": Number,
-		                        "id": Number,
-		                        "name": String,
-		                        "mapType": String ("type-Blank", "type-OSM", "type-DHP"),
-		                        "mapTypeId": String,
+		                        "id": Number,						// Map ID (no longer WP Post-ID)
+		                		"opacity": Number
 		                    }, ...
 		                ],
 		                "coordMote": String (name of mote),			// Mote used for geo coord
@@ -52,7 +50,7 @@
 									// Topic Cards settings are as follows
 		            "settings" : {
 		            	"titleOn": Boolean,							// true if marker title is to be shown as card title on top
-		            	"width" : String,							// card width: "auto", thin", "med-width", "wide"
+		            	"width" : String,							// card width: "auto", "thin", "med-width", "wide"
 		            	"height" : String,							// card height: "auto", "short", "med-height", "tall"
 						"color": String (name of mote),				// to determine color of card
 						"defColor" : String (CSS color to use),		// as default when no mote value
@@ -190,6 +188,31 @@ class DHPressProject
 		return $pieces[1];
     }
 
+    	// PURPOSE: Insert the value into the array in sorted order
+    static private function sorted_insert($value, &$the_array)
+    {
+    	$size = count($the_array);
+    		// If array is empty, just add to end
+    	if ($size == 0) {
+    		array_push($the_array, $value);
+    	} else {
+    			// Go through array looking for insertion point
+    		for ($i=0; $i<$size; $i++) {
+    			$element = $the_array[$i];
+    			$cmp = strcmp($value, $element);
+    				// Don't want redundant values -- already exists, return
+    			if ($cmp == 0) {
+    				return;
+    			} elseif ($cmp < 0) {
+    				array_splice($the_array, $i, 0, $value);
+    				return;
+    			}
+    		}
+    			// Array exhausted -- just append
+    		array_push($the_array, $value);
+    	}
+    } // sorted_insert()
+
 	    // PUBLIC OBJECT METHODS
 		//======================
 
@@ -226,102 +249,93 @@ class DHPressProject
     	$settings = null;
     }
 
+
 		// PURPOSE:	To determine all the names of custom fields associated with the Project
 		// RETURNS: Array of all unique custom fields of all marker posts associated with the Project
     	// WARNING: This will reset and lose the current post
-		// TO DO:	A faster way to do this? Create a sorted array/list?
     public function getAllCustomFieldNames()
     {
-			//loop through all markers in Project adding to array
-		$custom_field_array = array();
+		$custom_fields = array();
 
+			// Loop through all Markers in Project adding to array
 		$args = array(	'post_type' => 'dhp-markers',
 						'meta_key' => 'project_id',
 						'meta_value' => $this->id,
 						'posts_per_page' => -1 );
 		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
+		while ($loop->have_posts()) : $loop->the_post();
 
 			$marker_id = get_the_ID();
-			$temp_custom_field_keys = get_post_custom_keys($marker_id);
+			$marker_fields = get_post_custom_keys($marker_id);
 
-			foreach($temp_custom_field_keys as $key => $value) {
-				$valuet = trim($value);
+			foreach ($marker_fields as $key => $value) {
+				$trimmed = trim($value);
 					// exclude WP internal fields
-	     		if ( $valuet{0} == '_' )
+	     		if ($trimmed{0} == '_')
 	      			continue;
-				array_push($custom_field_array, $value);
+	      		$this->sorted_insert($trimmed, $custom_fields);
 			}
 
 		endwhile;
 		wp_reset_query();
 
-		$unique_custom_fields = array_unique($custom_field_array);
-		return $unique_custom_fields;
+		return $custom_fields;
 	} // getAllCustomFieldNames()
 
 
-		// getCustomFieldUniqueValues($custom_field_name,$project_id)
 		// PURPOSE: Calculate the unique values for a custom field in all markers of a project
 		// INPUT:	$custom_name = the field name within a marker
 		// RETURNS:	Array of unique values
-		// TO DO:	A faster way to do this? Create a sorted array/list?
 	public function getCustomFieldUniqueValues($custom_field_name)
 	{
-			//loop through all markers in project & add to array
-		$moteArray = array();
-		$projectObj = get_post($this->id);
-		$dhp_tax_name = $this->getRootTaxName();
+		$values = array();
 
 		$args = array('post_type' => 'dhp-markers',
 					'meta_key' => 'project_id',
-					'meta_value'=>$this->id,
+					'meta_value' => $this->id,
 					'posts_per_page' => -1 );
-		$tempMetaArray = array();
 		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$tempMetaValue = get_post_meta(get_the_ID(), $custom_field_name, true);
+		while ($loop->have_posts()) : $loop->the_post();
+			$meta_val = get_post_meta(get_the_ID(), $custom_field_name, true);
 
-			array_push($tempMetaArray, $tempMetaValue);
+			$this->sorted_insert($meta_val, $values);
 		endwhile;
 		wp_reset_query();
 
-		$result = array_unique($tempMetaArray);
-		return $result;
+		return $values;
 	} // getCustomFieldUniqueValues()
 
 
-	// PURPOSE: Get unique values of a custom field (w/delimiter) associated with a project
-	// INPUT:	$custom_name = name of the custom field (specified by mote) for which we are creating values
-	//			$delim = character separator for values in field (if any), or null if none
-	// RETURNS:	Array of unique values for the custom field
-	// TO DO:	A more efficient way of doing this? Sorted array?
-
+		// PURPOSE: Get unique values of a custom field (w/delimiter) associated with a project
+		// INPUT:	$custom_name = name of the custom field (specified by mote) for which we are creating values
+		//			$delim = character separator for values in field (if any), or null if none
+		// RETURNS:	Array of unique values for the custom field
 	public function getCustomFieldUniqueDelimValues($custom_name, $delim)
 	{
-			// Loop through all markers in project
-		$moteArray = array();
+		$values = array();
 
 		$loop = $this->setAllMarkerLoop();
-		while ( $loop->have_posts() ) : $loop->the_post();
+		while ($loop->have_posts()) : $loop->the_post();
 			$marker_id = get_the_ID();
 
 				// Get the value in this marker for the custom field
 			$moteValue = get_post_meta($marker_id, $custom_name, true);
 
-			if ($delim && $delim != '') {
+			if ($delim && $delim != '')
+			{
 				$valueArray = explode($delim, $moteValue);
 				foreach ($valueArray as $value) {
-		   		 	array_push($moteArray, $value);
+					$trimmed = trim($value);
+		   		 	$this->sorted_insert($trimmed, $values);
 				}
 			} else {
-	   		 	array_push($moteArray, $moteValue);
+				$trimmed = trim($moteValue);
+	   		 	$this->sorted_insert($trimmed, $values);
 			}
 		endwhile;
 		wp_reset_query();
 
-		$result = array_unique($moteArray);
-		return $result;
+		return $values;
 	} // getCustomFieldUniqueDelimValues()
 
 

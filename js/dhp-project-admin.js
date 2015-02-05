@@ -1,7 +1,7 @@
 // PURPOSE: Handle functions for Edit Project admin page
 //          This file loaded by add_dhp_project_admin_scripts() in dhp-project-functions.php
 // ASSUMES: dhpDataLib is used to pass parameters to this function via wp_localize_script()
-//          Hidden data in DIV ID hidden-layers for info about map layers
+//          Hidden data in DIV ID map-layers for info about map layers
 //          Initial project settings embedded in HTML in DIV ID project_settings by show_dhp_project_settings_box()
 // USES:    Libraries jQuery, Underscore, Knockout, jQuery UI, jQuery.nestable, jquery-colorpicker
 // NOTES:   Relies on some HTML data generated in show_dhp_project_settings_box() of dhp-project-functions.php
@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
       // Constants
   var _blankSettings = {
         general: {
-          version: 3,
+          version: 4,
           homeLabel: '',
           homeURL: '',
           mTitle: 'the_title',
@@ -66,8 +66,9 @@ jQuery(document).ready(function($) {
 
   var mapLayersParam = $('#map-layers').text();
   if (mapLayersParam.length > 2) {
+      // Get overlay maps from embedded HTML and pass to initialize map services
     mapLayersParam = JSON.parse(mapLayersParam);
-    mapLayersParam = normalizeArray(mapLayersParam);
+    dhpMapServices.init(mapLayersParam);
   } else {
     mapLayersParam = [];
   }
@@ -141,6 +142,7 @@ jQuery(document).ready(function($) {
     self.settings.lat = ko.observable(epSettings.settings.lat);
     self.settings.lon = ko.observable(epSettings.settings.lon);
     self.settings.zoom = ko.observable(epSettings.settings.zoom);
+    self.settings.cluster = ko.observable(epSettings.settings.cluster);
     self.settings.size = ko.observable(epSettings.settings.size);
     self.settings.layers = ko.observableArray();
     ko.utils.arrayForEach(normalizeArray(epSettings.settings.layers), function(theLayer) {
@@ -289,21 +291,8 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.id        = theLayer.id;
-    self.name      = theLayer.name;
     self.opacity   = ko.observable(theLayer.opacity).extend({ onedigit: false });
-    self.mapType   = theLayer.mapType;
-    self.mapTypeId = theLayer.mapTypeId;
   } // MapLayer()
-
-    // Object to store data about Maps in map library (both base and overlay types)
-  var MapOption = function(name, mapType, typeID, layerID) {
-    var self = this;
-
-    self.name    = name;
-    self.mapType = mapType;
-    self.typeID  = typeID;
-    self.layerID = layerID;
-  } // MapOption()
 
     // Create new "blank" layer to store in Pinboard entry point
   var PinLayer = function(theLayer) {
@@ -318,29 +307,12 @@ jQuery(document).ready(function($) {
 
     // PURPOSE: "Controller" Object that coordinates between Knockout and business layer
     // INPUT:   allCustomFields = array of custom fields used by Project
-    //          allMapLayers = complete list of all map selections
-  var ProjectSettings = function(allCustomFields, allMapLayers) {
+  var ProjectSettings = function(allCustomFields) {
     var self = this;
 
       // Need to copy map layers into separate arrays according to Base and Overlay
-    self.baseLayers = [ ];
-    self.overLayers = [ ];
-
-    ko.utils.arrayForEach(allMapLayers, function(theLayer) {
-      var newLayer = new MapOption(theLayer.layerName, theLayer.layerType, theLayer.layerTypeId,
-                                  theLayer.layerID);
-      switch (theLayer.layerCat) {
-      case 'base layer':
-        self.baseLayers.push(newLayer);
-        break;
-      case 'overlay':
-        self.overLayers.push(newLayer);
-        break;
-      default:
-        throw new Error('Unsupported map category '+theLayer.layerCat);
-        break;
-      }
-    });
+    self.baseLayers = dhpMapServices.getBaseLayers();
+    self.overLayers = dhpMapServices.getOverlays();
 
       // PURPOSE: For debug -- spit out all of the editable data
     self.showSettings = function() {
@@ -401,6 +373,7 @@ jQuery(document).ready(function($) {
           savedEP.settings.lat    = theEP.settings.lat();
           savedEP.settings.lon    = theEP.settings.lon();
           savedEP.settings.zoom   = theEP.settings.zoom();
+          savedEP.settings.cluster= theEP.settings.cluster();
           savedEP.settings.size   = theEP.settings.size();
           savedEP.settings.layers = [];
 
@@ -409,17 +382,6 @@ jQuery(document).ready(function($) {
 
             savedLayer.opacity   = theLayer.opacity();
             savedLayer.id        = theLayer.id;
-
-              // Copy name, mapType and mapTypeId values given ID by searching in original maplayer arrays
-            ko.utils.arrayFirst(allMapLayers, function(layerItem) {
-              if (theLayer.id != layerItem.layerID) {
-                return false;
-              }
-              savedLayer.name      = layerItem.layerName;
-              savedLayer.mapType   = layerItem.layerType;
-              savedLayer.mapTypeId = layerItem.layerTypeId;
-              return true;
-            });
             savedEP.settings.layers.push(savedLayer);
           } );
           savedEP.settings.coordMote = theEP.settings.coordMote();
@@ -1464,7 +1426,7 @@ jQuery(document).ready(function($) {
         type: 'map',
         label: 'name me',
         settings: {
-            lat: 0, lon: 0, zoom: 10, size: 'm',
+            lat: 0, lon: 0, zoom: 10, cluster: false, size: 'm',
             layers: [ { id: 0, name: '', opacity: 1, mapType: '', mapTypeId: '' } ],
             coordMote: '',
             legends: [ ]
@@ -2379,6 +2341,7 @@ jQuery(document).ready(function($) {
     // Initialize jQuery components
   $("#accordion, #subaccordion").accordion({ collapsible: true, heightStyle: 'content' });
 
+
     // Add decimal formatting extension (X.X) for observable (opacity)
   ko.extenders.onedigit = function(target) {
     //create a writeable computed observable to intercept writes to our observable
@@ -2411,7 +2374,7 @@ jQuery(document).ready(function($) {
 
     // Need to Initialize project here first so that object properties and methods visible when
     //    Knockout is activated
-  var projObj = new ProjectSettings(customFieldsParam, mapLayersParam);
+  var projObj = new ProjectSettings(customFieldsParam);
 
     // Manually load the Project Settings object from JSON string
   projObj.setDetails(savedSettings.general);
@@ -2443,6 +2406,7 @@ jQuery(document).ready(function($) {
       $(element).slider('value', value);
     }
   }; // bindingHandlers.opacitySlider
+
 
     // Add minimal functionality for jQueryUI button
   ko.bindingHandlers.jqButton = {

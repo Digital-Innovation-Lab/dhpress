@@ -164,39 +164,46 @@ add_filter('postmeta_form_limit', 'dhp_cf_limit_increase');
 	// PURPOSE: Return list of map attributes, given list of items to load
 	// INPUT: 	$mapID = custom post ID of map in DH Press library
 	//			$mapMetaList = hash [key to use in resulting array : custom field name]
-function dhp_get_map_metadata($mapID, $mapMetaList)
+	//			$bounds = true if swBounds and neBounds values need to be constructed
+function dhp_get_map_metadata($mapID, $mapMetaList, $bounds)
 {
 	$thisMetaSet = array();
 
 	foreach ($mapMetaList as $arrayKey => $metaName) {
 		$thisMetaData = get_post_meta($mapID, $metaName, true);
 		$thisMetaSet[$arrayKey] = $thisMetaData;
+		if ($bounds) {
+			$south = get_post_meta($mapID, 'dhp_map_s_bounds', true);
+			$west = get_post_meta($mapID, 'dhp_map_w_bounds', true);
+			$north = get_post_meta($mapID, 'dhp_map_n_bounds', true);
+			$east = get_post_meta($mapID, 'dhp_map_e_bounds', true);
+			$thisMetaSet['swBounds'] = array(floatval($south), floatval($west));
+			$thisMetaSet['neBounds'] = array(floatval($north), floatval($east));
+		}
 	}
 	return $thisMetaSet;
 } // dhp_get_map_metadata()
 
 
-	// PURPOSE: Return list of all dhp-maps in DHP site
-	// RETURNS: array [layerID, layerName, layerCat, layerType, layerTypeId]
+	// PURPOSE: Return list of all dhp-maps in DHP site (for Project Admin)
+	// RETURNS: array [id, sname]
 function dhp_get_map_layer_list()
 {
 	$layers = array();
-	$theMetaSet = array('layerName' => 'dhp_map_shortname', 'layerCat' => 'dhp_map_category',
-						'layerType' => 'dhp_map_type', 'layerTypeId' => 'dhp_map_typeid' );
+	$theMetaSet = array('id' => 'dhp_map_id', 'sname' => 'dhp_map_sname');
 
-	$args = array( 'post_type' => 'dhp-maps', 'posts_per_page' => -1 );
+	$args = array('post_type' => 'dhp-maps', 'posts_per_page' => -1);
 	$loop = new WP_Query( $args );
 	while ( $loop->have_posts() ) : $loop->the_post();
-	//var $tempLayers = array();
 		$layer_id = get_the_ID();
 
-		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet);
-		$mapMetaData['layerID']		= $layer_id;
-		// $mapMetaData['layerName']	= get_the_title();
+		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
 		array_push($layers, $mapMetaData);
-
 	endwhile;
 	wp_reset_query();
+
+		// Sort array according to map IDs
+	usort($layers, 'cmp_map_ids');
 
 	return $layers;
 } // dhp_get_map_layer_list()
@@ -564,15 +571,15 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	$filter_object['terms'] = array();
 
 		// Begin with top-level mote name
+		// Currently only used by Pinboard View
 	$filter_parent['name']     = $parent_term->name;
 	$filter_parent['id']       = intval($parent_term->term_id);
-
 	array_push($filter_object['terms'], $filter_parent);
 
 	$myargs = array( 'orderby'       => 'term_group',
 		 			 'hide_empty'    => false, 
 					 'parent'        => $parent_term->term_id );
-	$children_terms  = get_terms( $taxonomy, $myargs );
+	$children_terms  = get_terms($taxonomy, $myargs);
 
 		// Go through each of the 1st-level values in the category
 	foreach ($children_terms as $child) {
@@ -635,7 +642,7 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	} // for each 1st-level value
 
 		// Update top-level mote pushed near top of function
-	$filter_parent['children'] = $children_terms;
+	// $filter_parent['children'] = $children_terms;
 
 	return $filter_object;
 } // dhp_get_category_vals()
@@ -650,14 +657,14 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 //			$index = index of entry-point to display
 // RETURNS: JSON object describing all markers associated with Project
 //			[0..n-1] contains results from dhp_get_category_vals() defined above;
-//			[n] is a FeatureCollection; exact contents will depend on visualization, but could include:
-			// {	"type": "FeatureCollection",
+//			[n] is based on FeatureCollection; exact contents will depend on visualization, but could include:
+			// {	"type": "FeatureCollection",	// No longer GeoJSON compliant!
 			// 	 	"features" :
 			// 		[
 			// 			{ "type" : "Feature",	// Only added to FeatureCollections created for Maps
 			//							// Only if map or pinboard
 			// 			  "geometry" : {
-			//					"type" : "Point" | "Polygon"
+			//					"type" : 1 = Point | 2 = Line | 3 = Polygon
 			//					"coordinates" : LongLat (or X-Y)
 			//			  },
 			//			  "date" : String, 	// Only if Timeline
@@ -852,26 +859,32 @@ function dhp_get_markers()
 				continue;
 			}
 				// Create Polygons? Only if delim given
+				// NOTE: Since no longer passing GeoJSON, coord order is: LatLon
 			if ($mapDelim) {
 				$split = explode($mapDelim, $latlon);
 					// Just treat as Point if only one data item
 				if (count($split) == 1) {
 					$split = explode(',', $latlon);
-					$thisFeature['geometry'] = array("type"=>"Point",
-													"coordinates"=> array((float)$split[1], (float)$split[0]));
+					$thisFeature['geometry'] = array("type" => 1,
+													"coordinates"=> array((float)$split[0], (float)$split[1]));
+
 				} else {
 					$poly = array();
 					foreach ($split as $thisPt) {
 						$pts = explode(',', $thisPt);
-						array_push($poly, array((float)$pts[1], (float)$pts[0]));
+						array_push($poly, array((float)$pts[0], (float)$pts[1]));
 					}
-					$thisFeature['geometry'] = array("type" => "Polygon", "coordinates" => array($poly));
+					if (count($poly) == 2) {
+						$thisFeature['geometry'] = array("type" => 2, "coordinates" => $poly);
+
+					} else {
+						$thisFeature['geometry'] = array("type" => 3, "coordinates" => $poly);
+					}
 				}
 			} else {
 				$split = explode(',', $latlon);
-					// Have to reverse order for GeoJSON
 				$thisFeature['geometry'] = array("type"=>"Point",
-												"coordinates"=> array((float)$split[1],(float)$split[0]));
+												"coordinates"=> array((float)$split[0],(float)$split[1]));
 			}
 		}
 
@@ -883,7 +896,7 @@ function dhp_get_markers()
 				continue;
 			}
 			$split = explode(',', $xycoord);
-			$thisFeature['geometry'] = array("type"=>"Point",
+			$thisFeature['geometry'] = array("type"=> 1,
 											"coordinates"=> array((float)$split[0], (float)$split[1]));
 		}
 
@@ -1328,7 +1341,7 @@ function dhp_rebuild_legend_vals()
 
 			// Now delete any Category/Legend values that exist
 		$delete_children = get_term_children($parent_id, $rootTaxName);
-		if ($delete_children != WP_Error) {
+		if (!is_wp_error($delete_children)) {
 			$results['deletedCount'] = count($delete_children);
 			foreach ($delete_children as $delete_term) {
 				wp_delete_term($delete_term, $rootTaxName);
@@ -1387,7 +1400,7 @@ function dhp_create_term_in_tax()
 			// create new term
 		$newTerm = wp_insert_term($dhp_term_name, $projRootTaxName, $args);
 		$results['newTerm'] = $newTerm;
-		if ($newTerm == WP_Error) {
+		if (is_wp_error($newTerm)) {
 			// trigger_error("WP will not create new term ".$dhp_term_name." in taxonomy".$parent_term_name);
 			$results['termID'] = 0;
 		} else {
@@ -1425,7 +1438,7 @@ function dhp_delete_head_term()
 		$dhp_delete_parent_id = $dhp_delete_parent_term->term_id;
 			// Must gather all children and delete them too (first!)
 		$dhp_delete_children = get_term_children($dhp_delete_parent_id, $projRootTaxName);
-		if ($dhp_delete_children != WP_Error) {
+		if (!is_wp_error($dhp_delete_children)) {
 			foreach ($dhp_delete_children as $delete_term) {
 				wp_delete_term($delete_term, $projRootTaxName);
 			}
@@ -2428,9 +2441,11 @@ function add_dhp_project_admin_scripts( $hook )
 
 			wp_enqueue_script('knockout', plugins_url('/lib/knockout-3.1.0.js', dirname(__FILE__)) );
 
+			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)) );
+
 				// Custom JavaScript for Admin Edit Panel
 			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'jquery-colorpicker',
-								'knockout');
+								'knockout', 'dhp-map-services');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
 			$pngs = dhp_get_attached_PNGs($postID);
@@ -2453,34 +2468,66 @@ function add_dhp_project_admin_scripts( $hook )
 } // add_dhp_project_admin_scripts()
 
 
-// PURPOSE: Extract DHP custom map data from Map Library so they can be rendered
-// INPUT:	$mapLayers = array of EP Map layers (each containing Hash ['mapType'], ['id' = WP post ID])
-// RETURNS: Array of data about map layers
-// ASSUMES:	Custom Map data has been loaded into WP DB
-// TO DO:	Further error handling if necessary map data doesn't exist?
+	// PURPOSE: Compare map IDs for sort function
+function cmp_map_ids($a, $b)
+{
+	return strcmp($a["id"], $b["id"]);
+} // cmp_map_ids()
 
+
+	// PURPOSE: Extract DHP custom map data from Map Library so they can be rendered in Map view
+	// INPUT:	$mapLayers = array of EP Map layers (each containing ['id' = unique Map ID])
+	// RETURNS: Array of data about map layers
+	// NOTE:    If id begins with '.' it is a base layer and does not need to be loaded
+	// ASSUMES:	Custom Map data has been loaded into WP DB
+	// TO DO:	Further error handling if necessary map data doesn't exist?
 function dhp_get_map_layer_data($mapLayers)
 {
-	$mapMetaList = array(	"dhp_map_shortname"  => "dhp_map_shortname",
-							"dhp_map_typeid"     => "dhp_map_typeid",  "dhp_map_category"  => "dhp_map_category" ,
-							"dhp_map_type"       => "dhp_map_type",     "dhp_map_url"      => "dhp_map_url",
-							"dhp_map_subdomains" => "dhp_map_subdomains", "dhp_map_source" => "dhp_map_source",
-							"dhp_map_n_bounds"   => "dhp_map_n_bounds", "dhp_map_s_bounds" => "dhp_map_s_bounds",
-							"dhp_map_e_bounds"   => "dhp_map_e_bounds", "dhp_map_w_bounds" => "dhp_map_w_bounds",
-							"dhp_map_min_zoom"   => "dhp_map_min_zoom", "dhp_map_max_zoom" => "dhp_map_max_zoom",
-							"dhp_map_cent_lat"   => "dhp_map_cent_lat", "dhp_map_cent_lon" => "dhp_map_cent_lon"
+	$mapMetaList = array(	"sname"  	=> "dhp_map_sname",
+							"id"     	=> "dhp_map_id",
+							"url" 		=> "dhp_map_url",
+							"subd" 		=> "dhp_map_subdomains",
+							"minZoom"   => "dhp_map_min_zoom",
+							"maxZoom" 	=> "dhp_map_max_zoom",
+							"credits"	=> "dhp_map_credits"
 						);
 	$mapArray = array();
 
 		// Loop thru all map layers, collecting essential data to pass
 	foreach($mapLayers as $layer) {
-		$mapData = dhp_get_map_metadata($layer->id, $mapMetaList);
-			// Do basic error checking to ensure necessary fields exist
-		if ($mapData['dhp_map_typeid'] == '') {
-			trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
+			// Ignore base maps
+		if ($layer->id[0] != '.') {
+				// Search for Map entry based on map ID
+			$args = array( 
+				'post_type' => 'dhp-maps', 
+				'posts_per_page' => 1,
+				'meta_query' => array(
+					array('key' => 'dhp_map_id', 'value' => $layer->id)
+				)
+			);
+			$loop = new WP_Query($args);
+				// We can only abort if not found
+			if (!$loop->have_posts()) {
+				trigger_error("Map ID cannot be found");
+				return null;
+			}
+
+			$loop->the_post();
+			$map_id = get_the_ID();
+
+			$mapData = dhp_get_map_metadata($map_id, $mapMetaList, true);
+			wp_reset_query();
+
+				// Do basic error checking to ensure necessary fields exist
+			if ($mapData['id'] == '') {
+				trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
+			}
+			array_push($mapArray, $mapData);
 		}
-		array_push($mapArray, $mapData);
 	}
+		// Sort array according to map IDs
+	usort($mapArray, 'cmp_map_ids');
+
 	return $mapArray;
 } // dhp_get_map_layer_data()
 
@@ -2641,8 +2688,17 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.3/leaflet.js', dirname(__FILE__)));
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
 
+				// Has user specified to use Marker Clustering?
+			if (isset($thisEP->settings->cluster) && $thisEP->settings->cluster) {
+				wp_enqueue_style('dhp-map-cluster-css', plugins_url('/lib/marker-cluster/MarkerCluster.css',  dirname(__FILE__)),
+					'leaflet-css', DHP_PLUGIN_VERSION );
+				wp_enqueue_style('dhp-map-clusterdef-css', plugins_url('/lib/marker-cluster/MarkerCluster.Default.css',  dirname(__FILE__)),
+					'dhp-map-cluster-css', DHP_PLUGIN_VERSION );
+				wp_enqueue_script('dhp-maps-cluster', plugins_url('/lib/marker-cluster/leaflet.markercluster.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
+			}
+
 			wp_enqueue_script('dhp-maps-view', plugins_url('/js/dhp-maps-view.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
-			wp_enqueue_script('dhp-custom-maps', plugins_url('/js/dhp-custom-maps.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
+			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)), 'leaflet', DHP_PLUGIN_VERSION);
 
 				// Get any DHP custom map parameters
 			$layerData = dhp_get_map_layer_data($thisEP->settings->layers);
@@ -2651,7 +2707,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-	    	array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-custom-maps',
+	    	array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-map-services',
 	    							'dhp-jquery-ui');
 	    	break;
 

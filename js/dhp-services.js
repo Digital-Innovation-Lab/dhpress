@@ -208,7 +208,7 @@ var dhpServices = {
                 if (legendName !== theTerm.name) {
                     var hasParentClass = '';
                         // Make 2nd-level children invisible with CSS
-                    if(theTerm.parent) {
+                    if (theTerm.parent) {
                         hasParentClass = 'hasParent';
                     }
                     if (theTerm.icon_url == null || theTerm.icon_url == undefined) {
@@ -367,7 +367,6 @@ var dhpServices = {
     {
         var newTerms = oldTerms;
         var termArray = [];
-        var allTerms = [];
 
         _.each(oldTerms.terms, function(theTerm) {
             termArray.push(theTerm);

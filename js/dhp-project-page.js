@@ -131,17 +131,6 @@ jQuery(document).ready(function($) {
     var thisEP = dhpSettings.eps[vizIndex];
     switch (thisEP.type) {
     case 'map':
-            // vizParams.layerData must have array of DHP custom map layers to add to "library" -- not base maps (??)
-        _.each(dhpData.vizParams.layerData, function(theLayer) {
-            dhpCustomMaps.maps.addMap(theLayer.dhp_map_typeid, theLayer.dhp_map_shortname,
-                                    theLayer.dhp_map_n_bounds, theLayer.dhp_map_s_bounds,
-                                    theLayer.dhp_map_e_bounds, theLayer.dhp_map_w_bounds, 
-                                    theLayer.dhp_map_cent_lat, theLayer.dhp_map_cent_lon,
-                                    theLayer.dhp_map_min_zoom, theLayer.dhp_map_max_zoom,
-                                    theLayer.dhp_map_url,      null );
-        });
-
-            // all custom maps must have already been loaded into run-time "library"
         dhpMapsView.initialize(ajaxURL, projectID, vizIndex, thisEP.settings, dhpData.vizParams);
 
         updateVizSpace = dhpMapsView.dhpUpdateSize;
