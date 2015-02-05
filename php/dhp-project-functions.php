@@ -34,36 +34,36 @@ define( 'DHP_SCRIPT_PINBOARD_VIEW',   'dhp-script-pin-view.txt' );
 function dhp_register_project_cpt()
 {
   $labels = array(
-    'name' => _x('Projects', 'post type general name'),
-    'singular_name' => _x('Project', 'post type singular name'),
-    'add_new' => _x('Add New', 'project'),
-    'add_new_item' => __('Add New Project'),
-    'edit_item' => __('Edit Project'),
-    'new_item' => __('New Project'),
-    'all_items' => __('Projects'),
-    'view_item' => __('View Project'),
-    'search_items' => __('Search Projects'),
-    'not_found' =>  __('No projects found'),
-    'not_found_in_trash' => __('No projects found in Trash'), 
-    'parent_item_colon' => '',
-    'menu_name' => __('Projects'),
-    'menu_icon' => plugins_url( 'dhpress/images/dhpress-plugin-icon.png' )  // Icon Path
+	'name' => _x('Projects', 'post type general name'),
+	'singular_name' => _x('Project', 'post type singular name'),
+	'add_new' => _x('Add New', 'project'),
+	'add_new_item' => __('Add New Project'),
+	'edit_item' => __('Edit Project'),
+	'new_item' => __('New Project'),
+	'all_items' => __('Projects'),
+	'view_item' => __('View Project'),
+	'search_items' => __('Search Projects'),
+	'not_found' =>  __('No projects found'),
+	'not_found_in_trash' => __('No projects found in Trash'), 
+	'parent_item_colon' => '',
+	'menu_name' => __('Projects'),
+	'menu_icon' => plugins_url( 'dhpress/images/dhpress-plugin-icon.png' )  // Icon Path
   );
   $args = array(
-    'labels' => $labels,
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true, 
-    'show_in_menu' => 'dhp-top-level-handle', 
-    'query_var' => true,
-    'rewrite' => array('slug' => 'dhp-projects','with_front' => FALSE),
-    'capability_type' => 'page',
-    'has_archive' => true,
-    /* if we want to subclass project types in future (i.e., Entry Points), will need to set 'hierarchical' => true */
-    'hierarchical' => false,
-    'menu_position' => null,
-    /* if hierarchical, then may want to add 'page-attributes' to supports */
-    'supports' => array( 'title', 'thumbnail', 'revisions', 'custom-fields' )
+	'labels' => $labels,
+	'public' => true,
+	'publicly_queryable' => true,
+	'show_ui' => true, 
+	'show_in_menu' => 'dhp-top-level-handle', 
+	'query_var' => true,
+	'rewrite' => array('slug' => 'dhp-projects','with_front' => FALSE),
+	'capability_type' => 'page',
+	'has_archive' => true,
+	/* if we want to subclass project types in future (i.e., Entry Points), will need to set 'hierarchical' => true */
+	'hierarchical' => false,
+	'menu_position' => null,
+	/* if hierarchical, then may want to add 'page-attributes' to supports */
+	'supports' => array( 'title', 'thumbnail', 'revisions', 'custom-fields' )
   ); 
   register_post_type('dhp-project',$args);
 } // dhp_register_project_cpt()
@@ -77,7 +77,7 @@ function dhp_project_init()
 {
 	dhp_register_project_cpt();
 
-  		// Are there any 'project' custom post types from 2.5.4 or earlier -- if so, change CPT
+		// Are there any 'project' custom post types from 2.5.4 or earlier -- if so, change CPT
 
 		// If no version # in DB, definitely old version of DH Press whose data needs checking
 	if (get_option('dhp_plugin_version') === false) {
@@ -87,7 +87,7 @@ function dhp_project_init()
 			$proj_id = get_the_ID();
 
 				// Only does this change if CPT has associated metadata
-    		$proj_set = get_post_meta($proj_id, 'project_settings', true);
+			$proj_set = get_post_meta($proj_id, 'project_settings', true);
 			if(!empty($proj_set)) {
 				$update_params = array( 'ID' => $proj_id, 'post_type' => 'dhp-project');
 				wp_update_post($update_params);
@@ -123,11 +123,11 @@ function dhp_project_activate()
 // PURPOSE: Ensure that txt and png files are able to be added to the Media Library
 function dhp_add_mime_types($mime_types)
 {
-    $mime_types['txt'] = 'text/plain';
-    $mime_types['png'] = 'image/png';
-    $mime_types['csv'] = 'text/csv';
+	$mime_types['txt'] = 'text/plain';
+	$mime_types['png'] = 'image/png';
+	$mime_types['csv'] = 'text/csv';
 
-    return $mime_types;
+	return $mime_types;
 } // dhp_add_mime_types()
 
 add_filter('upload_mimes', 'dhp_add_mime_types', 1, 1);
@@ -143,7 +143,7 @@ add_action('admin_head', 'dhp_plugin_header');
 function dhp_plugin_header()
 { ?>
 		<style>
-		    #icon-dhp-top-level-handle { background:transparent url('<?php echo DHP_PLUGIN_URL .'/images/dhpress-plugin-icon.png';?>') no-repeat; }     
+			#icon-dhp-top-level-handle { background:transparent url('<?php echo DHP_PLUGIN_URL .'/images/dhpress-plugin-icon.png';?>') no-repeat; }     
 		</style>
 <?php
 } // plugin_header()
@@ -222,20 +222,20 @@ function dhp_project_updated_messages( $messages )
   global $post, $post_ID;
 
   $messages['dhp-project'] = array(
-    0 => '', // Unused. Messages start at index 1.
-    1 => sprintf( __('Project updated. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
-    2 => __('Custom field updated.'),
-    3 => __('Custom field deleted.'),
-    4 => __('Project updated.'),
-    /* translators: %s: date and time of the revision */
-    5 => isset($_GET['revision']) ? sprintf( __('Project restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-    6 => sprintf( __('Project published. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
-    7 => __('Project saved.'),
-    8 => sprintf( __('Project submitted. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-    9 => sprintf( __('Project scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview project</a>'),
-      // translators: Publish box date format, see http://php.net/date
-      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-    10 => sprintf( __('Project draft updated. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	0 => '', // Unused. Messages start at index 1.
+	1 => sprintf( __('Project updated. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
+	2 => __('Custom field updated.'),
+	3 => __('Custom field deleted.'),
+	4 => __('Project updated.'),
+	/* translators: %s: date and time of the revision */
+	5 => isset($_GET['revision']) ? sprintf( __('Project restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	6 => sprintf( __('Project published. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
+	7 => __('Project saved.'),
+	8 => sprintf( __('Project submitted. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	9 => sprintf( __('Project scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview project</a>'),
+	  // translators: Publish box date format, see http://php.net/date
+	  date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	10 => sprintf( __('Project draft updated. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
   );
 
   return $messages;
@@ -249,9 +249,9 @@ add_filter( 'post_row_actions', 'dhp_export_post_link', 10, 2 );
 
 function dhp_export_post_link( $actions, $post )
 {
-    if ($post->post_type != 'dhp-project') {
-        return $actions;
-    }
+	if ($post->post_type != 'dhp-project') {
+		return $actions;
+	}
 
 	if (current_user_can('edit_posts')) {
 		$actions['CSV_Export'] = '<a href="admin.php?action=dhp_export_as_csv&amp;post='.$post->ID.'" title="Export this item as CSV" rel="permalink">CSV Export</a>';
@@ -292,27 +292,27 @@ function dhp_create_tax($taxID,$taxName,$taxSlug)
 {
 	// Add new taxonomy, make it hierarchical (like categories)
   $labels = array(
-    'name' => _x( $taxName, 'taxonomy general name' ),
-    'singular_name' => _x( $taxName, 'taxonomy singular name' ),
-    'search_items' =>  __( 'Search Terms' ),
-    'all_items' => __( 'All Terms' ),
-    'parent_item' => __( 'Parent Term' ),
-    'parent_item_colon' => __( 'Parent Term:' ),
-    'edit_item' => __( 'Edit Term' ), 
-    'update_item' => __( 'Update Term' ),
-    'add_new_item' => __( 'Add New Term' ),
-    'new_item_name' => __( 'New Term Name' ),
-    'menu_name' => __( 'Term' ),
+	'name' => _x( $taxName, 'taxonomy general name' ),
+	'singular_name' => _x( $taxName, 'taxonomy singular name' ),
+	'search_items' =>  __( 'Search Terms' ),
+	'all_items' => __( 'All Terms' ),
+	'parent_item' => __( 'Parent Term' ),
+	'parent_item_colon' => __( 'Parent Term:' ),
+	'edit_item' => __( 'Edit Term' ), 
+	'update_item' => __( 'Update Term' ),
+	'add_new_item' => __( 'Add New Term' ),
+	'new_item_name' => __( 'New Term Name' ),
+	'menu_name' => __( 'Term' ),
   ); 	
 
   register_taxonomy($taxID,array('dhp-markers'), array(
-    'hierarchical' => true,
-    'public' => true,
-    'labels' => $labels,
-    'show_ui' => true,
-    'show_in_nav_menus' => false,
-    'query_var' => true,
-    'rewrite' => array('hierarchical' => true, 'slug' => 'dhp-projects/'.$taxSlug, 'with_front' => false)
+	'hierarchical' => true,
+	'public' => true,
+	'labels' => $labels,
+	'show_ui' => true,
+	'show_in_nav_menus' => false,
+	'query_var' => true,
+	'rewrite' => array('hierarchical' => true, 'slug' => 'dhp-projects/'.$taxSlug, 'with_front' => false)
   ));
 } // dhp_create_tax()
 
@@ -349,7 +349,7 @@ add_action('add_meta_boxes_dhp-project', 'add_dhp_project_admin_edit');
 
 function add_dhp_project_admin_edit()
 {
-    add_meta_box(
+	add_meta_box(
 		'dhp_settings_box', 			// id of edit box
 		'Project Details',				// textual title of box
 		'show_dhp_project_admin_edit', 			// name of callback function
@@ -371,18 +371,18 @@ function show_dhp_project_admin_edit()
 
 		// BUG -- Post does not have appropriate value
 	$projObj = new DHPressProject($post->ID);
-    $project_settings = $projObj->getAllSettings();
+	$project_settings = $projObj->getAllSettings();
 
-    	// must handle case that project has just been created and does not have settings yet
-    if (is_null($project_settings)) {
-    	$project_settings = '';
-    } else {
-    	$project_settings = json_encode($project_settings);
-    }
+		// must handle case that project has just been created and does not have settings yet
+	if (is_null($project_settings)) {
+		$project_settings = '';
+	} else {
+		$project_settings = json_encode($project_settings);
+	}
 
-    	// Info about DH Press and this project
+		// Info about DH Press and this project
 	echo '<p><b>DH Press version '.DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;Project ID '.$post->ID.'</p>';
-    echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >Category Manager</a></p>';
+	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >Category Manager</a></p>';
 
 		// Insert Edit Panel's HTML
 	$projscript = dhp_get_script_text(DHP_HTML_ADMIN_EDIT);
@@ -453,8 +453,8 @@ function save_dhp_project_settings($post_id)
 
 		// Check to see if Project settings from custom metabox are different from saved version
 	$projObj = new DHPressProject($srcToCheck);
-    $old = $projObj->getAllSettings();
-    $new = $_POST['project_settings'];
+	$old = $projObj->getAllSettings();
+	$new = $_POST['project_settings'];
 	if ($new && $new != $old) {
 		update_metadata('post', $post_id, 'project_settings', $new);
 	} elseif ($new == '' && $old) {
@@ -483,33 +483,33 @@ function dhp_export_as_csv()
 		wp_die('Invalid request');
 	}
  
- 		// Get post ID and associated Project Data
+		// Get post ID and associated Project Data
 	$postID = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
 	$projObj = new DHPressProject($postID);
 
 		// Create appropriate filename
-    $date = new DateTime();
-    $dateFormatted = $date->format("Y-m-d");
+	$date = new DateTime();
+	$dateFormatted = $date->format("Y-m-d");
 
 	$filename = "csv-$dateFormatted.csv";
 
-    	// Tells the browser to expect a csv file and bring up the save dialog in the browser
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment;filename='.$filename);
+		// Tells the browser to expect a csv file and bring up the save dialog in the browser
+	header('Content-Type: text/csv; charset=utf-8');
+	header('Content-Disposition: attachment;filename='.$filename);
 
-    	// This opens up the output buffer as a "file"
-    $fp = fopen('php://output', 'w');
-    	// Hack to write as UTF-8 format
-    fwrite($fp, pack("CCC",0xef,0xbb,0xbf));
+		// This opens up the output buffer as a "file"
+	$fp = fopen('php://output', 'w');
+		// Hack to write as UTF-8 format
+	fwrite($fp, pack("CCC",0xef,0xbb,0xbf));
 
-    $cfs = $projObj->getAllCustomFieldNames();
-    $firstLine = array_merge(array('csv_post_title', 'csv_post_type' ), $cfs);
-    array_push($firstLine, 'csv_post_post');
+	$cfs = $projObj->getAllCustomFieldNames();
+	$firstLine = array_merge(array('csv_post_title', 'csv_post_type' ), $cfs);
+	array_push($firstLine, 'csv_post_post');
 
-    	// Output the names of columns first
-    fputcsv($fp, $firstLine);
+		// Output the names of columns first
+	fputcsv($fp, $firstLine);
 
-    	// Go through all of the Project's Markers and gather data
+		// Go through all of the Project's Markers and gather data
 	$loop = $projObj->setAllMarkerLoop();
 	while ( $loop->have_posts() ) : $loop->the_post();
 		$markerID = get_the_ID();
@@ -523,11 +523,11 @@ function dhp_export_as_csv()
 
 		array_push($values, get_the_content());
 
-    	fputcsv($fp, $values);
+		fputcsv($fp, $values);
 	endwhile;
 
-        // Close the output buffer
-    fclose($fp);
+		// Close the output buffer
+	fclose($fp);
  
 	exit();
 } // dhp_export_as_csv()
@@ -577,7 +577,7 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	array_push($filter_object['terms'], $filter_parent);
 
 	$myargs = array( 'orderby'       => 'term_group',
-		 			 'hide_empty'    => false, 
+					 'hide_empty'    => false, 
 					 'parent'        => $parent_term->term_id );
 	$children_terms  = get_terms($taxonomy, $myargs);
 
@@ -585,7 +585,7 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 	foreach ($children_terms as $child) {
 			// Does 1st-level term have any 2ndary children?
 		$childArgs = array( 'orderby' 		=> 'term_group',
-		 					'hide_empty'    => false,
+							'hide_empty'    => false,
 							'parent'        => $child->term_id );
 		$children_terms2 = get_terms( $taxonomy, $childArgs );
 
@@ -624,18 +624,18 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 		$child_filter['children']    = $new_children;
 
 			// If icon_url is a color value, determine if black or white will contrast: algorithms at
-        	//    http://www.particletree.com/notebook/calculating-color-contrast-for-legible-text/
-        	//    http://stackoverflow.com/questions/5650924/javascript-color-contraster
+			//    http://www.particletree.com/notebook/calculating-color-contrast-for-legible-text/
+			//    http://stackoverflow.com/questions/5650924/javascript-color-contraster
 		if (substr($icon_url, 0, 1) === '#') {
-	        $brightness = ((hexdec(substr($icon_url, 1, 2)) * 299.0) +
-	                    (hexdec(substr($icon_url, 3, 2)) * 587.0) +
-	                    (hexdec(substr($icon_url, 5, 2)) * 114.0)) / 255000.0;
+			$brightness = ((hexdec(substr($icon_url, 1, 2)) * 299.0) +
+						(hexdec(substr($icon_url, 3, 2)) * 587.0) +
+						(hexdec(substr($icon_url, 5, 2)) * 114.0)) / 255000.0;
 
-	        if ($brightness >= 0.5) {
-	            $child_filter['black'] = true;
-	        } else {
-	            $child_filter['black'] = false;
-	        }
+			if ($brightness >= 0.5) {
+				$child_filter['black'] = true;
+			} else {
+				$child_filter['black'] = false;
+			}
 		}
 
 		array_push($filter_object['terms'], $child_filter);
@@ -1134,16 +1134,16 @@ function dhp_initialize_taxonomy($mArray, $parent_id, $projRootTaxName)
 		if (!is_null($value) && $value != '') {
 				// WP's term_exists() function doesn't escape slash characters!
 				// 	Unlike wp_insert_term() and wp_update_term()!
-	   		$termIs = term_exists(addslashes($value), $projRootTaxName, $parent_id);
-	   			//debug
-	   		if(!$termIs) {
-	   			//if term doesn't exist, create
-	   			wp_insert_term($value, $projRootTaxName, $args);
-	   		} else {
-	   			//update term using id
-	   			wp_update_term($termIs->term_id, $projRootTaxName, $args);
-	   		}
-	   	}
+			$termIs = term_exists(addslashes($value), $projRootTaxName, $parent_id);
+				//debug
+			if(!$termIs) {
+				//if term doesn't exist, create
+				wp_insert_term($value, $projRootTaxName, $args);
+			} else {
+				//update term using id
+				wp_update_term($termIs->term_id, $projRootTaxName, $args);
+			}
+		}
 	}
 } // dhp_initialize_taxonomy()
 
@@ -1175,9 +1175,9 @@ function dhp_bind_tax_to_markers($projObj, $custom_field, $parent_id, $rootTaxNa
 				$value = trim($value);
 					// Since we are specifying $parent_id, term_exists() will return 0/NULL or hash
 				$term = term_exists($value, $rootTaxName, $parent_id);
-	   		 	if ($term !== 0 && $term !== null) {
-	   		 		array_push($theseTerms, intval($term['term_id']));
-	   		 	}
+				if ($term !== 0 && $term !== null) {
+					array_push($theseTerms, intval($term['term_id']));
+				}
 			}
 				// Ensure that marker is tagged with category terms for this mote
 			wp_set_object_terms($marker_id, $theseTerms, $rootTaxName, true);
@@ -1245,11 +1245,11 @@ function dhp_get_legend_vals()
 
 		// Get all taxonomic terms for project, excluding all other motes
 	$terms_loaded = get_terms($rootTaxName, 'exclude_tree='.$exclude_string.'&orderby=term_group&hide_empty=0');
- 	$t_count = count($terms_loaded);
+	$t_count = count($terms_loaded);
 
- 		// Parse icon_url data from the description metadata
- 	if ($t_count > 0) {
-   		foreach ($terms_loaded as $term) {
+		// Parse icon_url data from the description metadata
+	if ($t_count > 0) {
+		foreach ($terms_loaded as $term) {
 			$term->icon_url = $term->description;
 		}
 	}
@@ -2006,14 +2006,14 @@ function dhp_get_attached_PNGs($pID)
 
 	$images = get_attached_media('image/png', $pID);
 	foreach($images as $image) {
-	    $onePNG = array();
-	    $onePNG['id'] = $image->ID;
-	    $onePNG['title'] = $image->post_title;
-	    $imageData = wp_get_attachment_image_src($image->ID);
-	    $onePNG['url'] = $imageData[0];
-	    $onePNG['w'] = $imageData[1];
-	    $onePNG['h'] = $imageData[2];
-	    array_push($pngs, $onePNG);
+		$onePNG = array();
+		$onePNG['id'] = $image->ID;
+		$onePNG['title'] = $image->post_title;
+		$imageData = wp_get_attachment_image_src($image->ID);
+		$onePNG['url'] = $imageData[0];
+		$onePNG['w'] = $imageData[1];
+		$onePNG['h'] = $imageData[2];
+		array_push($pngs, $onePNG);
 	}
 	return $pngs;
 } // dhp_get_attached_PNGs()
@@ -2129,23 +2129,23 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 
 			// Get all taxonomic terms for project, excluding all other motes
 		$terms_loaded = get_terms($rootTaxName, 'exclude_tree='.$exclude_string.'&orderby=term_group&hide_empty=0');
-	 	$t_count = count($terms_loaded);
+		$t_count = count($terms_loaded);
 
 		$usedColor  = false;
 		$usedMaki   = false;
 		$usedPNG 	= false;
 		$mixFlagged = false;
 
-	 		// Check visualization data (encoded in the description metadata)
-	 		// 	Value must specified for all category/legend terms
+			// Check visualization data (encoded in the description metadata)
+			// 	Value must specified for all category/legend terms
 			//	Ensure value is a parseable value
 			//	Ensure there is not a mixture of icon and color
-	 		//	Ensure only color values are used if required
-	 	if ($t_count > 0) {
-	   		foreach ($terms_loaded as $term) {
-	   			if ($term->description == null || $term->description == '') {
-	   				$results .= '<p>The value '.$term->name.' for legend '.$theLegend.' has no visual setting.</p>';
-	   			} else {
+			//	Ensure only color values are used if required
+		if ($t_count > 0) {
+			foreach ($terms_loaded as $term) {
+				if ($term->description == null || $term->description == '') {
+					$results .= '<p>The value '.$term->name.' for legend '.$theLegend.' has no visual setting.</p>';
+				} else {
 					$isColor = preg_match("/^#[:xdigit:]{6}$/", $term->description);
 					$isMaki = preg_match("/^.maki\-\S/", $term->description);
 					$isPNG = preg_match("/^@\S/", $term->description);
@@ -2401,17 +2401,17 @@ add_action( 'admin_enqueue_scripts', 'add_dhp_project_admin_scripts', 10, 1 );
 
 function add_dhp_project_admin_scripts( $hook )
 {
-    global $post;
+	global $post;
 
-    $blog_id = get_current_blog_id();
+	$blog_id = get_current_blog_id();
 	$dev_url = get_admin_url( $blog_id ,'admin-ajax.php');
 	$plugin_folder = plugins_url('',dirname(__FILE__));
 	$postID  = get_the_ID();
 
- 		// Editing a specific project in admin panel
-    if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
-        if ( $post->post_type == 'dhp-project' ) {
-        		// Library styles
+		// Editing a specific project in admin panel
+	if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
+		if ( $post->post_type == 'dhp-project' ) {
+				// Library styles
 			wp_enqueue_style('jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.css', dirname(__FILE__)) );
 
 			wp_enqueue_style('jquery-colorpicker-style', plugins_url('/lib/colorpicker/jquery.colorpicker.css',  dirname(__FILE__)),
@@ -2455,16 +2455,16 @@ function add_dhp_project_admin_scripts( $hook )
 				'pngImages' => $pngs
 			) );
 
-        } else if ( $post->post_type == 'dhp-markers' ) {
-        	wp_enqueue_style('dhp-admin-style', plugins_url('/css/dhp-admin.css',  dirname(__FILE__) ));
-        }
+		} else if ( $post->post_type == 'dhp-markers' ) {
+			wp_enqueue_style('dhp-admin-style', plugins_url('/css/dhp-admin.css',  dirname(__FILE__) ));
+		}
 
-        // Shows list of all Project in admin panel
-    } else if ( $hook == 'edit.php'  ) {
-        if ( $post->post_type == 'dhp-project' ) {
+		// Shows list of all Project in admin panel
+	} else if ( $hook == 'edit.php'  ) {
+		if ( $post->post_type == 'dhp-project' ) {
 			wp_enqueue_script('jquery' );
-        }
-    }
+		}
+	}
 } // add_dhp_project_admin_scripts()
 
 
@@ -2538,9 +2538,9 @@ function dhp_get_map_layer_data($mapLayers)
 
 function dhp_get_script_text($scriptname)
 {
- 	$scriptpath = plugin_dir_path( __FILE__ ).'scripts/'.$scriptname;
- 	if (!file_exists($scriptpath)) {
- 		trigger_error("Script file ".$scriptpath." not found");
+	$scriptpath = plugin_dir_path( __FILE__ ).'scripts/'.$scriptname;
+	if (!file_exists($scriptpath)) {
+		trigger_error("Script file ".$scriptpath." not found");
 	}
 	$scripthandle = fopen($scriptpath, "r");
 	$scripttext = file_get_contents($scriptpath);
@@ -2567,7 +2567,7 @@ function dhp_mod_page_content($content) {
 		// Only produce dhp-visual div hook for Project posts
 	switch ($postType) {
 	case 'dhp-project':
-    	$projObj = new DHPressProject($postID);
+		$projObj = new DHPressProject($postID);
 
 		$projscript = dhp_get_script_text(DHP_SCRIPT_PROJ_VIEW);
 
@@ -2579,29 +2579,29 @@ function dhp_mod_page_content($content) {
 		$ep = $projObj->getEntryPointByIndex($vizIndex);
 		switch ($ep->type) {
 		case 'map':
-	    	$projscript .= dhp_get_script_text(DHP_SCRIPT_MAP_VIEW);
-	    	break;
+			$projscript .= dhp_get_script_text(DHP_SCRIPT_MAP_VIEW);
+			break;
 		case 'cards':
-	    	$projscript .= dhp_get_script_text(DHP_SCRIPT_CARDS_VIEW);
+			$projscript .= dhp_get_script_text(DHP_SCRIPT_CARDS_VIEW);
 			break;
 		case 'pinboard':
-	    	$projscript .= dhp_get_script_text(DHP_SCRIPT_PINBOARD_VIEW);
+			$projscript .= dhp_get_script_text(DHP_SCRIPT_PINBOARD_VIEW);
 			break;
 		case 'tree':
 				// currently nothing is used
-	    	// $projscript .= dhp_get_script_text(DHP_SCRIPT_TREE_VIEW);
+			// $projscript .= dhp_get_script_text(DHP_SCRIPT_TREE_VIEW);
 			break;
 		case 'time':
 				// currently nothing is used
-	    	// $projscript .= dhp_get_script_text(DHP_SCRIPT_TIME_VIEW);
+			// $projscript .= dhp_get_script_text(DHP_SCRIPT_TIME_VIEW);
 			break;
 		case 'flow':
 				// currently nothing is used
-	    	// $projscript .= dhp_get_script_text(DHP_SCRIPT_FLOW_VIEW);
+			// $projscript .= dhp_get_script_text(DHP_SCRIPT_FLOW_VIEW);
 			break;
 		case 'browser':
 				// currently nothing is used
-	    	// $projscript .= dhp_get_script_text(DHP_SCRIPT_BROWSER_VIEW);
+			// $projscript .= dhp_get_script_text(DHP_SCRIPT_BROWSER_VIEW);
 			break;
 		}
 		$to_append = '<div id="dhp-visual"></div>'.$projscript;
@@ -2639,16 +2639,16 @@ function dhp_page_template( $page_template )
 	$post_type = get_query_var('post_type');
 
 		// Viewing a Project?
-    if ( $post_type == 'dhp-project' ) {
-    	$projObj = new DHPressProject($post->ID);
-    	$allSettings = $projObj->getAllSettings();
+	if ( $post_type == 'dhp-project' ) {
+		$projObj = new DHPressProject($post->ID);
+		$allSettings = $projObj->getAllSettings();
 
-    		// Communicate to visualizations by sending parameters in this array
-    	$vizParams = array();
+			// Communicate to visualizations by sending parameters in this array
+		$vizParams = array();
 
 			// Foundation styles
-        wp_enqueue_style('dhp-foundation-style', plugins_url('/lib/foundation-5.1.1/css/foundation.min.css',  dirname(__FILE__)));
-        wp_enqueue_style('dhp-foundation-icons', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
+		wp_enqueue_style('dhp-foundation-style', plugins_url('/lib/foundation-5.1.1/css/foundation.min.css',  dirname(__FILE__)));
+		wp_enqueue_style('dhp-foundation-icons', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
 
 		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), 'dhp-foundation-style', DHP_PLUGIN_VERSION );
 
@@ -2670,17 +2670,17 @@ function dhp_page_template( $page_template )
 		}
 		$vizParams['menu'] = $vizMenu;
 
-    		// Visualization specific -- only 1st Entry Point currently supported
-    	$thisEP = $projObj->getEntryPointByIndex($vizIndex);
-    	switch ($thisEP->type) {
-    	case 'map':
+			// Visualization specific -- only 1st Entry Point currently supported
+		$thisEP = $projObj->getEntryPointByIndex($vizIndex);
+		switch ($thisEP->type) {
+		case 'map':
 			wp_enqueue_style('dhp-jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.css', dirname(__FILE__)));
 
 			wp_enqueue_style('dhp-map-css', plugins_url('/css/dhp-map.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.3/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			wp_enqueue_style('maki-sprite-style', plugins_url('/lib/maki/maki-sprite.css',  dirname(__FILE__)) );
 
-	    	wp_enqueue_script('dhp-google-map-script', 'http'. ( is_ssl() ? 's' : '' ) .'://maps.google.com/maps/api/js?v=3&amp;sensor=false');
+			wp_enqueue_script('dhp-google-map-script', 'http'. ( is_ssl() ? 's' : '' ) .'://maps.google.com/maps/api/js?v=3&amp;sensor=false');
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
 			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
@@ -2707,21 +2707,21 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-	    	array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-map-services',
-	    							'dhp-jquery-ui');
-	    	break;
+			array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-map-services',
+									'dhp-jquery-ui');
+			break;
 
-	    case 'cards':
+		case 'cards':
 			wp_enqueue_style('dhp-cards-css', plugins_url('/css/dhp-cards.css',  dirname(__FILE__)) );
 
 			wp_enqueue_script('isotope', plugins_url('/lib/isotope.pkgd.min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-cards-view', plugins_url('/js/dhp-cards-view.js', dirname(__FILE__)), 
 				'isotope' );
 
-	    	array_push($dependencies, 'isotope', 'dhp-cards-view');
-	    	break;
+			array_push($dependencies, 'isotope', 'dhp-cards-view');
+			break;
 
-	    case 'pinboard':
+		case 'pinboard':
 			wp_enqueue_style('dhp-jquery-ui-style', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.css', dirname(__FILE__)));
 
 			wp_enqueue_style('foundation-icons-css', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
@@ -2745,28 +2745,28 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-	    	array_push($dependencies, 'snap', 'dhp-jquery-ui', 'dhp-pinboard-view');
-	    	break;
+			array_push($dependencies, 'snap', 'dhp-jquery-ui', 'dhp-pinboard-view');
+			break;
 
-	    case 'tree':
+		case 'tree':
 			wp_enqueue_style('dhp-tree-css', plugins_url('/css/dhp-tree.css',  dirname(__FILE__)) );
 
 			wp_enqueue_script('d3', plugins_url('/lib/d3.min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-tree-view', plugins_url('/js/dhp-tree-view.js', dirname(__FILE__)), 'd3' );
 
-	    	array_push($dependencies, 'd3', 'dhp-tree-view');
-	    	break;
+			array_push($dependencies, 'd3', 'dhp-tree-view');
+			break;
 
-	    case 'time':
+		case 'time':
 			wp_enqueue_style('dhp-time-css', plugins_url('/css/dhp-time.css',  dirname(__FILE__)) );
 
 			wp_enqueue_script('d3', plugins_url('/lib/d3.min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-time-view', plugins_url('/js/dhp-time-view.js', dirname(__FILE__)), 'd3' );
 
-	    	array_push($dependencies, 'd3', 'dhp-time-view');
-	    	break;
+			array_push($dependencies, 'd3', 'dhp-time-view');
+			break;
 
-	    case 'flow':
+		case 'flow':
 			wp_enqueue_style('dhp-flow-css', plugins_url('/css/dhp-flow.css',  dirname(__FILE__)) );
 
 			wp_enqueue_script('d3', plugins_url('/lib/d3.min.js', dirname(__FILE__)));
@@ -2774,25 +2774,25 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('dhp-flow-view', plugins_url('/js/dhp-flow-view.js', dirname(__FILE__)),
 				array('d3', 'd3-parsets') );
 
-	    	array_push($dependencies, 'd3', 'd3-parsets', 'dhp-flow-view');
-	    	break;
+			array_push($dependencies, 'd3', 'd3-parsets', 'dhp-flow-view');
+			break;
 
-	    case 'browser':
+		case 'browser':
 			wp_enqueue_style('dhp-browser-css', plugins_url('/css/dhp-browser.css',  dirname(__FILE__)) );
 
 			wp_enqueue_script('d3', plugins_url('/lib/d3.min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-browser-view', plugins_url('/js/dhp-browser-view.js', dirname(__FILE__)),
 				'd3' );
 
-	    	array_push($dependencies, 'd3', 'dhp-browser-view');
-	    	break;
+			array_push($dependencies, 'd3', 'dhp-browser-view');
+			break;
 
-	    default:
-	 		trigger_error("Unknown visualization type: ".$thisEP->type);
-	    	break;
-	    }
+		default:
+			trigger_error("Unknown visualization type: ".$thisEP->type);
+			break;
+		}
 
-	    	// Any playback widgets?
+			// Any playback widgets?
 		if (($allSettings->views->transcript->audio && $allSettings->views->transcript->audio != '' &&
 			$allSettings->views->transcript->audio != 'disable') ||
 			($allSettings->views->transcript->video && $allSettings->views->transcript->video != '' &&
@@ -2804,13 +2804,13 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('dhp-widget', plugins_url('/js/dhp-widget.js',  dirname(__FILE__)),
 				 array('jquery', 'underscore') );
 			if ($projObj->selectModalHas('scloud')) {
-	        	wp_enqueue_script('soundcloud-api', 'http://w.soundcloud.com/player/api.js');
-	    		array_push($dependencies, 'soundcloud-api');
-	        }
+				wp_enqueue_script('soundcloud-api', 'http://w.soundcloud.com/player/api.js');
+				array_push($dependencies, 'soundcloud-api');
+			}
 			// if ($projObj->selectModalHas('youtube')) {
 			// }
-	    	array_push($dependencies, 'dhp-widget');
-	    }
+			array_push($dependencies, 'dhp-widget');
+		}
 
 			// For touch-screen mechanisms
 		// wp_enqueue_script('dhp-touch-punch', plugins_url('/lib/jquery.ui.touch-punch.js', dirname(__FILE__)),
@@ -2818,9 +2818,9 @@ function dhp_page_template( $page_template )
 
 		wp_enqueue_script('dhp-services', plugins_url('/js/dhp-services.js', dirname(__FILE__)),
 						array('jquery', 'underscore'), DHP_PLUGIN_VERSION );
-	    array_push($dependencies, 'dhp-services');
+		array_push($dependencies, 'dhp-services');
 
-	    	// Enqueue page JS last, after we've determine what dependencies might be
+			// Enqueue page JS last, after we've determine what dependencies might be
 		wp_enqueue_script('dhp-public-project-script', plugins_url('/js/dhp-project-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );
 
 			// Set up the marker query and get first post just to get the base URL for markers
@@ -2838,7 +2838,7 @@ function dhp_page_template( $page_template )
 		) );
 
 		// Looking at a Marker/Data entry?
-    } else if ( $post_type == 'dhp-markers' ) {
+	} else if ( $post_type == 'dhp-markers' ) {
 		$project_id = get_post_meta($post->ID, 'project_id',true);
 		$projObj = new DHPressProject($project_id);
 
@@ -2864,9 +2864,9 @@ function dhp_page_template( $page_template )
 			// 'marker_url' => $marker_url,
 			'proj_id' => $project_id
 		) );
-    } // else if ($post_type == 'dhp-markers')
+	} // else if ($post_type == 'dhp-markers')
 
-    return $page_template;
+	return $page_template;
 } // dhp_page_template()
 
 
@@ -2888,21 +2888,21 @@ function dhp_tax_template( $page_template )
 
 		// ensure a Taxonomy archive page is being rendered
 	if( is_tax() ) {
-	    global $wp_query;
+		global $wp_query;
 
-	    $term = $wp_query->get_queried_object();
-	    $title = $term->taxonomy;
-	    $term_parent = get_term($term->parent, $title);
+		$term = $wp_query->get_queried_object();
+		$title = $term->taxonomy;
+		$term_parent = get_term($term->parent, $title);
 
-	    	// Set the name of the term's parent, which is also the name of the mote
-	    $term->parent_name = $term_parent->name;
+			// Set the name of the term's parent, which is also the name of the mote
+		$term->parent_name = $term_parent->name;
 
-	    $projectID = DHPressProject::RootTaxNameToProjectID($title);
-	    $projObj = new DHPressProject($projectID);
-	    $project_settings = $projObj->getAllSettings();
+		$projectID = DHPressProject::RootTaxNameToProjectID($title);
+		$projObj = new DHPressProject($projectID);
+		$project_settings = $projObj->getAllSettings();
 
-	    	// Are we on a taxonomy/archive page that corresponds to transcript "source"?
-	    $isTranscript = ($project_settings->views->transcript->source == $term_parent->name);
+			// Are we on a taxonomy/archive page that corresponds to transcript "source"?
+		$isTranscript = ($project_settings->views->transcript->source == $term_parent->name);
 
 			// Foundation styles
 		wp_enqueue_style('dhp-foundation-css', plugins_url('/lib/foundation-5.1.1/css/foundation.min.css',  dirname(__FILE__)));
@@ -2916,22 +2916,22 @@ function dhp_tax_template( $page_template )
 		wp_enqueue_script('underscore');
 		// wp_enqueue_script('handlebars', plugins_url('/lib/handlebars-v1.1.2.js', dirname(__FILE__)));
 
-	    if ($isTranscript) {
+		if ($isTranscript) {
 			wp_enqueue_style('transcript', plugins_url('/css/transcriptions.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			if ($projObj->selectModalHas('scloud')) {
-	        	wp_enqueue_script('soundcloud-api', 'http://w.soundcloud.com/player/api.js');
-		    	array_push($dependencies, 'soundcloud-api');
-	        }
+				wp_enqueue_script('soundcloud-api', 'http://w.soundcloud.com/player/api.js');
+				array_push($dependencies, 'soundcloud-api');
+			}
 			// if ($projObj->selectModalHas('youtube')) {
 			// }
 			wp_enqueue_script('dhp-widget', plugins_url('/js/dhp-widget.js',  dirname(__FILE__)),
 				 array('jquery', 'underscore'), DHP_PLUGIN_VERSION);
-		    array_push($dependencies, 'dhp-widget');
+			array_push($dependencies, 'dhp-widget');
 		}
 
 		wp_enqueue_script('dhp-services', plugins_url('/js/dhp-services.js', dirname(__FILE__)),
 						array('jquery', 'underscore'), DHP_PLUGIN_VERSION );
-	    array_push($dependencies, 'dhp-services');
+		array_push($dependencies, 'dhp-services');
 
 			// Enqueue last, after dependencies have been determined
 		wp_enqueue_script('dhp-tax-script', plugins_url('/js/dhp-tax-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );

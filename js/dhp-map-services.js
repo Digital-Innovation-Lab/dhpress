@@ -158,7 +158,7 @@ var dhpMapServices = (function () {
 				if (leafMap)
 					newLeafLayer.addTo(leafMap);
 				if (control)
-                	control.addBaseLayer(newLeafLayer, layerDef.sname);
+					control.addBaseLayer(newLeafLayer, layerDef.sname);
 			} else {
 				layerDef = doGetOverlayByID(id);
 
