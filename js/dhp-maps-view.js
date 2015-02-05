@@ -358,14 +358,21 @@ var dhpMapsView = {
                 switch (fKey.charAt(0)) {
                     // Color value -- Point or Polygon
                 case '#':
-                    if (theMarker.geometry.type === 'Point') {
+                    var type = theMarker.geometry.type;
+                    if (type === 'Point') {
                         aNewMarker = L.circleMarker(theMarker.geometry.coordinates, {
                             id: markerIndex, weight: 1, radius: dhpMapsView.radius,
                             fillColor: fKey, color: "#000",
                             opacity: dhpMapsView.markerOpacity, fillOpacity: dhpMapsView.markerOpacity
                         });
+                    } else if (type === 'Line') {
+                        aNewMarker = L.polyline(theMarker.geometry.coordinates, {
+                            id: markerIndex, weight: 1, color: fKey,
+                            opacity: dhpMapsView.markerOpacity, weight: 4
+                        });
+
                     } else {
-                        if (theMarker.geometry.type !== 'Polygon') {
+                        if (type !== 'Polygon') {
                             throw new Error("Bad Marker type: "+theMarker.geometry.type);
                         } else {
                             aNewMarker = L.polygon(theMarker.geometry.coordinates, {

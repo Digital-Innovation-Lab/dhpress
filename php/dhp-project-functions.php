@@ -664,7 +664,7 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 			// 			{ "type" : "Feature",	// Only added to FeatureCollections created for Maps
 			//							// Only if map or pinboard
 			// 			  "geometry" : {
-			//					"type" : "Point" | "Polygon"
+			//					"type" : "Point" | "Line" | "Polygon"
 			//					"coordinates" : LongLat (or X-Y)
 			//			  },
 			//			  "date" : String, 	// Only if Timeline
@@ -867,13 +867,19 @@ function dhp_get_markers()
 					$split = explode(',', $latlon);
 					$thisFeature['geometry'] = array("type"=>"Point",
 													"coordinates"=> array((float)$split[0], (float)$split[1]));
+
 				} else {
 					$poly = array();
 					foreach ($split as $thisPt) {
 						$pts = explode(',', $thisPt);
 						array_push($poly, array((float)$pts[0], (float)$pts[1]));
 					}
-					$thisFeature['geometry'] = array("type" => "Polygon", "coordinates" => array($poly));
+					if (count($poly) == 2) {
+						$thisFeature['geometry'] = array("type" => "Line", "coordinates" => $poly);
+
+					} else {
+						$thisFeature['geometry'] = array("type" => "Polygon", "coordinates" => $poly);
+					}
 				}
 			} else {
 				$split = explode(',', $latlon);

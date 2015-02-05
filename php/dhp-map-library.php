@@ -6,7 +6,7 @@
 //              dhp_map_id          = unique ID for this map (String)
 //              dhp_map_sname       = a short title for map, does not need to be unique
 //              dhp_map_url         = URL for map on map server
-//              dhp_map_subdomains  = extra urls for tile server subdomains
+//              dhp_map_subdomains  = extra urls for tile server subdomains separated by |
 //              dhp_map_n_bounds    = latitude of northern bounds of map/overlay
 //              dhp_map_s_bounds    = latitude of southern bounds of map/overlay
 //              dhp_map_e_bounds    = longitude of eastern bounds of map/overlay
