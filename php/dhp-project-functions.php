@@ -657,14 +657,14 @@ function dhp_get_category_vals($parent_term, $taxonomy)
 //			$index = index of entry-point to display
 // RETURNS: JSON object describing all markers associated with Project
 //			[0..n-1] contains results from dhp_get_category_vals() defined above;
-//			[n] is a FeatureCollection; exact contents will depend on visualization, but could include:
-			// {	"type": "FeatureCollection",
+//			[n] is based on FeatureCollection; exact contents will depend on visualization, but could include:
+			// {	"type": "FeatureCollection",	// No longer GeoJSON compliant!
 			// 	 	"features" :
 			// 		[
 			// 			{ "type" : "Feature",	// Only added to FeatureCollections created for Maps
 			//							// Only if map or pinboard
 			// 			  "geometry" : {
-			//					"type" : "Point" | "Line" | "Polygon"
+			//					"type" : 1 = Point | 2 = Line | 3 = Polygon
 			//					"coordinates" : LongLat (or X-Y)
 			//			  },
 			//			  "date" : String, 	// Only if Timeline
@@ -865,7 +865,7 @@ function dhp_get_markers()
 					// Just treat as Point if only one data item
 				if (count($split) == 1) {
 					$split = explode(',', $latlon);
-					$thisFeature['geometry'] = array("type"=>"Point",
+					$thisFeature['geometry'] = array("type" => 1,
 													"coordinates"=> array((float)$split[0], (float)$split[1]));
 
 				} else {
@@ -875,10 +875,10 @@ function dhp_get_markers()
 						array_push($poly, array((float)$pts[0], (float)$pts[1]));
 					}
 					if (count($poly) == 2) {
-						$thisFeature['geometry'] = array("type" => "Line", "coordinates" => $poly);
+						$thisFeature['geometry'] = array("type" => 2, "coordinates" => $poly);
 
 					} else {
-						$thisFeature['geometry'] = array("type" => "Polygon", "coordinates" => $poly);
+						$thisFeature['geometry'] = array("type" => 3, "coordinates" => $poly);
 					}
 				}
 			} else {
@@ -896,7 +896,7 @@ function dhp_get_markers()
 				continue;
 			}
 			$split = explode(',', $xycoord);
-			$thisFeature['geometry'] = array("type"=>"Point",
+			$thisFeature['geometry'] = array("type"=> 1,
 											"coordinates"=> array((float)$split[0], (float)$split[1]));
 		}
 

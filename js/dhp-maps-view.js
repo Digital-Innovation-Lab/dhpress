@@ -1,12 +1,7 @@
 // DH Press Maps View -- contains all data and functions for rendering maps with help of dhpCustomMaps
 // ASSUMES: An area for the map has been marked with HTML div as "dhp-visual"
 //          That the custom maps "library" has already been loaded with corresponding map entries
-// NOTES:   Format of Marker and Legend data (GeoJSON) is documented in dhp-project-functions.php
-//          Once size of Marker array increases, may need to make filter more efficient
-//          FeatureCollections can now consist of both Points and Polygons; however, mixing makes it
-//              difficult to pass as GeoJSON to Leaflet, as markerStyle() does redundant work. A better
-//              solution would be to create and pass separate GeoJSON arrays for Points and Polygons
-//              but this is not conducive to current architecture. Better support in next Leaflet?
+// NOTES:   Format of Marker and Legend data is documented in dhp-project-functions.php
 
 // USES:    JavaScript libraries jQuery, Underscore, Zurb Foundation, Leaflet
 
@@ -356,24 +351,24 @@ var dhpMapsView = {
 
             if (found) {
                 switch (fKey.charAt(0)) {
-                    // Color value -- Point or Polygon
+                    // Color value -- Must be Point (1), Line (2) or Polygon (3)
                 case '#':
                     var type = theMarker.geometry.type;
-                    if (type === 'Point') {
+                    if (type === 1) {
                         aNewMarker = L.circleMarker(theMarker.geometry.coordinates, {
                             id: markerIndex, weight: 1, radius: dhpMapsView.radius,
                             fillColor: fKey, color: "#000",
                             opacity: dhpMapsView.markerOpacity, fillOpacity: dhpMapsView.markerOpacity
                         });
-                    } else if (type === 'Line') {
+                    } else if (type === 2) {
                         aNewMarker = L.polyline(theMarker.geometry.coordinates, {
                             id: markerIndex, weight: 1, color: fKey,
                             opacity: dhpMapsView.markerOpacity, weight: 4
                         });
 
                     } else {
-                        if (type !== 'Polygon') {
-                            throw new Error("Bad Marker type: "+theMarker.geometry.type);
+                        if (type !== 3) {
+                            throw new Error("Bad Marker type: "+type);
                         } else {
                             aNewMarker = L.polygon(theMarker.geometry.coordinates, {
                                 id: markerIndex, weight: 1, color: "#000", fillColor: fKey,
