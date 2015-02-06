@@ -883,7 +883,7 @@ function dhp_get_markers()
 				}
 			} else {
 				$split = explode(',', $latlon);
-				$thisFeature['geometry'] = array("type"=>"Point",
+				$thisFeature['geometry'] = array("type" => 1,
 												"coordinates"=> array((float)$split[0],(float)$split[1]));
 			}
 		}
