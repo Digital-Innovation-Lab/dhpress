@@ -12,18 +12,6 @@
 // ================== Global Constants and Variables ===================
 
 define( 'DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.txt' );
-define( 'DHP_SCRIPT_PROJ_VIEW',  'dhp-script-proj-view.txt' );
-define( 'DHP_SCRIPT_MAP_VIEW',   'dhp-script-map-view.txt' );
-define( 'DHP_SCRIPT_CARDS_VIEW',   'dhp-script-cards-view.txt' );
-define( 'DHP_SCRIPT_PINBOARD_VIEW',   'dhp-script-pin-view.txt' );
-
-// define( 'DHP_SCRIPT_TREE_VIEW',   'dhp-script-tree-view.txt' );   // currently unneeded
-// define( 'DHP_SCRIPT_TIME_VIEW',   'dhp-script-time-view.txt' );   // currently unneeded
-// define( 'DHP_SCRIPT_FLOW_VIEW',   'dhp-script-flow-view.txt' );   // currently unneeded
-// define( 'DHP_SCRIPT_BROWSER_VIEW',   'dhp-script-browser-view.txt' );   // currently unneeded
-
-// define( 'DHP_SCRIPT_TAX_TRANS',  'dhp-script-tax-trans.txt' );	// currently unneeded
-// define( 'DHP_SCRIPT_TRANS_VIEW', 'dhp-script-trans-view.txt' );   // currently unneeded
 
 
 // ================== Initialize Plug-in ==================
@@ -2554,63 +2542,12 @@ add_filter('the_content', 'dhp_mod_page_content');
 // PURPOSE:	Called by WP to modify content to be rendered for a post page
 // INPUT:	$content = material to show on page
 // RETURNS:	$content with ID of this post and DH Press hooks for marker text and visualization
-// NOTES:   Need to insert Handlebars script texts into HTML, depending on visualizations
 
 function dhp_mod_page_content($content) {
-	// $postID = get_the_ID();
-	// $postType = get_query_var('post_type');
-
 	global $post;
-	$postID = $post->ID;
-	$postType = $post->post_type;
 
-		// Only produce dhp-visual div hook for Project posts
-	switch ($postType) {
-	case 'dhp-project':
-		$projObj = new DHPressProject($postID);
-
-		$projscript = dhp_get_script_text(DHP_SCRIPT_PROJ_VIEW);
-
-			// Which visualization is being shown
-		$vizIndex = (get_query_var('viz')) ? get_query_var('viz') : 0;
-		// $allSettings = $projObj->getAllSettings();
-		// $vizIndex = min($vizIndex, count($allSettings->eps)-1);
-
-		$ep = $projObj->getEntryPointByIndex($vizIndex);
-		switch ($ep->type) {
-		case 'map':
-			$projscript .= dhp_get_script_text(DHP_SCRIPT_MAP_VIEW);
-			break;
-		case 'cards':
-			$projscript .= dhp_get_script_text(DHP_SCRIPT_CARDS_VIEW);
-			break;
-		case 'pinboard':
-			$projscript .= dhp_get_script_text(DHP_SCRIPT_PINBOARD_VIEW);
-			break;
-		case 'tree':
-				// currently nothing is used
-			// $projscript .= dhp_get_script_text(DHP_SCRIPT_TREE_VIEW);
-			break;
-		case 'time':
-				// currently nothing is used
-			// $projscript .= dhp_get_script_text(DHP_SCRIPT_TIME_VIEW);
-			break;
-		case 'flow':
-				// currently nothing is used
-			// $projscript .= dhp_get_script_text(DHP_SCRIPT_FLOW_VIEW);
-			break;
-		case 'browser':
-				// currently nothing is used
-			// $projscript .= dhp_get_script_text(DHP_SCRIPT_BROWSER_VIEW);
-			break;
-		}
-		$to_append = '<div id="dhp-visual"></div>'.$projscript;
-		break;
-	default:
-		$to_append = '<div class="dhp-entrytext"></div>';
-		break;
-	}
-	return $content.'<div class="dhp-post" id="'.$postID.'">'.$to_append.'</div>';
+		// NOTE: This is not called in case of Viewing Projects
+	return $content.'<div class="dhp-post" id="'.$post->ID.'"><div class="dhp-entrytext"></div></div>';
 } // dhp_mod_page_content()
 
 
@@ -2639,7 +2576,12 @@ function dhp_page_template( $page_template )
 	$post_type = get_query_var('post_type');
 
 		// Viewing a Project?
-	if ( $post_type == 'dhp-project' ) {
+	if ($post_type == 'dhp-project') {
+			// Get rid of theme styles
+		wp_dequeue_style('screen');
+		wp_deregister_style('screen');
+		wp_dequeue_style('events-manager');
+
 		$projObj = new DHPressProject($post->ID);
 		$allSettings = $projObj->getAllSettings();
 
@@ -2823,19 +2765,14 @@ function dhp_page_template( $page_template )
 			// Enqueue page JS last, after we've determine what dependencies might be
 		wp_enqueue_script('dhp-public-project-script', plugins_url('/js/dhp-project-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );
 
-			// Set up the marker query and get first post just to get the base URL for markers
-		// $loop = $projObj->setAllMarkerLoop();
-		// $loop->the_post();
-		// $marker_url = get_post_permalink(0, true);
-		// 	// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
-		// $marker_url = substr($marker_url, 0, strlen($marker_url)-14);
-
 		wp_localize_script('dhp-public-project-script', 'dhpData', array(
 			'ajax_url'   => $ajax_url,
 			'vizParams'  => $vizParams,
-			// 'marker_url' => $marker_url,
 			'settings'   => $allSettings
 		) );
+
+			// Replace HTML with Project View Template
+		$page_template = dirname(__FILE__).'/scripts/dhp-view-template.php';
 
 		// Looking at a Marker/Data entry?
 	} else if ( $post_type == 'dhp-markers' ) {
@@ -2853,18 +2790,12 @@ function dhp_page_template( $page_template )
 						array('jquery', 'underscore'), DHP_PLUGIN_VERSION );
 		wp_enqueue_script('dhp-marker-script', plugins_url('/js/dhp-marker-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION);
 
-			// System already geared to marker posts
-		// $marker_url = get_post_permalink(0, true);
-			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
-		// $marker_url = substr($marker_url, 0, strlen($marker_url)-14);
-
 		wp_localize_script('dhp-marker-script', 'dhpData', array(
 			'ajax_url' => $ajax_url,
 			'settings' => $projObj->getAllSettings(),
-			// 'marker_url' => $marker_url,
 			'proj_id' => $project_id
 		) );
-	} // else if ($post_type == 'dhp-markers')
+	} // else if dhp-markers
 
 	return $page_template;
 } // dhp_page_template()

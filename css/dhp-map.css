@@ -3,10 +3,6 @@
 
 @charset "UTF-8";
 
-body.fullscreen {
-	overflow: hidden;
-}
-
 #dhp-visual {
 	z-index: 1000;
 }
@@ -22,8 +18,8 @@ body.fullscreen {
 	top:10px;
 }
 
-.fullscreen #dhp-visual div.olControlZoom,
-.fullscreen #dhp-visual .leaflet-control-zoom {
+#dhp-visual div.olControlZoom,
+#dhp-visual .leaflet-control-zoom {
 	/*top: 110px;*/
 	
 }
@@ -92,7 +88,7 @@ input.leaflet-control-layers-selector {
 	width: 100%;*/
 }
 
-.logged-in.fullscreen #dhp-visual div.olControlZoom {
+.logged-in #dhp-visual div.olControlZoom {
 	top:70px;
 }
 

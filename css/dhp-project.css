@@ -3,6 +3,10 @@
 
 @charset "UTF-8";
 
+html {
+	overflow: hidden;
+}
+
 body {
 	cursor: auto;
 }
@@ -17,24 +21,27 @@ code {
 	white-space: inherit;
 }
 
+h1 {
+	font-size: 2.75rem;
+}
+
+body .site {
+	margin-top: 0px;
+}
+
 	/* ======== NAVIGATION BAR ========= */
 
 .dhp-nav {
 	z-index: 1102;
 	width: 100%;
-}
-
-.dhp-nav.fixed {
-	position: fixed;
-	z-index: 1102;
-	width: 100%;
-}
-
-.fullscreen .dhp-nav {
 	position: absolute;
 	left: 0px;
 	top: 0px;
 	z-index: 1105;
+}
+
+.dhp-nav.fixed {
+	position: fixed;
 }
 
 .admin-bar .dhp-nav.fixed {
@@ -83,25 +90,10 @@ code {
 	text-align: right;
 }
 
-.fullscreen h1 {
-	font-size: 2.75rem;
-}
-body.fullscreen .site {
-	margin-top: 0px;
-}
-html.fullscreen {
-	overflow: hidden;
-}
-
 	/* ========== VISUALIZATION FRAME ========= */
 
 #dhp-visual {
-	position: relative;
 	background: #fff;
-}
-
-	/* Must position below upper nav-bar */
-.fullscreen #dhp-visual {
 	width:100%;
 	min-width: 100%;
 	height: auto;
@@ -110,7 +102,6 @@ html.fullscreen {
 	left: 0px;
 	bottom: 0;
 }
-
 
 .dhp-mote-title {
 	font-weight: bold;
@@ -121,13 +112,16 @@ html.fullscreen {
 .modal {
 	z-index: 1150;
 }
+
 .modal-content {
 	overflow: auto;
 }
+
 .modal-content div {
 	padding-bottom: 10px;
 	line-height: 1.5em;
 }
+
 .modal.transcript {
 	position: fixed;
 	top: 10%;
@@ -185,41 +179,25 @@ html.fullscreen {
 	display:none;
 }
 
-	/* Legend style (by default non-fullscreen) */
 #legends {
-	position: relative;	
-	margin-left: 0;
-	overflow: auto;
-
-	opacity: 0.9;
-
-/*	max-width: 320px; */
-	min-width: 260px;
-	min-height: 120px;
-	max-height: 200px;
-
 	background: #fff;
 	background-color: rgba(255, 255, 255, .95);
 
 	/*foundation font style*/
 	color: #222;
 	font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
-}
 
-#legends.mini {
-/*	min-height: 37px; */
-    overflow: hidden;
-}
-
-	/* Override for fullscreen */
-.fullscreen #legends {
 	position:absolute;
 	overflow: auto;
 
 	opacity: 0.9;
 
-		/* These height settings are not working properly, and it's unclear why.
-			In fullscreen, only the min-height setting is used; max-height is ignored.
+	margin-left: 0;
+
+	min-width: 260px;
+
+		/* These height settings are not working properly, prob from interference by Foundation.
+			Only the min-height setting is used; max-height is ignored.
 		 */
 	min-height: 300px;
 /*	min-height: 220px; */
@@ -235,19 +213,19 @@ html.fullscreen {
 	box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
 }
 
-.fullscreen #legends.mini {
+#legends.mini {
 	min-height: 30px;
     overflow: hidden;
 }
 
 
 @media all and (min-width: 1025px) {
-  .fullscreen #legends {
+  #legends {
   	min-width: 320px;
   }
 }
 
-.logged-in.fullscreen #legends {
+.logged-in #legends {
 	/*top:70px;*/
 }
 
@@ -260,6 +238,7 @@ html.fullscreen {
 }
 
 .legend-div .legend-title {
+	height: 1.1em;
 	padding-left: 10px;
 	padding-right: 20px;
 	border-bottom: 1px solid #111;

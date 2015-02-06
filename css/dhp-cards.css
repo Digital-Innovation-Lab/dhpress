@@ -25,12 +25,9 @@ p {
 
     /* move top down to make room for head of nav bar */
     /* bottom padding necessary to compensate for top nav bar */
-.fullscreen #card-container {
+#card-container {
     top: 50px;
     padding-bottom: 48px;
-}
-
-#card-container {
     padding-left: 4px;
     z-index: 0 !important;
 }
