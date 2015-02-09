@@ -23,7 +23,6 @@ jQuery(document).ready(function($) {
         motes: [],
         eps: [],
         views: {
-          fullscreen: true, miniWidth: 500, miniHeight: 500,
           select: {
             title: '',
             width: 'medium',
@@ -488,10 +487,6 @@ jQuery(document).ready(function($) {
       }); // for each EP
 
       projSettings.views = {};
-      projSettings.views.fullscreen = self.edVizFullScreen();
-      projSettings.views.miniWidth = self.edVizWidth();
-      projSettings.views.miniHeight = self.edVizHeight();
-
       projSettings.views.post = {};
       projSettings.views.post.title = self.edPostTitle();
       projSettings.views.post.content = [];
@@ -1763,10 +1758,6 @@ jQuery(document).ready(function($) {
 //------------------------------------------ Views -----------------------------------------
 
       // User-editable values
-    self.edVizFullScreen = ko.observable(true);
-    self.edVizWidth = ko.observable(600);
-    self.edVizHeight = ko.observable(600);
-
     self.edSelWidth = ko.observable('medium');
     self.edSelLinkMt  = ko.observable('');
     self.edSelLinkLbl = ko.observable('');
@@ -1791,10 +1782,6 @@ jQuery(document).ready(function($) {
 
       // PURPOSE: Set all variables related to views programmatically (not from user interface)
     self.setViews = function(viewSettings) {
-      self.edVizFullScreen(viewSettings.fullscreen);
-      self.edVizWidth(viewSettings.miniWidth);
-      self.edVizHeight(viewSettings.miniHeight);
-
       self.edSelWidth(viewSettings.select.width);
       self.edSelLinkMt(disableByDefault(viewSettings.select.link));
       self.edSelLinkLbl(viewSettings.select.linkLabel);

@@ -69,11 +69,6 @@
 
       <h3>Views</h3>
       <div>
-          <p>Fullscreen <input type="checkbox" data-bind="checked: edVizFullScreen"/>
-            Width: <input type="text" size="4" data-bind="value: edVizWidth"/>
-            Height: <input type="text" size="4" data-bind="value: edVizHeight"/>
-          </p>
-
           <div id="subaccordion">
             <h3>Select Modal windows (item selected from visualization)</h3>
             <div>

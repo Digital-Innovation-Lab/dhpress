@@ -129,9 +129,6 @@
 		        }
 		    },
 		    "views": {
-		        "fullscreen": false | true,
-		        "miniWidth": Integer,						// Size of visualization window (non-full screen)
-		        "miniHeight": Integer,
 		    	"post" : {									// For Marker post pages
 			        "title": String,						// Title to give Marker modal
 			        "content": [ String, ...  ]				// Names of motes to show

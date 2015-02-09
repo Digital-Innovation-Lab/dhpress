@@ -1,3 +1,4 @@
+	/* Not sure what it does -- transition to fullscreen? Is it needed? */
 .make-fullscreen {
 	position:fixed;
 	width:100%;
@@ -5,26 +6,31 @@
 	top:0;
 	left:0;
 }
+
 .kiosk-launch {
 	overflow: hidden;
 }
+
 .kiosk-launch::-webkit-scrollbar { 
     display: none; 
 }
+
 /* Kiosk settings layout */
-body.kiosk-mode.fullscreen .site {
+body.kiosk-mode .site {
 	margin-top: 0;
 }
-body.kiosk-mode.fullscreen {
+
+body.kiosk-mode {
 	overflow: hidden;
 }
-.kiosk-mode.fullscreen #dhp-visual {
+
+.kiosk-mode #dhp-visual {
 	/*margin-bottom: -65px;*/
 }
 
 /* Hide elements to avoid confusion */
-.kiosk-mode .top-bar-section .right .fullscreen,
-.kiosk-mode-non-iframe .top-bar-section .right .fullscreen,
+.kiosk-mode .top-bar-section .right,
+.kiosk-mode-non-iframe .top-bar-section .right,
 .kiosk-mode .main-navigation,
 .kiosk-mode-non-iframe .main-navigation {
 	display    : none !important;

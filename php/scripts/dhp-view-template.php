@@ -1,3 +1,4 @@
+<title><?php the_title(); ?></title>
 <?php wp_head(); ?>
 
 <nav class="top-bar dhp-nav" data-topbar data-options="is_hover: false">
@@ -84,7 +85,6 @@
 		break;
 	}
 
-wp_footer();
 ?>
 
 <div id="markerModal" class="reveal-modal" data-reveal>
@@ -131,3 +131,5 @@ wp_footer();
     <div class="small-10 large-10 columns"><a class="value" data-id="all"><b>Hide/Show All</b></a></div>
   </div>
 </script>
+
+<?php wp_footer(); ?>
