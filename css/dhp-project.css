@@ -16,6 +16,10 @@ body.waiting * {
     cursor: wait !important;
 }
 
+body .site {
+	margin-top: 0px;
+}
+
 	/* FIX: Adjusts foundations nowrap style for code blocks */
 code {
 	white-space: inherit;
@@ -23,10 +27,6 @@ code {
 
 h1 {
 	font-size: 2.75rem;
-}
-
-body .site {
-	margin-top: 0px;
 }
 
 	/* ======== NAVIGATION BAR ========= */
@@ -230,7 +230,6 @@ body .site {
 }
 
 .legend-row {
-	
 }
 
 .legend-row .legend-div {
@@ -238,12 +237,15 @@ body .site {
 }
 
 .legend-div .legend-title {
-	height: 1.1em;
+	font-size: 22px;
+	font-weight: bold;
+
+	height: 30px;
+
+	padding-top: 3px;
 	padding-left: 10px;
 	padding-right: 20px;
 	border-bottom: 1px solid #111;
-	font-size: 22px;
-	font-weight: bold;
 	z-index: 20;
 }
 
