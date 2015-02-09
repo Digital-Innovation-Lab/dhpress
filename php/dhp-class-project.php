@@ -491,7 +491,7 @@ class DHPressProject
 
 	 		$settingsArray = $this->settings;
 
-	 		if ($settingsArray->general->version != 3) {
+	 		if ($settingsArray->general->version < 2 && $settingsArray->general->version > 4) {
 	    		trigger_error("Unknown project settings format");
 	 		}
     	} // if need to read settings

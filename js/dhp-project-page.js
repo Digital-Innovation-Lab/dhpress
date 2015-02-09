@@ -110,32 +110,32 @@ jQuery(document).ready(function($) {
 	var thisEP = dhpSettings.eps[vizIndex];
 	switch (thisEP.type) {
 	case 'map':
-		dhpMapsView.initialize(ajaxURL, projectID, vizIndex, thisEP.settings, dhpData.vizParams);
-
-		updateVizSpace = dhpMapsView.dhpUpdateSize;
+			// Check that Project Settings up to date
+		if (dhpSettings.general.version < 4) {
+			$('#dhp-visual').append('<p>&nbsp;Cannot display map until Project Settings are updated for 2.6.</p>');
+		} else {
+			dhpMapsView.initialize(ajaxURL, projectID, vizIndex, thisEP.settings, dhpData.vizParams);
+			updateVizSpace = dhpMapsView.dhpUpdateSize;
+		}
 		break;
 
 	case 'cards':
 		dhpCardsView.initialize(ajaxURL, projectID, vizIndex, thisEP.settings);
-
 		updateVizSpace = dhpCardsView.dhpUpdateSize;
 		break;
 
 	case 'pinboard':
 		dhpPinboardView.initialize(ajaxURL, projectID, vizIndex, thisEP.settings, dhpData.vizParams);
-
 		updateVizSpace = dhpPinboardView.dhpUpdateSize;
 		break;
 
 	case 'tree':
 		dhpTreeView.initialize(ajaxURL, projectID, vizIndex, thisEP.settings);
-
 		updateVizSpace = dhpTreeView.dhpUpdateSize;
 		break;
 
 	case 'time':
 		dhpTimeline.initialize(ajaxURL, projectID, vizIndex, thisEP.settings);
-
 		updateVizSpace = dhpTimeline.dhpUpdateSize;
 		break;
 

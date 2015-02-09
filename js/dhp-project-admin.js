@@ -72,13 +72,13 @@ jQuery(document).ready(function($) {
     mapLayersParam = [];
   }
 
-    // Get initial project settings -- make blank settings if new project, or if settings not version 3
+    // Get initial project settings -- make blank settings if new project, or if settings not version 4
   var savedSettings = $('#project_settings').val();
   if (savedSettings.length < 2) {
     savedSettings = _blankSettings;
   } else {
     savedSettings = JSON.parse(savedSettings);
-    if (savedSettings == undefined || savedSettings.general == undefined || savedSettings.general.version != 3) {
+    if (savedSettings == undefined || savedSettings.general == undefined) {
       savedSettings = _blankSettings;
     }
   }
@@ -344,7 +344,7 @@ jQuery(document).ready(function($) {
       projSettings.general = {};
       projSettings.general.id = projectID;
       projSettings.general.name = savedSettings.general.name;
-      projSettings.general.version = 3;
+      projSettings.general.version = 4;
 
       projSettings.general.homeLabel = self.edHomeBtnLbl();
       projSettings.general.homeURL = self.edHomeURL();
