@@ -20,7 +20,8 @@
 
 <div id="dhp-visual"></div>
 
-<?php
+<?php wp_footer();
+
 	define( 'DHP_SCRIPT_PROJ_VIEW',  'dhp-script-proj-view.txt' );
 	define( 'DHP_SCRIPT_MAP_VIEW',   'dhp-script-map-view.txt' );
 	define( 'DHP_SCRIPT_CARDS_VIEW',   'dhp-script-cards-view.txt' );
@@ -131,5 +132,3 @@
     <div class="small-10 large-10 columns"><a class="value" data-id="all"><b>Hide/Show All</b></a></div>
   </div>
 </script>
-
-<?php wp_footer(); ?>
