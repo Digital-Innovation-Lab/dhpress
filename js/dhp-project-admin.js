@@ -2470,6 +2470,7 @@ jQuery(document).ready(function($) {
     // INPUT:   legendName = Head term id (legend name)
     //          taxTermsList = flat list containing data for updating terms in WP
   function saveLegendValuesInWP(legendName, taxTermsList) {
+console.log("Legend "+legendName+" Vals: "+JSON.stringify(taxTermsList));
     jQuery.ajax({
           type: 'POST',
           url: ajax_url,
@@ -2480,6 +2481,7 @@ jQuery(document).ready(function($) {
               terms: taxTermsList
           },
           success: function(data, textStatus, XMLHttpRequest) {
+console.log("Legend update: "+data);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
              alert(errorThrown);

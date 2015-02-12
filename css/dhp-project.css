@@ -9,6 +9,8 @@ html {
 
 body {
 	cursor: auto;
+
+	font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif" !important;
 }
 
 	/* For busy cursor */
@@ -38,6 +40,9 @@ h1 {
 	left: 0px;
 	top: 0px;
 	z-index: 1105;
+
+	font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";  
+	font-size: 12px;
 }
 
 .dhp-nav.fixed {
@@ -101,6 +106,9 @@ h1 {
 	top: 45px;
 	left: 0px;
 	bottom: 0;
+
+	font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif" !important;
+	font-size: 12px;
 }
 
 .dhp-mote-title {

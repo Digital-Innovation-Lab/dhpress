@@ -88,6 +88,70 @@ function dhp_project_init()
 } // dhp_project_init
 
 
+	// Hook into delete of posts so that all data associated with Project gets deleted
+add_action('admin_init', 'dhp_admin_init');
+
+function dhp_admin_init()
+{
+    if (current_user_can('delete_posts')) {
+        add_action('before_delete_post', 'dhp_deleting_post', 10);
+    }
+} // dhp_admin_init()
+
+
+	// PURPOSE: Catch the process of deleting a Project so other housekeeping can be done
+function dhp_deleting_post($postID)
+{
+	global $post_type;
+
+	if ($post_type != 'dhp-project')
+		return;
+	dhp_delete_all_terms($postID);
+	dhp_delete_all_project_markers($postID);
+} // dhp_deleting_project()
+
+
+	// PURPOSE: Delete all Markers associated with a Project
+function dhp_delete_all_project_markers($postID)
+{
+	$projObj = new DHPressProject($postID);
+
+		// Go through all of the Project's Markers and gather data
+	$loop = $projObj->setAllMarkerLoop();
+	while ($loop->have_posts()) : $loop->the_post();
+		$markerID = get_the_ID();
+		wp_delete_post($markerID, false);
+	endwhile;
+} // dhp_delete_all_project_markers()
+
+
+	// PURPOSE:	Delete all taxonomic terms associated with Project when deleted
+function dhp_delete_all_terms($postID)
+{
+	$rootTaxName = DHPressProject::ProjectIDToRootTaxName($postID);
+
+	$args = array('hide_empty' => false);
+	$projTerms = get_terms($rootTaxName, $args);
+
+	update_option('dhp_term_param', $rootTaxName);
+	update_option('dhp_term_array', json_encode($projTerms));
+
+	if (!is_wp_error($projTerms) && !empty($projTerms))
+	{
+		foreach ($projTerms as $term) {
+			wp_delete_term(intval($term->term_id), $rootTaxName);
+		}
+	} // if !error
+
+		// NOTE: 	There does not seem to be a formal method for un-registering taxonomies
+		// 			This method taken from http://w4dev.com/wp/unregister-wordpress-taxonomy
+	global $wp_taxonomies;
+	if (taxonomy_exists($rootTaxName) ) {
+		unset($wp_taxonomies[$rootTaxName]);
+	}
+} // dhp_delete_all_terms()
+
+
 // add support for theme-specific feature
 if (function_exists('add_theme_support')) {
 		// enable use of thumbnails
@@ -266,7 +330,7 @@ function create_tax_for_projects()
 			$projectSlug = $project->post_name;
 			$taxonomy_exist = taxonomy_exists($projectTax);
 			//returns true
-			if(!$taxonomy_exist) {
+			if (!$taxonomy_exist) {
 				dhp_create_tax($projectTax,$projectName,$projectSlug);
 			}
 		}
@@ -291,9 +355,9 @@ function dhp_create_tax($taxID,$taxName,$taxSlug)
 	'add_new_item' => __( 'Add New Term' ),
 	'new_item_name' => __( 'New Term Name' ),
 	'menu_name' => __( 'Term' ),
-  ); 	
+  );
 
-  register_taxonomy($taxID,array('dhp-markers'), array(
+  register_taxonomy($taxID, 'dhp-markers', array(
 	'hierarchical' => true,
 	'public' => true,
 	'labels' => $labels,
@@ -994,7 +1058,6 @@ function dhp_create_tree_node($cf_key, $node_id, $mQuery, $childrenCF, $children
 } // dhp_create_tree_node()
 
 
-
 // Enable for both editing and viewing
 
 add_action('wp_ajax_dhpGetMarkerTree', 'dhp_get_marker_tree' );
@@ -1269,25 +1332,22 @@ function dhp_save_legend_vals()
 	$projRootTaxName = DHPressProject::ProjectIDToRootTaxName($projectID);
 
 	foreach ($project_terms as $term) {
-		// $term_name      = $term['name'];	// name not passed in
-
-		$parent_term_id = intval($term['parent']);
 		$term_id        = intval($term['term_id']);
+		$parent_term_id = intval($term['parent']);
 		$term_order     = intval($term['term_order']);
 
 		$updateArgs = array('parent' => $parent_term_id, 'term_group' =>  $term_order, 'description' => $term['icon_url']);
 
 			// Update term settings
-		wp_update_term($term_id, $projRootTaxName, $updateArgs);
+		$result = wp_update_term($term_id, $projRootTaxName, $updateArgs);
+		if (is_wp_error($result)) {
+			die('Legend for Project '.$projectID.' could not be updated due to error '.$result->get_error_message());
+		}
 	}
 	delete_option("{$projRootTaxName}_children");
 
-		// Taxonomy must be reassociated with Markers because user may have added parent terms
-		//	or changed hierarchy
-	// $projObj      = new DHPressProject($projectID);
-	// dhp_bind_tax_to_markers($projObj, $custom_field, $parent_id, $projRootTaxName, $mote_delim);
-
-	die('');
+	$results = array($projectID, $mote_parent, $projRootTaxName, $project_terms);
+	die(json_encode($results));
 } // dhp_save_legend_vals()
 
 
