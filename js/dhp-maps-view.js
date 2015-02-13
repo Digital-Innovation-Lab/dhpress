@@ -44,6 +44,11 @@ var dhpMapsView = (function () {
 			// Add map elements to nav bar
 		jQuery('.dhp-nav .top-bar-section .left').append(Handlebars.compile(jQuery("#dhp-script-map-menus").html()));
 
+			// But remove Legend drop-down if only one Legend
+		if (mapEP.legends.length == 1) {
+			jQuery('#legend-dropdown').remove();
+		}
+
 			// Insert Legend area -- Joe had "after" but menu off map above if not "append"
 		jQuery('#dhp-visual').append(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
 

@@ -102,10 +102,11 @@ function dhp_admin_init()
 	// PURPOSE: Catch the process of deleting a Project so other housekeeping can be done
 function dhp_deleting_post($postID)
 {
-	global $post_type;
+	$post = get_post($postID);
 
-	if ($post_type != 'dhp-project')
+	if ($post->post_type != 'dhp-project')
 		return;
+
 	dhp_delete_all_terms($postID);
 	dhp_delete_all_project_markers($postID);
 } // dhp_deleting_project()
@@ -130,11 +131,11 @@ function dhp_delete_all_terms($postID)
 {
 	$rootTaxName = DHPressProject::ProjectIDToRootTaxName($postID);
 
+		// NOTE: Need to re-register before delete, as WP may not have flushed cache
+	register_taxonomy($rootTaxName, 'dhp-markers');
+
 	$args = array('hide_empty' => false);
 	$projTerms = get_terms($rootTaxName, $args);
-
-	update_option('dhp_term_param', $rootTaxName);
-	update_option('dhp_term_array', json_encode($projTerms));
 
 	if (!is_wp_error($projTerms) && !empty($projTerms))
 	{
@@ -143,8 +144,8 @@ function dhp_delete_all_terms($postID)
 		}
 	} // if !error
 
-		// NOTE: 	There does not seem to be a formal method for un-registering taxonomies
-		// 			This method taken from http://w4dev.com/wp/unregister-wordpress-taxonomy
+		// NOTE: There does not seem to be a formal method for un-registering taxonomies
+		// 	This method taken from http://w4dev.com/wp/unregister-wordpress-taxonomy
 	global $wp_taxonomies;
 	if (taxonomy_exists($rootTaxName) ) {
 		unset($wp_taxonomies[$rootTaxName]);
@@ -340,7 +341,7 @@ function create_tax_for_projects()
 
 	// PURPOSE: Create custom taxonomy for a specific Project in WP
 	// INPUT:	$taxID = taxonomy root name, $taxName = project title, $taxSlug = project slug
-function dhp_create_tax($taxID,$taxName,$taxSlug)
+function dhp_create_tax($taxID, $taxName, $taxSlug)
 {
 	// Add new taxonomy, make it hierarchical (like categories)
   $labels = array(
@@ -2642,6 +2643,9 @@ function dhp_page_template( $page_template )
 		wp_deregister_style('screen');
 		wp_dequeue_style('events-manager');
 
+		wp_dequeue_script('site');
+		wp_deregister_script('site');
+
 		$projObj = new DHPressProject($post->ID);
 		$allSettings = $projObj->getAllSettings();
 
@@ -2682,8 +2686,6 @@ function dhp_page_template( $page_template )
 			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.3/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			wp_enqueue_style('maki-sprite-style', plugins_url('/lib/maki/maki-sprite.css',  dirname(__FILE__)) );
 
-			wp_enqueue_script('dhp-google-map-script', 'http'. ( is_ssl() ? 's' : '' ) .'://maps.google.com/maps/api/js?v=3&amp;sensor=false');
-
 				// Will call our own versions of jquery-ui to minimize compatibility problems
 			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui-1.11.2/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
 
@@ -2709,8 +2711,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-			array_push($dependencies, 'leaflet', 'dhp-google-map-script', 'dhp-maps-view', 'dhp-map-services',
-									'dhp-jquery-ui');
+			array_push($dependencies, 'leaflet', 'dhp-maps-view', 'dhp-map-services', 'dhp-jquery-ui');
 			break;
 
 		case 'cards':

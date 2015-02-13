@@ -12,7 +12,7 @@
 	<section class="top-bar-section">
 		<ul class="right">
 		</ul>
-		<!-- Left Nav Section -->
+
 		<ul class="left">
 		</ul>
 	</section>

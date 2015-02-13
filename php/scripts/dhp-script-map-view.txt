@@ -1,6 +1,6 @@
     <!-- Handlebars Templates for Map View -->
 <script id="dhp-script-map-menus" type="text/x-handlebars-template">
-  <li class="has-dropdown">
+  <li id="legend-dropdown" class="has-dropdown">
       <a href="#">Legends</a>
       <ul class="dropdown legend-dropdown"">
           <!-- links -->
