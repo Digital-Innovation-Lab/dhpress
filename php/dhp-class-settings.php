@@ -4,7 +4,8 @@
 //				Timeout duration: the number of minutes of inactivity that leads to timeout condition
 //				Redirect URL: the destination webpage where browser is redirected upon a timeout
 //				Kiosk User Agent: The name of device for which external URL blocking is applied (if any)
-//				Block External URLs: A comma-separated list of domains blocked for the browser
+//				Block URLs: A comma-separated list of domains to check against the URLs on a webpage;
+//					If any are found on the page, they are disabled.
 
 if (!class_exists( 'DHPressSettings')) {
 	class DHPressSettings
@@ -94,7 +95,7 @@ if (!class_exists( 'DHPressSettings')) {
 							</tr>
 
 							<tr valign="top">
-								<th scope="row"><label for="timeout_duration">Timeout Duration(mins)</label></th>
+								<th scope="row"><label for="timeout_duration">Timeout Duration (minutes)</label></th>
 								<td><input type="text" name="timeout_duration" id="timeout_duration" value="<?php echo get_option( 'timeout_duration' ); ?>" />
 									Leave blank if no timeout is needed.</td>
 							</tr>
@@ -106,11 +107,11 @@ if (!class_exists( 'DHPressSettings')) {
 							<tr valign="top">
 								<th scope="row"><label for="redirect_url">Kiosk User Agent</label></th>
 								<td><input type="text" name="kiosk_useragent" id="kiosk_useragent" value="<?php echo get_option( 'kiosk_useragent' ); ?>" /> 
-									Only block external URLs for a specific device. Leave empty if enabled for all devices.</td>
+									Only block external URLs for a specific device or browser. Leave empty if enabled for all devices and browsers.</td>
 							</tr>
 							<tr valign="top">
 								<th scope="row"><label for="redirect_url">Block External URLs </label></th>
-								<td>Enter comma separated list of domains that you wish to block on kiosk (only applies if User Agent is set above).<br/>
+								<td>Enter comma separated list of domains that you wish to block if they appear in URLs on a webpage.<br/>
 									<textarea name="kiosk_blockurls" id="kiosk_blockurls"><?php echo get_option( 'kiosk_blockurls' ); ?></textarea> 
 								</td>
 							</tr>
@@ -186,7 +187,7 @@ if (!class_exists( 'DHPressSettings')) {
 				// Print settings to page
 			wp_localize_script( 'dhp-global-settings-script', 'dhpGlobals', array(
 				'global_tip' => $global_tip,
-				'timeout_duration' => get_option('timeout_duration'),
+				'timeout_duration' => intval(get_option('timeout_duration')),
 				'redirect_url' => get_option('redirect_url'),
 				'kiosk_useragent' => get_option('kiosk_useragent'),
 				'kiosk_blockurls' => get_option('kiosk_blockurls')

@@ -30,7 +30,6 @@ var dhpMapsView = (function () {
 	var markerLayer;			// Leaflet layer containing individual Markers
 	var control;				// Leaflet map layer selection controller
 	var useParent = true;		// if true (always true!), actions on parent term affect child terms
-	var isTouch;				// touch-screen interface, not mouse?
 
 	var currentFeature;			// map feature currently highlighted or selected (with modal)
 	var anyPopupsOpen;			// true when a popover modal is currently open
@@ -56,20 +55,6 @@ var dhpMapsView = (function () {
 
 		   //create map with view
 		mapLeaflet = L.map('dhpMap',{ zoomControl:false }).setView([mapEP.lat, mapEP.lon], mapEP.zoom);
-
-			// Handle hover modal popup
-		if (isTouch) {
-			mapLeaflet.on('popupopen', function(e) {
-				anyPopupsOpen = true;
-			});
-			mapLeaflet.on('popupclose', function(e) {
-					// popupclose event fires on open and close (bug?)
-				if (anyPopupsOpen) {
-					markerLayer.resetStyle(e.popup._source);
-					anyPopupsOpen = false;
-				}
-			});
-		}
 
 		// jQuery('#dhp-visual').height(jQuery('#dhp-visual')-45);
 	} // initializeMap2()
@@ -181,57 +166,6 @@ var dhpMapsView = (function () {
 			dhpServices.showMarkerModal(marker);
 		}
 	} // markerClick()
-
-
-		// PURPOSE: Bind controls for each Marker
-	// onEachFeature: function(feature, layer)
-	// {
-	//         // Hover popup only for touchscreen
-	//     if (isTouch) {
-	//         layer.bindPopup('<div><h1>'+feature.properties.title+
-	//             '</h1><a class="button success" onclick="javascript:onFeatureSelect()">More</a></div>',
-	//             {offset: L.Point(0, -10)});
-
-	//             // Click is automatically handled by Leaflet popup
-	//         layer.on({
-	//             mouseover: hoverFeature,
-	//             mouseout: resetHighlight
-	//         });
-	//     } else {
-	//         layer.on({
-	//             click: clickFeature
-	//         });
-	//     }
-	// }, // onEachFeature()
-
-
-		// PURPOSE: Handle touch over this feature
-	// hoverFeature: function(e) {
-	//     currentFeature = e.target.feature;
-
-	//     e.target.openPopup();
-
-	//         // This only works for geometric markers, not maki-icons, so must remove for now
-	//     // e.target.setStyle({ // highlight the feature
-	//     //     weight: 3,
-	//     //     color: '#666',
-	//     //     dashArray: '',
-	//     //     fillOpacity: 0.6
-	//     // });
-
-	//         // Can't feature foregrounding on Internet Explorer or Opera
-	//         // This only works for geometric markers, not maki-icons
-	//     // if (!L.Browser.ie && !L.Browser.opera) {
-	//     //     e.target.bringToFront();
-	//     // }
-	// },
-
-
-		// PURPOSE: Handle mouse(only!) selection of feature
-	// clickFeature: function(e) {
-	//     currentFeature = e.target.feature;
-	//     onFeatureSelect();
-	// },
 
 
 		// PURPOSE: Remove the hover style
@@ -676,8 +610,6 @@ var dhpMapsView = (function () {
 				radius     = 12;
 				break;
 			}
-
-			isTouch = dhpServices.isTouchDevice();
 
 			initializeMap2();
 			createLayers();

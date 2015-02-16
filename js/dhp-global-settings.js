@@ -10,47 +10,60 @@ jQuery(document).ready(function($) {
 
 
 var dhpGlobalSettings = function($) {
-	var userActivity = false, secondsInactive = 0, activeMonitorID, maxSecondsInactive, myMonitor;
-	var kioskTablet = true;
 	var blockLinks = [];
-		//Detect user agent and determine if kiosk device
-	var kioskRE = new RegExp(dhpGlobals.kiosk_useragent, "i");
-	var kioskDevice = kioskRE.test(navigator.userAgent.toLowerCase());
+
+		// For block checks, URLs must have been provided
+		//	If user agent also given, it must match
+	var testBlocks = dhpGlobals.kiosk_blockurls.length > 0;
+	if (testBlocks) {
+		if (dhpGlobals.kiosk_useragent && dhpGlobals.kiosk_useragent.length > 0) {
+			var kioskRE = new RegExp(dhpGlobals.kiosk_useragent, "i");
+			testBlocks = kioskRE.test(navigator.userAgent.toLowerCase());
+		}
+	}
 
 		// Block links
-	blockLinks = dhpGlobals.kiosk_blockurls.split(',');
-	findAndBlockLinks(blockLinks);
+	if (testBlocks) {
+		blockLinks = dhpGlobals.kiosk_blockurls.split(',');
+		findAndBlockLinks(blockLinks);
+	}
 
-		// Only execute if not loaded in iframe
-	if (!inIframe()) {
+		// Only check user activity if not loaded in iframe
+	var userActivity = false, secondsInactive = 0, activeMonitorID, maxSecondsInactive, myMonitor;
+	if (dhpGlobals.timeout_duration && typeof(dhpGlobals.timeout_duration) === "string") {
+		dhpGlobals.timeout_duration = parseFloat(dhpGlobals.timeout_duration);
+	}
+
+	if (!inIframe() && dhpGlobals.timeout_duration && dhpGlobals.timeout_duration !== 0)
+	{
 			// Monitor user activity, only if setting given
-		maxSecondsInactive = dhpGlobals.timeout_duration * 60;
-		if ((maxSecondsInactive !== null) && (maxSecondsInactive !== '') && (maxSecondsInactive !== '0') && (maxSecondsInactive !== 0)) {
-			console.log('start activity monitor')
-			if (typeof(maxSecondsInactive) === "string") {
-				maxSecondsInactive = parseFloat(maxSecondsInactive);
-			}
+		maxSecondsInactive = dhpGlobals.timeout_duration;
+		maxSecondsInactive *= 60;
+		if (maxSecondsInactive > 0)
+		{
+			console.log('Monitoring for '+maxSecondsInactive+' seconds of inactivity');
 			activeMonitorID = window.setInterval(monitorActivity.bind(this,10) , 10000);    // 1000 milliseconds = 1 sec * 60 sec = 1 minute
 			addSiteListeners();
 		}
 	} // if (!inIframe())
 
-		// PURPOSE: Block link, try a second time(map renders links after load)    
+		// PURPOSE: Block link, try a second time (map renders links after load)    
 	function findAndBlockLinks(linksArray)
 	{
 		$.each(linksArray, function(index,val)
 		{
-			blockLink(val.trim());
-			blockLinks[val.trim()] = setTimeout(function()
+			var trimmed = val.trim();
+			blockLink(trimmed);
+			blockLinks[trimmed] = setTimeout(function()
 			{
-				blockLink(val.trim());
+				blockLink(trimmed);
 			}, 5000);
 		});
 	} // findAndBlockLinks()
 
 	function blockLink(link)
 	{
-		if (findLink(link)){
+		if (findLink(link)) {
 			clearTimeout(blockLinks[link]);
 		}
 	} // blockLink()
@@ -60,7 +73,6 @@ var dhpGlobalSettings = function($) {
 		if ($('a[href*="'+link+'"]').length >= 1) {
 			$('a[href*="'+link+'"]').on('click', function(e) {
 				e.preventDefault();
-				// $('#externalModal').foundation('reveal', 'open',  link, {'crossDomain':true});
 			});
 			console.log('blocked '+link);
 			return true;

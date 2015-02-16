@@ -68,19 +68,72 @@ code {
 }
 
 	/* =========== MODALS =========== */
+
+	/* "Loading" modal */
 #loading {
+	margin-top: 40px;
 	position: fixed;
 }
 
 .loading-content {
 	width: 100%;
-	background: url('../images/ajax-loader.gif') no-repeat center 10px;
+	height: 200px;
 }
 
 .loading-content h3.loading-title {
-	padding-top: 40px;
+	padding-top: 10px;
 	text-align: center;
 	font-size: 28px;
+}
+
+	/* From http://tympanus.net/codrops/2012/11/14/creative-css-loading-animations/ */
+.spinner {
+	/* Size and position */
+    font-size: 100px; /* 1em */
+	width: 1em;
+    height: 1em;
+    position: relative;
+    margin: 16px auto;
+
+    /* Styles */
+    border-radius: 50%;
+    background: #FF4F72; /* Fallback */
+    background:
+        linear-gradient(#ea2d0e 50%, #fcd883 50%), /* First column */
+        linear-gradient(#fcd883 50%, #ea2d0e 50%); /* Second column */
+    background-position: 
+    	0 0,    /* Position of 1st column */
+    	100% 0; /* Position of 2nd column */
+    background-size: 50% 100%; /* Contraction of "50% 100%, 50% 100%" */
+    background-repeat: no-repeat;
+    box-shadow: 
+    	inset 0 0 0 .12em rgba(0,0,0,0.2), /* Inner border */
+    	0 0 0 .12em rgba(255,255,255,0.1); /* Outter border */
+    opacity: 0.7;
+    animation: rota 3s infinite alternate;
+}
+
+spinner:after {
+    /* Size */
+    content: "";
+    width: 50%;
+    height: 50%;
+
+    /* Perfect centering */
+    position: absolute;
+    top: 25%;
+    left: 25%;
+
+    /* Styles */
+    border: .12em solid rgba(255,255,255,0.3);
+    border-radius: inherit;
+}
+
+@keyframes rota {
+    25%  { transform: rotate(270deg); }
+    50%  { transform: rotate( 90deg); }
+    75%  { transform: rotate(360deg); }
+    100% { transform: rotate(180deg); }
 }
 
 .reveal-modal-bg {
@@ -377,3 +430,4 @@ code {
     width: 20px;
     min-height: 20px;
 }
+

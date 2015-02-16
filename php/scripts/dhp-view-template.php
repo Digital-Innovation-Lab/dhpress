@@ -106,6 +106,7 @@
 <div id="loading" class="reveal-modal tiny" data-reveal>
 	<div class="loading-content">
 		<h3 class="loading-title">Loading Project</h3>
+		<div class="spinner"></div>
 	</div>
 </div>
 
