@@ -11,7 +11,8 @@ body {
 	cursor: auto;
 
 	font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif" !important;
-	font-size: 12px !important;
+	font-size: 14px !important;
+	color: black !important;
 }
 
 	/* For busy cursor */
@@ -81,7 +82,8 @@ code {
 }
 
 .loading-content h3.loading-title {
-	padding-top: 10px;
+	margin-top: 10px;
+	padding-top: 3px;
 	text-align: center;
 	font-size: 28px;
 }
@@ -178,6 +180,8 @@ spinner:after {
 
 .modal-content {
 	overflow: auto;
+	font-size: 14px !important;
+	color: black;
 }
 
 .modal-content div {
@@ -200,12 +204,17 @@ spinner:after {
 .modal-header h3 {
 	clear: none;
 	font-size: 20px;
+	margin-top: 3px;
+	padding-top: 3px;
+	margin-bottom: 3px;
+	padding-bottom: 3px;
 }
+
 .modal-body h3 {
 	font-size: 16px;
 }
 
-	/* Lines of mote values */
+	/* Lines of mote values (for select modals) */
 .modal-body div {
 	line-height: 1.1em;
 	padding-top: 6px;
@@ -239,7 +248,7 @@ spinner:after {
 /* ============= LEGENDS ============= */
 
 .legend {
-	display:none;
+	display: none;
 }
 
 #legends {
@@ -288,10 +297,6 @@ spinner:after {
   }
 }
 
-.logged-in #legends {
-	/*top:70px;*/
-}
-
 .legend-row {
 }
 
@@ -299,11 +304,16 @@ spinner:after {
 	margin-left: 0px;
 }
 
+	/* Section containing an entire Legend */
+.legend-div {
+	color: black !important;
+}
+
 .legend-div .legend-title {
-	font-size: 22px;
+	font-size: 22px !important;
 	font-weight: bold;
 
-	height: 30px;
+	height: 30px !important;
 
 	padding-top: 3px;
 	padding-left: 10px;
@@ -313,7 +323,10 @@ spinner:after {
 }
 
 .legend-div .terms {
+	font-size: 14px !important;
+
 	position: absolute;
+
 	top:38px;
 	bottom: 0;
 	width: 100%;
@@ -327,18 +340,15 @@ spinner:after {
 	cursor: pointer;
 	line-height: 15px;
 }
+
 .legend-div .terms .row.hasParent {
 	display: none;
 }
+
 .legend-div .terms .row:hover,
 .legend-div .terms .row.selected {
 	background: #e8f2e6;
 }
-
-/*
-.legend-div .terms img {
-	float: left;
-}*/
 
 .legend-div .terms .maki-icon {
 	margin: 0;
@@ -369,13 +379,19 @@ spinner:after {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	overflow: hidden;
+	color: black !important;
 	display: inherit;
 }
 
 .legend-div input[type='checkbox'] {
 	/*margin: 12px;*/
+	font-size: 14px !important;
 	vertical-align: middle;
 	margin-top: 11px;
+}
+
+.legend-div .check-all input[type='checkbox'] {
+	font-size: 14px !important;
 }
 
 .legend-div .icon-legend {
@@ -416,6 +432,8 @@ spinner:after {
 	/* Controls for opacity/on-off for each layer */
 #layers-panel {
 	margin-left: 0px;
+
+	font-size: 14px !important;
 }
 
     /* Creates color area for non-checkbox Legends */
