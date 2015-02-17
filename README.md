@@ -42,6 +42,14 @@ Go to DHPress > New Project and create a new project to get started
 
 == Changelog ==
 
+= 2.6 =
+* Map view marker clustering (can be turned on or off)
+* Map views can display Markers as points, lines or polygons
+* Base maps are now built-in to DH Press (no separate file to load)
+* Overlay maps are simplified and fully compatible with Tiling Map Services
+* Greater WordPress theme independence
+* Deleting Project now automatically deletes all Markers associated with it
+
 = 2.5 =
 * New visualizations: Pinboard, Timeline, Trees, Facet Flows, Facet Browser
 * Insert YouTube videos into Select Modals
