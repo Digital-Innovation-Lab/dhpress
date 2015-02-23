@@ -59,6 +59,7 @@ Template Name: Map Template
             echo "<input type='hidden' id='map-subdomains' name='map-subdomains' value='".$mapMetaData['dhp_map_subdomains']."'>";
             echo "<input type='hidden' id='map-zoom-min' name='map-zoom-min' value='".$mapMetaData['dhp_map_min_zoom']."'>";
             echo "<input type='hidden' id='map-zoom-max' name='map-zoom-max' value='".$mapMetaData['dhp_map_max_zoom']."'>";
+            echo "<input type='hidden' id='map-inverse-y' name='map-inverse-y' value='".$mapMetaData['dhp_map_inverse_y']."'>";
             echo "<input type='hidden' id='map-desc' name='map-desc' value='".$mapMetaData['dhp_map_desc']."'>";
             echo "<input type='hidden' id='map-credits' name='map-credits' value='".$mapMetaData['dhp_map_credits']."'>";
 
@@ -84,6 +85,7 @@ Template Name: Map Template
             echo "<tr><td><b>Credits: </b></td><td>".$mapMetaData['dhp_map_credits']."</td></tr>";
             echo "<tr><td><b>N,S,E,W Bounds: </b></td><td>".$mapMetaData['dhp_map_n_bounds'].", ".$mapMetaData['dhp_map_s_bounds'].", ".$mapMetaData['dhp_map_e_bounds'].", ".$mapMetaData['dhp_map_w_bounds']."</td></tr>";
             echo "<tr><td><b>Min/Max Zoom: </b></td><td>".$mapMetaData['dhp_map_min_zoom']."/".$mapMetaData['dhp_map_max_zoom']."</td></tr>";
+            echo "<tr><td><b>Inverse Y-axis: </b></td><td>".$mapMetaData['dhp_map_inverse_y']."</td></tr>";
             echo "<tr><td><b></b></td><td></td></tr>";
             echo "</table>";
         }

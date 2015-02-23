@@ -163,12 +163,14 @@ var dhpMapServices = (function () {
 				layerDef = doGetOverlayByID(id);
 
 				subDomains = (layerDef.subd && layerDef.subd !== '') ? layerDef.subd.split('|') : [];
+				layerDef.inverseY = (layerDef.inverseY === 'true' || layerDef.inverseY === 'TRUE');
 				if (subDomains.length>1) {
 					newLeafLayer = L.tileLayer(layerDef.url, {
 						subdomains: subDomains,
 						attribution: layerDef.credits,
 						minZoom: layerDef.minZoom,
 						maxZoom: layerDef.maxZoom,
+						tms: layerDef.inverseY,
 						opacity: opacity,
 						bounds: L.latLngBounds(layerDef.swBounds, layerDef.neBounds)
 					});
@@ -177,6 +179,7 @@ var dhpMapServices = (function () {
 						attribution: layerDef.credits,
 						minZoom: layerDef.minZoom,
 						maxZoom: layerDef.maxZoom,
+						tms: layerDef.inverseY,
 						opacity: opacity,
 						bounds: L.latLngBounds(layerDef.swBounds, layerDef.neBounds)
 					});

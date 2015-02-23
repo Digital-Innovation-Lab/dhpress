@@ -13,6 +13,7 @@
 //              dhp_map_w_bounds    = longitude of western bounds of map/overlay
 //              dhp_map_min_zoom    = minimum zoom for map (Integer)
 //              dhp_map_max_zoom    = maximum zoom for map (Integer)
+//              dhp_map_inverse_y   = if true, inverse Y axis (TMS standard)
 //          The following custom fields are for purposes of documenting and identifying maps:
 //              dhp_map_desc
 //              dhp_map_credits
@@ -22,7 +23,7 @@
     // A list of all of the custom fields associated with Map post types
 $dhp_map_custom_fields = array( 'dhp_map_id', 'dhp_map_sname', 'dhp_map_url', 'dhp_map_subdomains',
                                 'dhp_map_n_bounds', 'dhp_map_s_bounds', 'dhp_map_e_bounds', 'dhp_map_w_bounds',
-                                'dhp_map_min_zoom', 'dhp_map_max_zoom', 'dhp_map_desc', 'dhp_map_credits'
+                                'dhp_map_min_zoom', 'dhp_map_max_zoom', 'dhp_map_inverse_y', 'dhp_map_desc', 'dhp_map_credits'
                             );
 
 
@@ -154,6 +155,7 @@ function show_dhp_map_settings_box()
     echo '<tr><td align=right>*West bounds:</td><td><input name="dhp_map_w_bounds" id="dhp_map_w_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_w_bounds'].'"/></td></tr>';
     echo '<tr><td align=right>*Minimum Zoom:</td><td><input name="dhp_map_min_zoom" id="dhp_map_min_zoom" type="text" size="2" value="'.$mapAttributes['dhp_map_min_zoom'].'"/></td></tr>';
     echo '<tr><td align=right>*Maximum Zoom:</td><td><input name="dhp_map_max_zoom" id="dhp_map_max_zoom" type="text" size="2" value="'.$mapAttributes['dhp_map_max_zoom'].'"/></td></tr>';
+    echo '<tr><td align=right>*Inverse Y-axis:</td><td><input name="dhp_map_inverse_y" id="dhp_map_inverse_y" type="text" size="6" value="'.$mapAttributes['dhp_map_inverse_y'].'"/></td></tr>';
 
     echo '<tr><td align=right>Description:</td><td><input name="dhp_map_desc" id="dhp_map_desc" type="text" size="60" value="'.$mapAttributes['dhp_map_desc'].'"/></td></tr>';
     echo '<tr><td align=right>Credits:</td><td><input name="dhp_map_credits" id="dhp_map_credits" type="text" size="30" value="'.$mapAttributes['dhp_map_credits'].'"/></td></tr>';

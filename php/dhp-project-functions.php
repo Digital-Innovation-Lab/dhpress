@@ -2535,6 +2535,7 @@ function dhp_get_map_layer_data($mapLayers)
 	$mapMetaList = array(	"sname"  	=> "dhp_map_sname",
 							"id"     	=> "dhp_map_id",
 							"url" 		=> "dhp_map_url",
+							"inverseY" 	=> "dhp_map_inverse_y",
 							"subd" 		=> "dhp_map_subdomains",
 							"minZoom"   => "dhp_map_min_zoom",
 							"maxZoom" 	=> "dhp_map_max_zoom",

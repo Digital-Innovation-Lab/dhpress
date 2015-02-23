@@ -18,6 +18,7 @@ jQuery(document).ready(function($) {
     singleOverlayArray.desc     = $('#map-desc').val();
     singleOverlayArray.minZoom  = $('#map-zoom-min').val();
     singleOverlayArray.maxZoom  = $('#map-zoom-max').val();
+    singleOverlayArray.inverseY = $('#map-inverse-y').val();
     singleOverlayArray.swBounds = [$('#map-s_bounds').val(), $('#map-w_bounds').val()];
     singleOverlayArray.neBounds = [$('#map-n_bounds').val(), $('#map-e_bounds').val()];
 
