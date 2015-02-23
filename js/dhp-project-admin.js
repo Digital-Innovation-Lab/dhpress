@@ -717,6 +717,65 @@ jQuery(document).ready(function($) {
       }
     }; // createMote()
 
+      // PURPOSE: Remove any reference of theMote from Project definitions
+    self.extractMote = function(theMote) {
+      var moteName = theMote.name;
+
+      if (self.edMTitle() === moteName) { self.edMTitle('the_title'); }
+
+        // Remove all occurrences of mote name from all Entry Point
+      ko.utils.arrayForEach(self.entryPoints(), function(theEP) {
+        switch (theEP.type) {
+        case 'map':
+          if (theEP.settings.coordMote() == moteName) {
+            theEP.settings.coordMote('');
+          }
+          theEP.settings.legends.remove(function(mote) { return mote.name() === moteName; });
+          break;
+        case 'cards':
+          if (theEP.settings.color() == moteName) { theEP.settings.color(''); }
+
+          theEP.settings.content.remove(function(mote) { return mote.name() === moteName; });
+          theEP.settings.filterMotes.remove(function(mote) { return mote.name() === moteName; });
+          theEP.settings.sortMotes.remove(function(mote) { return mote.name() === moteName; });
+          break;
+        case 'pinboard':
+          if (theEP.settings.coordMote() == moteName) { theEP.settings.coordMote(''); }
+          theEP.settings.legends.remove(function(mote) { return mote.name() === moteName; });
+          break;
+        case 'tree':
+          if (theEP.settings.children() == moteName) {  theEP.settings.children(''); }
+          if (theEP.settings.color() == moteName) { theEP.settings.color(''); }
+          break;
+        case 'time':
+          if (theEP.settings.date() == moteName) {  theEP.settings.date(''); }
+          if (theEP.settings.color() == moteName) { theEP.settings.color(''); }
+          break;
+        case 'flow':
+        case 'browser':
+          theEP.settings.motes.remove(function(mote) { return mote.name() === moteName; });
+          break;
+        }
+      });
+
+      if (self.edSelLinkMt() === moteName) { self.edSelLinkMt('disable'); }
+      if (self.edSelLink2Mt()=== moteName) { self.edSelLink2Mt('disable'); }
+      self.selMoteList.remove(function(mote) { return mote.name() === moteName; });
+
+      if (self.edPostTitle() === moteName) { self.edPostTitle(''); }
+      self.postMoteList.remove(function(mote) { return mote.name() === moteName; });
+
+      self.taxMoteList.remove(function(mote) { return mote.name() === moteName; });
+
+      if (self.edTrnsAudio()  === moteName)  { self.edTrnsAudio('disable'); }
+      if (self.edTrnsVideo()  === moteName)  { self.edTrnsVideo('disable'); }
+      if (self.edTrnsTransc() === moteName)  { self.edTrnsTransc('disable'); }
+      if (self.edTrnsTransc2() === moteName) { self.edTrnsTransc2('disable'); }
+      if (self.edTrnsTime()  === moteName)   { self.edTrnsTime('disable'); }
+      if (self.edTrnsSrc()  === moteName)    { self.edTrnsSrc('disable'); }
+    }; // extractMote()
+
+
       // PURPOSE: Handle deleting a mote definition (and all references to it)
     self.delMote = function(theMote) {
       var moteName = theMote.name;
@@ -731,58 +790,9 @@ jQuery(document).ready(function($) {
         buttons: {
           'Delete': function() {
 
-              // Remove all occurrences of mote name from everywhere in ProjectSettings
-            ko.utils.arrayForEach(self.entryPoints(), function(theEP) {
-              switch (theEP.type) {
-              case 'map':
-                if (theEP.settings.coordMote() == moteName) {
-                  theEP.settings.coordMote('');
-                }
-                theEP.settings.legends.remove(function(mote) { return mote.name() === moteName; });
-                break;
-              case 'cards':
-                if (theEP.settings.color() == moteName) { theEP.settings.color(''); }
+            self.extractMote(theMote);
 
-                theEP.settings.content.remove(function(mote) { return mote.name() === moteName; });
-                theEP.settings.filterMotes.remove(function(mote) { return mote.name() === moteName; });
-                theEP.settings.sortMotes.remove(function(mote) { return mote.name() === moteName; });
-                break;
-              case 'pinboard':
-                if (theEP.settings.coordMote() == moteName) { theEP.settings.coordMote(''); }
-                theEP.settings.legends.remove(function(mote) { return mote.name() === moteName; });
-                break;
-              case 'tree':
-                if (theEP.settings.children() == moteName) {  theEP.settings.children(''); }
-                if (theEP.settings.color() == moteName) { theEP.settings.color(''); }
-                break;
-              case 'time':
-                if (theEP.settings.date() == moteName) {  theEP.settings.date(''); }
-                if (theEP.settings.color() == moteName) { theEP.settings.color(''); }
-                break;
-              case 'flow':
-              case 'browser':
-                theEP.settings.motes.remove(function(mote) { return mote.name() === moteName; });
-                break;
-              }
-            });
-
-            if (self.edSelLinkMt() == moteName) { self.edSelLinkMt('disable'); }
-            if (self.edSelLink2Mt()== moteName) { self.edSelLink2Mt('disable'); }
-            self.selMoteList.remove(function(mote) { return mote.name() === moteName; });
-
-            if (self.edPostTitle() == moteName) { self.edPostTitle(''); }
-            self.postMoteList.remove(function(mote) { return mote.name() === moteName; });
-
-            self.taxMoteList.remove(function(mote) { return mote.name() === moteName; });
-
-            if (self.edTrnsAudio()  == moteName)  { self.edTrnsAudio('disable'); }
-            if (self.edTrnsVideo()  == moteName)  { self.edTrnsVideo('disable'); }
-            if (self.edTrnsTransc() == moteName)  { self.edTrnsTransc('disable'); }
-            if (self.edTrnsTransc2() == moteName) { self.edTrnsTransc2('disable'); }
-            if (self.edTrnsTime()  == moteName)   { self.edTrnsTime('disable'); }
-            if (self.edTrnsSrc()  == moteName)    { self.edTrnsSrc('disable'); }
-
-              // In case any Legend exists
+              // Delete Taxonomy/Legend if it exists
             if (theMote.type == 'Short Text') {
               deleteHeadTermInWP(moteName);
             }
@@ -790,10 +800,10 @@ jQuery(document).ready(function($) {
             self.allMotes.remove(theMote);
 
             self.settingsDirty(true);
-            $( this ).dialog('close');
+            $(this).dialog('close');
           },
           Cancel: function() {
-            $( this ).dialog('close');
+            $(this).dialog('close');
           }
         }
       });
@@ -805,6 +815,8 @@ jQuery(document).ready(function($) {
     }; // setMote()
 
       // PURPOSE: Handle user selection to edit a Mote definition
+      // NOTE:    If the user has configured a Legend for a Short Text mote, changing the name
+      //            of the Mote will cause it to get lost. This code does not handle that case at present.
     self.editMote = function(theMote, event) {
       $('#mdl-edit-mote-title').text('Edit definition for '+theMote.name);
       $('#mdl-edit-mote #edMoteModalName').val(theMote.name);
@@ -836,11 +848,12 @@ jQuery(document).ready(function($) {
             {
               text: 'Save',
               click: function() {
+                self.extractMote(theMote);
+                self.allMotes.remove(theMote);
                 var newMote = new Mote($('#mdl-edit-mote #edMoteModalName').val(),
                                   $('#mdl-edit-mote #edMoteModalType').val(),
                                   $('#mdl-edit-mote #edMoteModalCF').val(),
                                   $('#mdl-edit-mote #edMoteModalDelim').val());
-                self.allMotes.remove(theMote);
                 self.allMotes.push(newMote);
                 self.settingsDirty(true);
                 $(this).dialog('close');
