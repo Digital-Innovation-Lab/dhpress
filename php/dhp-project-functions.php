@@ -2663,7 +2663,7 @@ function dhp_page_template( $page_template )
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('dhp-foundation', plugins_url('/lib/foundation-5.1.1/js/foundation.min.js', dirname(__FILE__)), 'jquery');
 		wp_enqueue_script('dhp-modernizr', plugins_url('/lib/foundation-5.1.1/js/vendor/modernizr.js', dirname(__FILE__)), 'jquery');
-		wp_enqueue_script('handlebars', plugins_url('/lib/handlebars-v2.0.0.js', dirname(__FILE__)));
+		wp_enqueue_script('handlebars', plugins_url('/lib/handlebars-v3.0.0.js', dirname(__FILE__)));
 
 			// Check query variable "viz" to see which visualization to display -- default = 0
 		$vizIndex = (get_query_var('viz')) ? get_query_var('viz') : 0;
@@ -2907,7 +2907,6 @@ function dhp_tax_template( $page_template )
 		wp_enqueue_script('dhp-foundation', plugins_url('/lib/foundation-5.1.1/js/foundation.min.js', dirname(__FILE__)), 'jquery');
 		wp_enqueue_script('dhp-modernizr', plugins_url('/lib/foundation-5.1.1/js/vendor/modernizr.js', dirname(__FILE__)), 'jquery');
 		wp_enqueue_script('underscore');
-		// wp_enqueue_script('handlebars', plugins_url('/lib/handlebars-v1.1.2.js', dirname(__FILE__)));
 
 		if ($isTranscript) {
 			wp_enqueue_style('transcript', plugins_url('/css/transcriptions.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
