@@ -95,7 +95,7 @@ var dhpPinboardView = {
         jQuery('#dhp-controls').prepend(Handlebars.compile(jQuery("#dhp-script-legend-head").html()));
 
             // Create buttons for navigating & zooming background image
-        jQuery('#dhp-controls').append('<div id="dhp-pin-controls"><div class="pin-fndn-icon"><i class="fi-arrow-left" title="Move Image Left" id="pin-left"></i> <i class="fi-arrow-right" title="Move Image Right" id="pin-right"></i> <i class="fi-arrow-down" title="Move Image Down" id="pin-down"></i> <i class="fi-arrow-up" title="Move Image Up" id="pin-up"></i> <i class="fi-arrows-in" title="Reduce Image Size" id="pin-reduce"></i> <i class="fi-arrows-out" title="Zoom Image" id="pin-zoom"></i> <i class="fi-refresh" title="Reset Image Settings" id="pin-refresh"></i> </div></div>');
+        jQuery('#dhp-controls').append(jQuery("#dhp-script-pin-iconpanel").html());
         jQuery("#pin-refresh").click(dhpPinboardView.resetView);
         jQuery("#pin-zoom").click(dhpPinboardView.zoomIn);
         jQuery("#pin-reduce").click(dhpPinboardView.zoomOut);
@@ -915,7 +915,7 @@ var dhpPinboardView = {
         // PURPOSE: Create HTML for all of the legends for this visualization
     createLegends: function() 
     {
-        dhpServices.createLegends(dhpPinboardView.filters, 'Layer Opacities');
+        dhpServices.createLegends(dhpPinboardView.filters, dhpServices.getText('#dhp-script-pin-lbl-opacities'));
 
             // Skip the rest if there are no filters!
         if (dhpPinboardView.filters.length == 0)
@@ -1003,9 +1003,7 @@ var dhpPinboardView = {
         var svgLayer;
 
             // Create slider for background image
-        jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-base">'+
-                    '<div><input type="checkbox" checked="checked"><a class="value">Background Image</a></div>'+
-                    '<div><div class="layer-opacity"></div></div></div>');
+        jQuery('#layers-panel').append(Handlebars.compile(jQuery("#dhp-script-bkgnd-slider").html()));
         jQuery('#layer-opct-base .layer-opacity').slider({
                     range: false,
                     min: 0,
@@ -1028,9 +1026,7 @@ var dhpPinboardView = {
 
             // Create slider for SVG markers
             // Don't create on/off checkmark, as Legends do that and it would complicate logic
-        jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-markers">'+
-                    '<div><a class="value">Markers</a></div>'+
-                    '<div><div class="layer-opacity"></div></div></div>');
+        jQuery('#layers-panel').append(Handlebars.compile(jQuery("#dhp-script-mrkr-slider").html()));
         jQuery('#layer-opct-markers .layer-opacity').slider({
                     range: false,
                     min: 0,
@@ -1044,9 +1040,8 @@ var dhpPinboardView = {
 
             // Create buttons and sliders for each overlay layer
         _.each(layerSettings, function(thisLayer, index) {
-            jQuery('#layers-panel').append('<div class="layer-set" id="layer-opct-'+index+'">'+
-                '<div><input type="checkbox" checked="checked"><a class="value" id="layer-opct-a-'+
-                index+'">'+thisLayer.label+'</a></div><div><div class="layer-opacity"></div></div></div>');
+            jQuery('#layers-panel').append(dhpServices.compileText('#dhp-script-layer-slider', 
+                                            { i: index, label: thisLayer.label }));
             jQuery('#layer-opct-'+index+' .layer-opacity').slider({
                     range: false,
                     min: 0,
