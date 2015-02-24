@@ -27,9 +27,9 @@
 	define('DHP_SCRIPT_CARDS_VIEW',   'dhp-script-cards-view.txt');
 	define('DHP_SCRIPT_PINBOARD_VIEW',   'dhp-script-pin-view.txt');
 	define('DHP_SCRIPT_FLOW_VIEW',   'dhp-script-flow-view.txt');
+	define('DHP_SCRIPT_TIME_VIEW',   'dhp-script-time-view.txt');
 
 	// define( 'DHP_SCRIPT_TREE_VIEW',   'dhp-script-tree-view.txt' );   // currently unneeded
-	// define( 'DHP_SCRIPT_TIME_VIEW',   'dhp-script-time-view.txt' );   // currently unneeded
 	// define( 'DHP_SCRIPT_BROWSER_VIEW',   'dhp-script-browser-view.txt' );   // currently unneeded
 
 	// define( 'DHP_SCRIPT_TAX_TRANS',  'dhp-script-tax-trans.txt' );	// currently unneeded
@@ -73,8 +73,7 @@
 		// $projscript .= dhptmplt_get_script_text(DHP_SCRIPT_TREE_VIEW);
 		break;
 	case 'time':
-			// currently nothing is used
-		// $projscript .= dhptmplt_get_script_text(DHP_SCRIPT_TIME_VIEW);
+		echo dhptmplt_get_script_text(DHP_SCRIPT_TIME_VIEW);
 		break;
 	case 'flow':
 		echo dhptmplt_get_script_text(DHP_SCRIPT_FLOW_VIEW);

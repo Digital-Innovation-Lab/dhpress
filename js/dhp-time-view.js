@@ -122,7 +122,7 @@ var dhpTimeline = {
         dhpTimeline.bands       = new Array(2);
         dhpTimeline.components  = [];   // All the components of the timeline for redrawing
 
-        dhpTimeline.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        dhpTimeline.months = dhpServices.getText('#dhp-script-time-months').split('|');
 
             // Create control div for Legend Key
         jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
