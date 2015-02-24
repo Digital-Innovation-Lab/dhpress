@@ -1,0 +1,9 @@
+    <!-- Handlebars Templates for Facet Flow View -->
+
+<script id="dhp-script-flow-alpha" type="text/x-handlebars-template">
+alpha »
+</script>
+
+<script id="dhp-script-flow-size" type="text/x-handlebars-template">
+size »
+</script>
