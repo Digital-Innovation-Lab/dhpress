@@ -35,6 +35,9 @@ var dhpCardsView = {
     {
         var menuHTML, active;
 
+            // Language-dependent text
+        dhpCardsView.btnTextApply   = dhpServices.getText('#dhp-script-btn-apply');
+
             // Save reset data for later
         dhpCardsView.cardsEP        = cardsEP;
 
@@ -130,7 +133,7 @@ var dhpCardsView = {
                 // Don't know why this is needed -- but Select Modal Close button won't work without it
             jQuery('#filterModal a.close-select-modal').click(function() {
               jQuery('#filterModal').foundation('reveal', 'close');
-              if (jQuery(this).text() === 'Apply') {
+              if (jQuery(this).text() === dhpCardsView.btnTextApply) {
                 jQuery('body').addClass('waiting');
                     // Return control to browser briefly to ensure cursor is changed
                 window.setTimeout(function() {
@@ -231,8 +234,10 @@ var dhpCardsView = {
         //              If Number, user can enter min and max values
     setFilter: function()
     {
+        var labelText = dhpServices.compileText('#dhp-script-lbl-filter', { label: dhpCardsView.currentFilter });
+
             // Reset modal title
-        jQuery('#filterModal #filterModalLabel').text('Filter options for '+dhpCardsView.currentFilter);
+        jQuery('#filterModal #filterModalLabel').text(labelText);
 
             // Clear out modal body contents
         jQuery('#filterModal .modal-body').empty();
@@ -337,7 +342,7 @@ var dhpCardsView = {
         function popUpErrModal(str)
         {
                 // Reset modal title
-            jQuery('#filterErrModal #errorModalLabel').text('Date Filter Error');
+            jQuery('#filterErrModal #errorModalLabel').text(dhpServices.getText('#dhp-script-err-date-filter'));
 
                 // Clear out modal body contents
             jQuery('#filterErrModal .modal-body').empty();
@@ -348,14 +353,17 @@ var dhpCardsView = {
 
             // PURPOSE: Utility function to make sure text is valid number; displays error modal if problem
             // RETURNS: number if no problem with format, null if error, or '' if no value
-        function getNumber(val, req, min, max, numType)
+        function getNumber(val, req, min, max, numLabel)
         {
             var num;
+
+                // Get label in preparation
+            var numType = dhpServices.getText(numLabel);
 
                 // Has no value been supplied? Check if it is required
             if (val === '') {
                 if (req) {
-                    popUpErrModal('The value for '+numType+' is required but you left it blank.');
+                    popUpErrModal(dhpServices.compileText('#dhp-script-err-req-val', { t: numType }));
                     return null;
                 }
                 return '';
@@ -366,24 +374,24 @@ var dhpCardsView = {
                 num = parseInt(val, 10);
             }
             if (isNaN(num)) {
-                popUpErrModal('The value you entered for '+numType+' is not a valid number.');
+                popUpErrModal(dhpServices.compileText('#dhp-script-err-invalid-num', { t: numType }));
                 return null;
             }
             if (min && num < min) {
-                popUpErrModal('The value you entered for '+numType+' is too small.');
+                popUpErrModal(dhpServices.compileText('#dhp-script-err-too-small', { t: numType }));
                 return null;
             }
             if (max && num > max) {
-                popUpErrModal('The value you entered for '+numType+' is too large.');
+                popUpErrModal(dhpServices.compileText('#dhp-script-err-too-big', { t: numType }));
                 return null;
             }
             return num;
         } // getNumber()
 
             // Abort if there are any errors with first date
-        if ((date1Y=getNumber(dhpCardsView.curFilterVal.date1Y, true, null, null, 'the first Date year')) == null ||
-            (date1M=getNumber(dhpCardsView.curFilterVal.date1M, false, 1, 12, 'the first Date month')) == null ||
-            (date1D=getNumber(dhpCardsView.curFilterVal.date1D, false, 1, 31, 'the first Date day')) == null)
+        if ((date1Y=getNumber(dhpCardsView.curFilterVal.date1Y, true, null, null, '#dhp-script-1st-year')) == null ||
+            (date1M=getNumber(dhpCardsView.curFilterVal.date1M, false, 1, 12, '#dhp-script-1st-month')) == null ||
+            (date1D=getNumber(dhpCardsView.curFilterVal.date1D, false, 1, 31, '#dhp-script-1st-day')) == null)
         {
             return;
         }
@@ -411,9 +419,9 @@ var dhpCardsView = {
             // Only check second date if checked
         if (dhpCardsView.curFilterVal.and)
         {
-            if ((date2Y=getNumber(dhpCardsView.curFilterVal.date2Y, true, null, null, 'the second Date year')) == null ||
-                (date2M=getNumber(dhpCardsView.curFilterVal.date2M, false, 1, 12, 'the second Date month')) == null ||
-                (date2D=getNumber(dhpCardsView.curFilterVal.date2D, false, 1, 31, 'the second Date day')) == null)
+            if ((date2Y=getNumber(dhpCardsView.curFilterVal.date2Y, true, null, null, '#dhp-script-2nd-year')) == null ||
+                (date2M=getNumber(dhpCardsView.curFilterVal.date2M, false, 1, 12, '#dhp-script-2nd-month')) == null ||
+                (date2D=getNumber(dhpCardsView.curFilterVal.date2D, false, 1, 31, '#dhp-script-2nd-day')) == null)
             {
                 return;
             }

@@ -140,6 +140,9 @@ var dhpMapsView = (function () {
 		// PURPOSE: Creates initial Marker Layer (only once -- not the Markers on it)
 	function createMarkerLayer()
 	{
+			// Load language-dependent string
+		var strMarkers = dhpServices.getText('#dhp-script-map-markers-label');
+
 			// Is it a Clustering Marker Layer?
 		if (mapEP.cluster) {
 			markerLayer = new L.MarkerClusterGroup();
@@ -148,10 +151,10 @@ var dhpMapsView = (function () {
 		}
 			// Create options properties if they don't already exist
 		markerLayer.options = markerLayer.options || { };
-		markerLayer.options.layerName = 'Markers';
+		markerLayer.options.layerName = strMarkers;
 
 		markerLayer.addTo(mapLeaflet);
-		control.addOverlay(markerLayer, 'Markers');
+		control.addOverlay(markerLayer, strMarkers);
 
 		mapLayers.push(markerLayer);
 	} // createMarkerLayer()
@@ -402,7 +405,7 @@ var dhpMapsView = (function () {
 		// PURPOSE: Create HTML for all of the legends for this visualization
 	function createLegends() 
 	{
-		dhpServices.createLegends(menuLgnds, 'Layer Controls');
+		dhpServices.createLegends(menuLgnds, dhpServices.getText('#dhp-script-map-layer-ctrls'));
 
 			// Handle user selection of value name from current Legend
 		jQuery('#legends div.terms .row a').click(function(event) {
@@ -528,12 +531,14 @@ var dhpMapsView = (function () {
 	{
 		var lOpacity, label, disable;
 		var layerSettings = mapEP.layers;
+		var strMarkerLayer = dhpServices.getText('#dhp-script-map-markers-opacity');
+
 		_.each(mapLayers, function(thisLayer, index) {
 			disable = false;
 				// Markers start out "fully on" by default
 			if (index == mapLayers.length-1) {
 				lOpacity = 1;
-				label = 'Markers (Geometric only)';
+				label = strMarkerLayer;
 				if (mapEP.cluster)
 					disable = true;
 			} else {

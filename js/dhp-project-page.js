@@ -41,7 +41,6 @@ jQuery(document).ready(function($) {
 	vizIndex       = dhpData.vizParams.current;
 
 	dhpServices.initialize(ajaxURL, projectID, dhpSettings);
-	// dhpServices.initialize(ajaxURL, projectID, dhpSettings, dhpData.marker_url);
 
 		// Inform dhpServices of any PNG images
 	if (typeof(dhpData.vizParams.pngs) !== 'undefined') {
@@ -291,7 +290,7 @@ jQuery(document).ready(function($) {
 			// If tipsModal exists, create link to open it
 		var helpText = $('#tipModal .modal-body').text();
 		if (helpText !== undefined && helpText.length > 1) {
-			$('.dhp-nav .top-bar-section .right').append('<li><a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i>Tips</a></li>');
+			$('.dhp-nav .top-bar-section .right').append(Handlebars.compile($('#dhp-script-tip-div').html()));
 				// Don't know why this is needed -- but Select Modal Close button won't work without it
 			$('#tipModal .close-tip').click(function() {
 			  $('#tipModal').foundation('reveal', 'close');

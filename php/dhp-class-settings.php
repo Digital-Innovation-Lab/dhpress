@@ -90,7 +90,7 @@ if (!class_exists( 'DHPressSettings')) {
 									<select name="tip_url" id="tip_url">
 										<?php echo self::dhp_list_pages_for_tips(); ?>
 									</select>
-									Select the post whose text is used for global tips here.
+									Select the Page whose text is used for global tips here.
 								</td>
 							</tr>
 

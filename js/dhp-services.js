@@ -963,7 +963,21 @@ var dhpServices = {
             milliSecondsCode = 0;
         }
         return milliSecondsCode;
-    } // tcToMilliSeconds()
+    }, // tcToMilliSeconds()
 
+        // PURPOSE: Retrieve language-dependent text embedded in script
+    getText: function(scriptName)
+    {
+        return jQuery(scriptName).html().trim();
+    },
+
+        // PURPOSE: Retrieve language-dependent text and insert variables
+        // INPUT:   scriptName = name of script text in DOM
+        //          vars = names and values of variables in text
+    compileText: function(scriptName, vars)
+    {
+        var baseText = jQuery(scriptName).html().trim();
+        var template = Handlebars.compile(baseText);
+        return template(vars);
+    } // compileText()
 }; // dhpServices
-

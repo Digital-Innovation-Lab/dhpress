@@ -133,3 +133,10 @@
     <div class="small-10 large-10 columns"><a class="value" data-id="all"><b>Hide/Show All</b></a></div>
   </div>
 </script>
+
+
+<script id="dhp-script-tip-div" type="text/x-handlebars-template">
+	<li>
+		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i>Tips</a>
+	</li>
+</script>

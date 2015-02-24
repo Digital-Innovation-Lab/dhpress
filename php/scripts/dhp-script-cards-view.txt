@@ -68,3 +68,56 @@
   <input type="checkbox" id="dateAnd"/> (override) After date above and before date below <br/>
   <div class="date-boxes">Date <input id="filter-date2Y-input" type="text" size="5" placeholder="Year"/> <input id="filter-date2M-input" type="text" size="2" placeholder="Month#"/> <input id="filter-date2D-input" type="text" size="2" placeholder="Date"/></div>
 </script>
+
+<!-- This must be the verbatim text for "Apply" button label that appears on all Filter modals -->
+<script id="dhp-script-btn-apply" type="text/x-handlebars-template">
+Apply
+</script>
+
+<script id="dhp-script-lbl-filter" type="text/x-handlebars-template">
+Filter options for {{label}}
+</script>
+
+<script id="dhp-script-err-date-filter" type="text/x-handlebars-template">
+Date Filter Error
+</script>
+
+<script id="dhp-script-err-req-val" type="text/x-handlebars-template">
+The value for {{t}} is required but you left it blank.
+</script>
+
+<script id="dhp-script-err-invalid-num" type="text/x-handlebars-template">
+The value you entered for {{t}} is not a valid number.
+</script>
+
+<script id="dhp-script-err-too-small" type="text/x-handlebars-template">
+The value you entered for {{t}} is too small.
+</script>
+
+<script id="dhp-script-err-too-big" type="text/x-handlebars-template">
+The value you entered for {{t}} is too large.
+</script>
+
+<script id="dhp-script-1st-year" type="text/x-handlebars-template">
+the first Date year
+</script>
+
+<script id="dhp-script-1st-month" type="text/x-handlebars-template">
+the first Date month
+</script>
+
+<script id="dhp-script-1st-day" type="text/x-handlebars-template">
+the first Date day
+</script>
+
+<script id="dhp-script-2nd-year" type="text/x-handlebars-template">
+the second Date year
+</script>
+
+<script id="dhp-script-2nd-month" type="text/x-handlebars-template">
+the second Date month
+</script>
+
+<script id="dhp-script-2nd-day" type="text/x-handlebars-template">
+the second Date day
+</script>
