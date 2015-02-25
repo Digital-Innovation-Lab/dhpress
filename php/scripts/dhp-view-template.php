@@ -138,3 +138,10 @@
 		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i>Tips</a>
 	</li>
 </script>
+
+<script id="dhp-script-transc-scroll" type="text/x-handlebars-template">
+	<div style="padding-top:5px">
+		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Scroll transcript to follow playback
+	</div>
+	<br/>
+</script>

@@ -150,7 +150,7 @@ var dhpTreeView = {
                     // Prepare the data for use
                 dhpTreeView.rawData = JSON.parse(data);
                 if (data == undefined || dhpTreeView.rawData == undefined || dhpTreeView.rawData[0] == undefined) {
-                    console.log("Error with data; "+data);
+                    console.log("Error with data: "+data);
                 }
                 dhpTreeView.legendTerms = dhpTreeView.rawData[0];
                 if (dhpTreeView.legendTerms.type !== 'filter') {

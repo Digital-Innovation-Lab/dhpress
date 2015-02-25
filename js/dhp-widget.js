@@ -143,7 +143,7 @@ var dhpWidget = {
         }
 
         if (usingAV && haveTransc) {
-            jQuery(appendPos).append('<div style="padding-top:5px"><input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Scroll transcript to follow playback</div><br>');
+            jQuery(appendPos).append(Handlebars.compile(jQuery("#dhp-script-transc-scroll").html()));
         }
     }, // prepareOneTranscript()
 
