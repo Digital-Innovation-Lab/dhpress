@@ -5,7 +5,7 @@ Donate link: http://dhpress.org/
 Tags: plugin, visualization, humanities, toolkit, historical
 Requires at least: 3.4
 Tested up to: 4.1
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
