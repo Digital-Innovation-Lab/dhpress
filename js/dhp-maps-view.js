@@ -24,6 +24,7 @@ var dhpMapsView = (function () {
 	var pngIcons = [];			// array of PNG image icons, indexed by name
 	var radius;					// radius of geometric markers
 	var markerOpacity  = 1;     // opacity of marker layer (for all markers)
+	var lineWidth = 1;			// width of lines, corresponding to marker size setting
 
 	var mapLayers = [];			// array of map layer data to display
 	var mapLeaflet;				// Leaflet map object
@@ -225,8 +226,8 @@ var dhpMapsView = (function () {
 						});
 					} else if (type === 2) {
 						aNewMarker = L.polyline(theMarker.geometry.coordinates, {
-							id: markerIndex, weight: 1, color: fKey,
-							opacity: markerOpacity, weight: 4
+							id: markerIndex, weight: lineWidth, color: fKey,
+							opacity: markerOpacity
 						});
 
 					} else {
@@ -606,13 +607,16 @@ var dhpMapsView = (function () {
 			makiSize       = theMapEP.size;
 			switch (theMapEP.size) {
 			case "s":
-				radius     = 4;
+				radius		= 4;
+				lineWidth	= 2;
 				break;
 			case "m":
-				radius     = 8;
+				radius		= 8;
+				lineWidth	= 4;
 				break;
 			case "l":
-				radius     = 12;
+				radius		= 12;
+				lineWidth	= 8;
 				break;
 			}
 
