@@ -2663,7 +2663,7 @@ function dhp_page_template( $page_template )
 		wp_enqueue_script('jquery');
 		wp_enqueue_script('dhp-foundation', plugins_url('/lib/foundation-5.1.1/js/foundation.min.js', dirname(__FILE__)), 'jquery');
 		wp_enqueue_script('dhp-modernizr', plugins_url('/lib/foundation-5.1.1/js/vendor/modernizr.js', dirname(__FILE__)), 'jquery');
-		wp_enqueue_script('handlebars', plugins_url('/lib/handlebars-v3.0.0.js', dirname(__FILE__)));
+		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
 
 			// Check query variable "viz" to see which visualization to display -- default = 0
 		$vizIndex = (get_query_var('viz')) ? get_query_var('viz') : 0;

@@ -109,7 +109,7 @@
 </div>
 
 
-<script id="dhp-script-epviz-menu" type="text/x-handlebars-template">
+<script id="dhp-script-epviz-menu" type="x-tmpl-mustache">
   <li class="divider"></li>
   <li class="has-dropdown">
       <a href="#">Change View</a>
@@ -120,12 +120,12 @@
 </script>
 
 
-<script id="dhp-script-legend-head" type="text/x-handlebars-template">
+<script id="dhp-script-legend-head" type="x-tmpl-mustache">
   <div id="legends" class="" style=""><div class="legend-row"></div></div>
 </script>
 
 
-<script id="dhp-script-legend-hideshow" type="text/x-handlebars-template">
+<script id="dhp-script-legend-hideshow" type="x-tmpl-mustache">
   <div class="row check-all"> 
     <div class="small-2 large-1 columns"><input type="checkbox" checked="checked"></div>
     <div class="small-10 large-10 columns"><a class="value" data-id="all"><b>Hide/Show All</b></a></div>
@@ -133,13 +133,13 @@
 </script>
 
 
-<script id="dhp-script-tip-div" type="text/x-handlebars-template">
+<script id="dhp-script-tip-div" type="x-tmpl-mustache">
 	<li>
 		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i>Tips</a>
 	</li>
 </script>
 
-<script id="dhp-script-transc-scroll" type="text/x-handlebars-template">
+<script id="dhp-script-transc-scroll" type="x-tmpl-mustache">
 	<div style="padding-top:5px">
 		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Scroll transcript to follow playback
 	</div>

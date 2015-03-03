@@ -1,1 +1,1 @@
-    <!-- Handlebars Templates for Tree View -->
+    <!-- Templates for Tree View -->

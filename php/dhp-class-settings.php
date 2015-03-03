@@ -124,7 +124,7 @@ if (!class_exists( 'DHPressSettings')) {
 			return ob_get_clean();
 		}
 
-			// Add handlebars template to footer for tip modal
+			// Add template to footer for tip modal
 		static function dhp_tip_page_content()
 		{
 			echo self::dhp_tip_page_template();			

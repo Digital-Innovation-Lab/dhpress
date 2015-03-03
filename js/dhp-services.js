@@ -242,7 +242,7 @@ var dhpServices = {
                                                     theTerm.id+'" data-parent="'+theTerm.parent+'">'+theTerm.name+'</a></div></div>');
                 }
             });
-            jQuery('.terms',legendHtml).prepend(Handlebars.compile(jQuery("#dhp-script-legend-hideshow").html()));
+            jQuery('.terms',legendHtml).prepend(Mustache.render(jQuery("#dhp-script-legend-hideshow").html()));
 
             jQuery('#legends .legend-row').append(legendHtml);
                 // Add Legend title to dropdown menu in navbar -- make 1st Legend active by default
@@ -977,7 +977,7 @@ var dhpServices = {
     compileText: function(scriptName, vars)
     {
         var baseText = jQuery(scriptName).html().trim();
-        var template = Handlebars.compile(baseText);
-        return template(vars);
+        var template = Mustache.render(baseText, vars);
+        return template;
     } // compileText()
 }; // dhpServices

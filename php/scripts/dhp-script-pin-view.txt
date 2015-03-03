@@ -1,5 +1,5 @@
-    <!-- Handlebars Templates for Map View -->
-<script id="dhp-script-pin-leg-menu" type="text/x-handlebars-template">
+    <!-- Templates for Map View -->
+<script id="dhp-script-pin-leg-menu" type="x-tmpl-mustache">
   <li class="has-dropdown">
       <a href="#">Legends</a>
       <ul class="dropdown legend-dropdown"">
@@ -9,11 +9,11 @@
   <li class="divider"></li>
 </script>
 
-<script id="dhp-script-pin-layer-menu" type="text/x-handlebars-template">
+<script id="dhp-script-pin-layer-menu" type="x-tmpl-mustache">
   <li><a id="layers-button" href="#">Opacities</a></li>
 </script>
 
-<script id="dhp-script-pin-iconpanel" type="text/x-handlebars-template">
+<script id="dhp-script-pin-iconpanel" type="x-tmpl-mustache">
 <div id="dhp-pin-controls">
 	<div class="pin-fndn-icon">
 		<i class="fi-arrow-left" title="Move Image Left" id="pin-left"></i>
@@ -27,11 +27,11 @@
 </div>
 </script>
 
-<script id="dhp-script-pin-lbl-opacities" type="text/x-handlebars-template">
+<script id="dhp-script-pin-lbl-opacities" type="x-tmpl-mustache">
 Layer Opacities
 </script>
 
-<script id="dhp-script-bkgnd-slider" type="text/x-handlebars-template">
+<script id="dhp-script-bkgnd-slider" type="x-tmpl-mustache">
 <div class="layer-set" id="layer-opct-base">
 	<div><input type="checkbox" checked="checked">
 		<a class="value">Background Image</a>
@@ -43,7 +43,7 @@ Layer Opacities
 </div>
 </script>
 
-<script id="dhp-script-mrkr-slider" type="text/x-handlebars-template">
+<script id="dhp-script-mrkr-slider" type="x-tmpl-mustache">
 <div class="layer-set" id="layer-opct-markers">
 	<div>
 		<a class="value">Markers</a>
@@ -55,7 +55,7 @@ Layer Opacities
 </div>
 </script>
 
-<script id="dhp-script-layer-slider" type="text/x-handlebars-template">
+<script id="dhp-script-layer-slider" type="x-tmpl-mustache">
 <div class="layer-set" id="layer-opct-{{i}}">
 	<div>
 		<input type="checkbox" checked="checked">
