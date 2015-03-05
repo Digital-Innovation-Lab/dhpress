@@ -15,7 +15,7 @@ DHPress is a flexible, repurposable, fully extensible digital public humanities 
 
 The digital public humanities toolkit, DH Press is built on the WordPress platform and its plugin-based architecture.
 
-DH Press is a flexible, repurposable, fully extensible digital public humanities toolkit designed for non-technical users. It enables administrative users to build web-based community projects that combine interactive historical maps, tags, categories, metadata, and multimedia objects (including videos, web pages, images, placemarkers, and virtual walking tours). WordPress’s plugin architecture allows for open and unlimited enhancement of features and functionalities.
+DH Press is a plugin for WordPress that enables scholars to visualize their humanities-oriented data and allow users to access that data from the visualizations themselves. The graphical representation of data – whether it be geographical information shown on maps, temporal data shown on timelines, family relationships shown on trees, etc. – can facilitate users in comprehending it quickly and analyzing it in domain-specific ways. WordPress’s plugin architecture allows for open and unlimited enhancement of features and functionalities. DH Press also supplies widgets that can display and coordinate textual transcripts with SoundCloud audio or YouTube video playback.
 
 Building DH Press on WordPress offers the following important benefits: 
 	1) its CMS provides a stable and robust core, 
@@ -26,7 +26,7 @@ Thus, building DH Press on top of the WordPress CMS results in a truly sustainab
 
 For DH Press version 2.0 and earlier, see https://github.com/jehope/dhpress
 
-== Installation ==
+== Installation of zip file ==
 
 1. Rename folder to 'dhpress'
 2. Upload 'dhpress' to the '/wp-content/plugins/' directory
