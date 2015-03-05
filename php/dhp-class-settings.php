@@ -16,13 +16,14 @@ if (!class_exists( 'DHPressSettings')) {
 			add_action('admin_menu', array( __CLASS__, 'add_menu'));
 
 				// Register/load scripts if options are set
-				if (get_option('tip_url')) {
-					add_action('wp_footer', array( __CLASS__, 'dhp_tip_page_content'));
-				}
+			if (get_option('tip_url')) {
+				add_action('wp_footer', array( __CLASS__, 'dhp_tip_page_content'));
+			}
 
-				add_action('init', array( __CLASS__, 'register_scripts'));
-				add_action('wp_enqueue_scripts', array( __CLASS__, 'print_scripts'));
+			add_action('init', array( __CLASS__, 'register_scripts'));
+			add_action('wp_enqueue_scripts', array( __CLASS__, 'print_scripts'));
 		} // init()
+
 
 		static function admin_init()
 		{
@@ -130,32 +131,35 @@ if (!class_exists( 'DHPressSettings')) {
 			echo self::dhp_tip_page_template();			
 		}
 
-			// PURPOSE: Load template in html to be called by javascript and embed in
-			//				HTML markup for Foundation modal
+			// PURPOSE: Inject Help Tip text into HTML for DH Press pages (if set)
 		static function dhp_tip_page_template()
 		{
-			$tip_page = get_option('tip_url');
-			if ($tip_page) {
-				$tip_obj = get_post($tip_page);
-				ob_start(); ?>
-				<div id="tipModal" class="reveal-modal medium" data-reveal>
-				  <div class="modal-content">
-					<div class="modal-header">
-					  <h1><?php echo $tip_obj->post_title;?></h1>
+			global $post;
+
+			if ($post->post_type == 'dhp-project') {
+				$tip_page = get_option('tip_url');
+				if ($tip_page) {
+					$tip_obj = get_post($tip_page);
+					ob_start(); ?>
+					<div id="tipModal" class="reveal-modal medium" data-reveal>
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <h1><?php echo $tip_obj->post_title;?></h1>
+						</div>
+						<div class="modal-body clearfix">
+							<?php remove_filter( 'the_content', 'dhp_mod_page_content' ); ?>
+							<?php echo apply_filters( 'the_content', $tip_obj->post_content ); ?>
+						</div>
+						<div class="reveal-modal-footer clearfix ">
+						  <ul class="button-group right"><li><a class="button close-tip" >Close</a></li></ul>
+						</div>
+					  </div>
+						<a class="close-reveal-modal close-tip">&#215;</a>
 					</div>
-					<div class="modal-body clearfix">
-						<?php remove_filter( 'the_content', 'dhp_mod_page_content' ); ?>
-						<?php echo apply_filters( 'the_content', $tip_obj->post_content ); ?>
-					</div>
-					<div class="reveal-modal-footer clearfix ">
-					  <ul class="button-group right"><li><a class="button close-tip" >Close</a></li></ul>
-					</div>
-				  </div>
-					<a class="close-reveal-modal close-tip">&#215;</a>
-				</div>
-				<?php
-				return ob_get_clean();
-			}
+					<?php
+					return ob_get_clean();
+				} // if tip_page
+			} // if dhp-project
 		} // dhp_tip_page_template()
 
 
@@ -165,37 +169,35 @@ if (!class_exists( 'DHPressSettings')) {
 			wp_register_script( 'dhp-global-settings-script', plugins_url( '/js/dhp-global-settings.js', dirname( __FILE__ ) ), array( 'jquery' ), DHP_PLUGIN_VERSION, true );
 		}
 
+			// PURPOSE: Inject global settings data and code into DH Press Project pages
 		static function print_scripts() 
 		{
-			$global_tip = false;
-			$screen_saver = false;
-
 			global $post;
-			if (get_option('tip_url')) {
-				$global_tip = true;
-			}
-			wp_enqueue_script( 'jquery' );
-			wp_enqueue_style( 'dhp-foundation-style', plugins_url('/lib/foundation-5.1.1/css/foundation.min.css',  dirname(__FILE__)));
-			wp_enqueue_style( 'dhp-foundation-icons', plugins_url('/lib/foundation-icons/foundation-icons.css',  dirname(__FILE__)));
-			wp_enqueue_script( 'dhp-foundation', plugins_url('/lib/foundation-5.1.1/js/foundation.min.js', dirname(__FILE__)), 'jquery');
-			wp_enqueue_script( 'dhp-modernizr', plugins_url('/lib/foundation-5.1.1/js/vendor/modernizr.js', dirname(__FILE__)), 'jquery');
+			if ($post->post_type == 'dhp-project') {
+				$timeout = intval(get_option('timeout_duration'));
+				$redirect = get_option('redirect_url');
+				$blocks = get_option('kiosk_blockurls');
+					// Only bother if there are settings to pass
+				if (($timeout > 0 && ($redirect != FALSE && $redirect != '')) || ($blocks != FALSE && $blocks != '')) {
+					wp_enqueue_script('jquery');
 
-			wp_enqueue_style( 'dhp-global-settings', plugins_url('/css/dhp-global-settings.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION);
+					wp_enqueue_style('dhp-global-settings', plugins_url('/css/dhp-global-settings.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION);
 
-				// Load scripts
-			wp_enqueue_script( 'dhp-global-settings-script' );
-				// Print settings to page
-			wp_localize_script( 'dhp-global-settings-script', 'dhpGlobals', array(
-				'global_tip' => $global_tip,
-				'timeout_duration' => intval(get_option('timeout_duration')),
-				'redirect_url' => get_option('redirect_url'),
-				'kiosk_useragent' => get_option('kiosk_useragent'),
-				'kiosk_blockurls' => get_option('kiosk_blockurls')
-			) );
+						// Load scripts
+					wp_enqueue_script('dhp-global-settings-script');
+						// Print settings to page
+					wp_localize_script('dhp-global-settings-script', 'dhpGlobals', array(
+						'timeout_duration' => $timeout,
+						'redirect_url' => $redirect,
+						'kiosk_useragent' => get_option('kiosk_useragent'),
+						'kiosk_blockurls' => $blocks
+					) );
+				} // if there are settings
+			} // if dhp-project
 		}
 	} // class DHPressSettings
 }
 
-if (class_exists( 'DHPressSettings')) {
+if (class_exists('DHPressSettings')) {
 	DHPressSettings::init();
 }
