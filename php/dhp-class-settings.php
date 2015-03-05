@@ -139,6 +139,9 @@ if (!class_exists( 'DHPressSettings')) {
 			if ($post->post_type == 'dhp-project') {
 				$tip_page = get_option('tip_url');
 				if ($tip_page) {
+						// Load style for Help Tip
+					wp_enqueue_style('dhp-global-settings', plugins_url('/css/dhp-global-settings.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION);
+
 					$tip_obj = get_post($tip_page);
 					ob_start(); ?>
 					<div id="tipModal" class="reveal-modal medium" data-reveal>
@@ -180,8 +183,6 @@ if (!class_exists( 'DHPressSettings')) {
 					// Only bother if there are settings to pass
 				if (($timeout > 0 && ($redirect != FALSE && $redirect != '')) || ($blocks != FALSE && $blocks != '')) {
 					wp_enqueue_script('jquery');
-
-					wp_enqueue_style('dhp-global-settings', plugins_url('/css/dhp-global-settings.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION);
 
 						// Load scripts
 					wp_enqueue_script('dhp-global-settings-script');
