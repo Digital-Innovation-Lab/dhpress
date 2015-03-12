@@ -64,7 +64,8 @@ var dhpFacetFlow = {
 				chart = d3.parsets().accessDim(getFacetValue)
 										.dimensions(ffEP.motes)
 										.width(dhpFacetFlow.iWidth)
-										.height(dhpFacetFlow.iHeight);
+										.height(dhpFacetFlow.iHeight)
+										.tension(.6);
 				vis.datum(rawData[rawData.length-1]['features']).call(chart);
 
 				    // Now create a select list to show the items that 

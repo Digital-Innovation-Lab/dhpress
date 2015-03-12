@@ -146,6 +146,12 @@ var dhpServices = {
     timeFuzzyStart: 2,
     timeFuzzyEnd: 4,
 
+    	// LOCALIZED TEXT
+    dateAbout: null,
+    dateNoLater: null,
+    dateAtLeast: null,
+    dateFromTo: null,
+
         // LOCAL PROPERTIES
     ajaxURL: null,
     projectID: null,
@@ -162,6 +168,10 @@ var dhpServices = {
         projectID = theProjID;
         projSettings = theSettings;
         markerURL = theMarkerURL;
+        dhpServices.dateNoLater = dhpServices.getText("#dhp-date-nolater");
+        dhpServices.dateAtLeast = dhpServices.getText("#dhp-date-atleast");
+        dhpServices.dateAbout  = dhpServices.getText("#dhp-date-about");
+        dhpServices.dateFromTo  = dhpServices.getText("#dhp-date-from-to");
     }, // initialize()
 
 
@@ -850,17 +860,15 @@ var dhpServices = {
     {
         function dateExplain(dateStr, from)
         {
-            var theString='';
-
             if (dateStr.charAt(0) === '~') {
                 if (from) {
-                    theString = 'no later than ';
+                    theString = dhpServices.dateNoLater;
                 } else {
-                    theString = 'at least ';
+                    theString = dhpServices.dateAtLeast;
                 }
-                dateStr = dateStr.substr(1);
-            }
-            return theString+dateStr;
+                return Mustache.render(theString, { date: dateStr.substr(1) });
+            } else 
+                return dateStr;
         } // dateExplain()
 
         var builtHTML='';
@@ -881,14 +889,15 @@ var dhpServices = {
                 if (dateSegs.length == 1) {
                     var dateStr;
                     if (start.charAt(0) === '~') {
-                        dateStr = 'about '+start.substr(1);
+                        dateStr = Mustache.render(dhpServices.dateAbout, { date: start.substr(1) });
                     } else {
                         dateStr = start;
                     }
                     builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+dateStr+'</div>';
                 } else {
-                    builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: From '+
-                                dateExplain(start, true)+' to '+dateExplain(dateSegs[1].trim(), false)+'</div>';
+                    builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+
+                        Mustache.render(dhpServices.dateFromTo, { d1: dateExplain(start, true), d2: dateExplain(dateSegs[1].trim(), false) });+
+                        '</div>';
                 }
                 break;
             case 'Image':
@@ -901,21 +910,21 @@ var dhpServices = {
                 }
                 break;
             case 'Link To':
-                builtHTML = '<div><a href="'+mVal+'" target="_blank"> See '+moteName+' webpage</a></div>';
+                builtHTML = '<div><a href="'+mVal+'" target="_blank">'+
+                		dhpServices.compileText('#dhp-btnlbl-linkto', { name: moteName })+'</a></div>';
                 break;
             case 'SoundCloud':
-                builtHTML = '<div><a href="'+mVal+'" target="_blank">Go to SoundCloud page</a></div>';
+                builtHTML = '<div><a href="'+mVal+'" target="_blank">'+
+                	dhpServices.getText('#dhp-btnlbl-sndcld')+'</a></div>';
                 break;
             case 'YouTube':
-                builtHTML = '<div><a href="https://www.youtube.com/watch?v='+mVal+'" target="_blank">Go to YouTube page</a></div>';
+                builtHTML = '<div><a href="https://www.youtube.com/watch?v='+mVal+'" target="_blank">' +
+                		dhpServices.getText('#dhp-btnlbl-youtube')+'</a></div>';
                 break;
             case 'Transcript':
-                builtHTML = '<div><a href="'+mVal+'" target="_blank">Look at Transcript file</a></div>';
+                builtHTML = '<div><a href="'+mVal+'" target="_blank">'+
+                		dhpServices.getText('#dhp-btnlbl-transcript')+'</a></div>';
                 break;
-            case 'Long Text':
-                if (mVal === '~|~') {
-                    break;
-                }
             // case 'Pointer':
             //     var parsed;
             //     if (moteDef.delim && moteDef.delim !== '' && moteDef.delim !== ' ') {
@@ -926,6 +935,11 @@ var dhpServices = {
             //     builtHTML = '<div><a href="'+markerURL+parsed[0]+'" target="_blank"> See '+moteName+' webpage</a></div>';
             //     break;
                 // else, fall through to default logic
+            case 'Long Text':
+                if (mVal === '~|~') {
+                    break;
+                }
+                // fall through to default logic to construct string
             default:
                 if (moteName === 'the_content') {
                     builtHTML = '<div>'+mVal+'</div>';
