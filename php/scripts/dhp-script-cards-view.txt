@@ -43,7 +43,7 @@
       <div class="modal-body clearfix">
       </div>
       <div class="reveal-modal-footer clearfix ">
-        <ul class="button-group left"><li><a class="button success close-select-modal">Cuir an Gnìomh</a></li></ul>
+        <ul class="button-group left"><li><a class="button success close-select-modal">Cuir an gnìomh</a></li></ul>
         <ul class="button-group right"><li><a class="button close-select-modal">Tréig</a></li></ul>
       </div>
     </div> <!-- modal-content -->
