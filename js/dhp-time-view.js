@@ -11,6 +11,7 @@
 //                  colorValues = Legend filter
 //                  features = FeatureCollection array
 
+//					local = localized formatter for D3, or null if none
 //                  events = array { start[Date], end[Date], instant[Boolean], track[Integer], index[Integer] }
 //                  bands = array for each view of events: [0] = zoom view, [1] = entire timeline
 
@@ -97,6 +98,20 @@ var dhpTimeline = {
 	initialize: function(ajaxURL, projectID, vizIndex, tlEP)
 	{
 		dhpTimeline.tlEP        = tlEP;
+
+			// Do we need to localize D3?
+		var d3Local = dhpServices.getText('#dhp-script-d3-local');
+		if (d3Local.length > 1) {
+			var locale = d3.locale(JSON.parse(d3Local));
+			dhpTimeline.local = locale.timeFormat.multi([
+				["%H:%M", function(d) { return d.getMinutes(); }],
+				["%H:%M", function(d) { return d.getHours(); }],
+				["%a %d", function(d) { return d.getDay() && d.getDate() != 1; }],
+				["%b %d", function(d) { return d.getDate() != 1; }],
+				["%B", function(d) { return d.getMonth(); }],
+				["%Y", function() { return true; }]
+			]);
+		}
 
 		dhpTimeline.fromDate = dhpServices.parseADate(tlEP.from, true);
 		if (tlEP.to === '' || tlEP.to === ' ') {
@@ -735,6 +750,11 @@ var dhpTimeline = {
 			//     }
 			// } )
 			;
+
+			// Do we need to localize the axis labels?
+		if (dhpTimeline.local) {
+			axis.tickFormat(dhpTimeline.local);
+		}
 
 			// Create SVG components
 		var axisSVG = dhpTimeline.chart.append("g")

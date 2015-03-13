@@ -3,3 +3,22 @@
 <script id="dhp-script-time-months" type="x-tmpl-mustache">
 Faol|Gear|Mairt|Gib|Ceit|ÒgM|Iuch|Lù|Sult|Damh|Samh|Dùb
 </script>
+
+<!-- Localization data for D3JS: see https://github.com/mbostock/d3/wiki/Localization -->
+<!-- Leave empty if no localization needed -->
+<script id="dhp-script-d3-local" type="x-tmpl-mustache">
+{
+	"decimal": ".",
+	"thousands": ",",
+	"grouping": [3],
+	"currency": ["$", ""],
+	"dateTime": "%a %b %e %X %Y",
+	"date": "%m/%d/%Y",
+	"time": "%H:%M:%S",
+	"periods": ["M", "F"],
+	"days": ["Di-Dòmhnaich", "Di-Luain", "Di-Mairt", "Di-Ciadaoin", "Di-hArdaoin", "Di-hAoine", "Di-Sathuirne"],
+	"shortDays": ["Domhn", "Luain", "Mairt", "Ciad", "hArd", "hAoin", "Sath"],
+	"months": ["Am Faoilleach", "An Gearran", "Am Mairt", "An Giblean", "An Céiteann", "An t-Òg-Mhìos", "An t-Iuchair", "An Lùghnasdal", "An t-Sultain", "An Dàmhair", "An t-Samhainn", "An Dùbhlachd"],
+	"shortMonths": ["Faol", "Gear", "Mar", "Gib", "Céit", "ÒgM", "Iuch", "Lù", "Sult", "Dàmh", "Samh", "Dùb"]
+}
+</script>
