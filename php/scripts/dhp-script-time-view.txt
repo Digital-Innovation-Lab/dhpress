@@ -1,5 +1,5 @@
-    <!-- Templates for Tree View -->
+    <!-- Templates for Timeline View -->
 
 <script id="dhp-script-time-months" type="x-tmpl-mustache">
-Jan|Feb|Mar|Apr|May|June|July|Aug|Sep|Oct|Nov|Dec
+Faol|Gear|Mairt|Gib|Ceit|ÒgM|Iuch|Lù|Sult|Damh|Samh|Dùb
 </script>

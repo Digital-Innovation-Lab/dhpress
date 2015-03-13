@@ -4,9 +4,9 @@
 <nav class="top-bar dhp-nav" data-topbar data-options="is_hover: false">
 	<ul class="title-area">
 		<li class="name">
-			<h1 style="font-style:italic"><a href="#">My Site</a></h1>
+			<h1 style="font-style:italic"><a href="#">Mo Làrach</a></h1>
 		</li>
-		<li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+		<li class="toggle-topbar menu-icon"><a href="#">Clàr-taice</a></li>
 	</ul>
 
 	<section class="top-bar-section">
@@ -94,7 +94,7 @@
 		<div class="modal-body clearfix">
 		</div>
 		<div class="reveal-modal-footer clearfix ">
-			<ul class="button-group right"><li><a class="button close-select-modal" >Close</a></li></ul>
+			<ul class="button-group right"><li><a class="button close-select-modal">Dùin</a></li></ul>
 		</div>
 	</div>
 	<a class="close-reveal-modal close-select-modal">&#215;</a>
@@ -103,7 +103,7 @@
 
 <div id="loading" class="reveal-modal tiny" data-reveal>
 	<div class="loading-content">
-		<h3 class="loading-title">Loading Project</h3>
+		<h3 class="loading-title">Luchdachadh Fiosrachaidh</h3>
 		<div class="spinner"></div>
 	</div>
 </div>
@@ -112,7 +112,7 @@
 <script id="dhp-script-epviz-menu" type="x-tmpl-mustache">
   <li class="divider"></li>
   <li class="has-dropdown">
-      <a href="#">Change View</a>
+      <a href="#">Sealladh eile</a>
       <ul class="dropdown epviz-dropdown">
           <!-- links -->
       </ul>
@@ -128,54 +128,54 @@
 <script id="dhp-script-legend-hideshow" type="x-tmpl-mustache">
   <div class="row check-all"> 
     <div class="small-2 large-1 columns"><input type="checkbox" checked="checked"></div>
-    <div class="small-10 large-10 columns"><a class="value" data-id="all"><b>Hide/Show All</b></a></div>
+    <div class="small-10 large-10 columns"><a class="value" data-id="all"><b>Falaich/Nochd na h-uile</b></a></div>
   </div>
 </script>
 
 
 <script id="dhp-script-tip-div" type="x-tmpl-mustache">
 	<li>
-		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i>Tips</a>
+		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i> Cuidich</a>
 	</li>
 </script>
 
 <script id="dhp-script-transc-scroll" type="x-tmpl-mustache">
 	<div style="padding-top:5px">
-		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Scroll transcript to follow playback
+		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Lean ris a’ chlàradh
 	</div>
 	<br/>
 </script>
 
 <!-- text related to creating Date strings -->
 <script id="dhp-date-nolater" type="x-tmpl-mustache">
-no later than {{date}}
+{{date}} aig a’ char as lugha
 </script>
 
 <script id="dhp-date-atleast" type="x-tmpl-mustache">
-at least {{date}}
+co-dhiù {{date}}
 </script>
 
 <script id="dhp-date-about" type="x-tmpl-mustache">
-about {{date}}
+mu thimcheall {{date}}
 </script>
 
 <script id="dhp-date-from-to" type="x-tmpl-mustache">
-From {{d1}} to {{d2}}
+Bho {{d1}} gu {{d2}}
 </script>
 
 <!-- text for button labels -->
 <script id="dhp-btnlbl-linkto" type="x-tmpl-mustache">
-See {{name}} webpage
+Seall air {{name}}
 </script>
 
 <script id="dhp-btnlbl-youtube" type="x-tmpl-mustache">
-Go to YouTube page
+Feuch an clàradh air YouTube
 </script>
 
 <script id="dhp-btnlbl-sndcld" type="x-tmpl-mustache">
-Go to SoundCloud page
+Éist ris a’ chlàradh air SoundCloud
 </script>
 
 <script id="dhp-btnlbl-transcript" type="x-tmpl-mustache">
-Look at Transcript file
+Seall air an Tar-sgrìobhainn
 </script>

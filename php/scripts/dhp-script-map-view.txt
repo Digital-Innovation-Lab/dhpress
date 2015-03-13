@@ -1,24 +1,24 @@
     <!-- Templates for Map View -->
 <script id="dhp-script-map-menus" type="x-tmpl-mustache">
   <li id="legend-dropdown" class="has-dropdown">
-      <a href="#">Legends</a>
+      <a href="#">Suaicheantas</a>
       <ul class="dropdown legend-dropdown"">
           <!-- links -->
       </ul>
   </li>
 
   <li class="divider"></li>
-  <li><a id="layers-button" href="#">Layer Sliders</a></li>
+  <li><a id="layers-button" href="#">Sleamhnachain Shreathan</a></li>
 </script>
 
 <script id="dhp-script-map-markers-label" type="x-tmpl-mustache">
-Markers
+Comharraidhean
 </script>
 
 <script id="dhp-script-map-markers-opacity" type="x-tmpl-mustache">
-Markers (Geometric only)
+Comharraidhean (Geomatraidhil a-mhàin)
 </script>
 
 <script id="dhp-script-map-layer-ctrls" type="x-tmpl-mustache">
-Layer Controls
+Uidheaman Shreathan
 </script>
