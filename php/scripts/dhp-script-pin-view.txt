@@ -1,4 +1,4 @@
-    <!-- Templates for Map View -->
+    <!-- Templates for Pinboard View -->
 <script id="dhp-script-pin-leg-menu" type="x-tmpl-mustache">
   <li class="has-dropdown">
       <a href="#">Legends</a>
