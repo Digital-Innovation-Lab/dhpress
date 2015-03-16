@@ -11,7 +11,8 @@
 
 // ================== Global Constants and Variables ===================
 
-define( 'DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.txt' );
+define('DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.txt');
+define('DHP_SCRIPT_SERVICES',  'dhp-script-services.txt');
 
 
 // ================== Initialize Plug-in ==================
@@ -2841,6 +2842,11 @@ function dhp_page_template( $page_template )
 		$project_id = get_post_meta($post->ID, 'project_id',true);
 		$projObj = new DHPressProject($project_id);
 
+			// Must insert text needed for dhpServices
+		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
+		$projscript = dhp_get_script_text(DHP_SCRIPT_SERVICES);
+		echo $projscript;
+
 		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 
 		wp_enqueue_script('jquery');
@@ -2880,7 +2886,7 @@ function dhp_tax_template( $page_template )
 	$dependencies = array('jquery', 'underscore');
 
 		// ensure a Taxonomy archive page is being rendered
-	if( is_tax() ) {
+	if (is_tax()) {
 		global $wp_query;
 
 		$term = $wp_query->get_queried_object();
@@ -2893,6 +2899,11 @@ function dhp_tax_template( $page_template )
 		$projectID = DHPressProject::RootTaxNameToProjectID($title);
 		$projObj = new DHPressProject($projectID);
 		$project_settings = $projObj->getAllSettings();
+
+			// Must insert text needed for dhpServices
+		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
+		$projscript = dhp_get_script_text(DHP_SCRIPT_SERVICES);
+		echo $projscript;
 
 			// Are we on a taxonomy/archive page that corresponds to transcript "source"?
 		$isTranscript = ($project_settings->views->transcript->source == $term_parent->name);
@@ -2928,20 +2939,12 @@ function dhp_tax_template( $page_template )
 			// Enqueue last, after dependencies have been determined
 		wp_enqueue_script('dhp-tax-script', plugins_url('/js/dhp-tax-page.js', dirname(__FILE__)), $dependencies, DHP_PLUGIN_VERSION );
 
-			// Set up the marker query and get first post just to get the base URL for markers
-		$loop = $projObj->setAllMarkerLoop();
-		$loop->the_post();
-		$marker_url = get_post_permalink(0, true);
-			// need to back up the URL -- assumes that it ends in "%dhp-markers%/" (14 chars)
-		$marker_url = substr($marker_url, 0, strlen($marker_url)-14);
-
 		wp_localize_script('dhp-tax-script', 'dhpData', array(
 				'project_id' => $projectID,
 				'ajax_url' => $ajax_url,
 				'tax' => $term,
 				'project_settings' => $project_settings,
-				'isTranscript' => $isTranscript,
-				'marker_url' => $marker_url
+				'isTranscript' => $isTranscript
 			) );
 	}
 	return $page_template;
