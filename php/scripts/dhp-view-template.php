@@ -22,6 +22,7 @@
 
 <?php wp_footer();
 
+	define('DHP_SCRIPT_SERVICES',  'dhp-script-services.txt');
 	define('DHP_SCRIPT_PROJ_VIEW',  'dhp-script-proj-view.txt');
 	define('DHP_SCRIPT_MAP_VIEW',   'dhp-script-map-view.txt');
 	define('DHP_SCRIPT_CARDS_VIEW',   'dhp-script-cards-view.txt');
@@ -50,6 +51,9 @@
 	global $post;
 	$postID = $post->ID;
 	$projObj = new DHPressProject($postID);
+
+		// get global text elements
+	echo dhptmplt_get_script_text(DHP_SCRIPT_SERVICES);
 
 		// insert title of post in hidden field
 	echo '<input type="hidden" id="dhp-view-title" value="'.get_the_title($postID).'"/>';
@@ -144,38 +148,4 @@
 		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> Lean ris a’ chlàradh
 	</div>
 	<br/>
-</script>
-
-<!-- text related to creating Date strings -->
-<script id="dhp-date-nolater" type="x-tmpl-mustache">
-{{date}} aig a’ char as lugha
-</script>
-
-<script id="dhp-date-atleast" type="x-tmpl-mustache">
-co-dhiù {{date}}
-</script>
-
-<script id="dhp-date-about" type="x-tmpl-mustache">
-mu thimcheall {{date}}
-</script>
-
-<script id="dhp-date-from-to" type="x-tmpl-mustache">
-Bho {{d1}} gu {{d2}}
-</script>
-
-<!-- text for button labels -->
-<script id="dhp-btnlbl-linkto" type="x-tmpl-mustache">
-Seall air {{name}}
-</script>
-
-<script id="dhp-btnlbl-youtube" type="x-tmpl-mustache">
-Feuch an clàradh air YouTube
-</script>
-
-<script id="dhp-btnlbl-sndcld" type="x-tmpl-mustache">
-Éist ris a’ chlàradh air SoundCloud
-</script>
-
-<script id="dhp-btnlbl-transcript" type="x-tmpl-mustache">
-Seall air an Tar-sgrìobhainn
 </script>

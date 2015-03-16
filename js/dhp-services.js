@@ -1,5 +1,6 @@
 // PURPOSE: Special object serving common needs of DHPress projects and taxonomy pages
 // USES:    JavaScript libraries jQuery, Underscore, (Zurb) Foundation ...
+// NOTES: 	dhpServices needs text in dhp-script-services
 
 	// Ensure that latest Array methods are defined
 	// ============================================
