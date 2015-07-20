@@ -564,8 +564,10 @@ var dhpServices = {
 		// PURPOSE: Remove the Loading pop-up modal dialog
 	remLoadingModal: function()
 	{
-			// Remove Loading modal
-		jQuery('#loading').foundation('reveal', 'close');
+			// Need to add 250ms delay to prevent race condition (since open uses 250ms open animation)
+		window.setTimeout(function() {
+			jQuery('#loading').foundation('reveal', 'close');
+		}, 250);
 	}, // remLoadingModal()
 
 
