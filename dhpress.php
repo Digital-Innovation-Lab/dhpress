@@ -26,7 +26,7 @@ License: GPLv2
 
 define('DHP_NAME', 'Digital Humanities Toolkit');
 define('DHP_REQUIRED_PHP_VERSION', '5.2');
-define('DHP_REQUIRED_WP_VERSION', '3.1');
+define('DHP_REQUIRED_WP_VERSION', '3.5');
 define('DHP_PLUGIN_URL', plugins_url('', __FILE__ ));
 define('DHP_MAPS_TABLE_VERSION', '0.1');
 define('DHP_PLUGIN_VERSION', '2.6.7');
