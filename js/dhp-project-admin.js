@@ -915,7 +915,14 @@ jQuery(document).ready(function($) {
           buttons: [
             {
               text: 'Cancel',
-              click: function() { $(this).dialog('close'); }
+              click: function() {
+                // If color picker is showing, hide it
+                if ($('.iris-picker').length) {
+                  $('#color-picker').iris('hide');
+                }
+                
+                $(this).dialog('close');
+              }
             },
             {
               text: 'Save',
@@ -952,6 +959,12 @@ jQuery(document).ready(function($) {
                 }); // arrayForEach
 
                 saveLegendValuesInWP(theMote.name, flatArray);
+
+                // If color picker is showing, hide it
+                if ($('.iris-picker').length) {
+                  $('#color-picker').iris('hide');
+                }
+
                   // Close modal on assumption that save works
                 $(this).dialog('close');
               }
@@ -1166,23 +1179,19 @@ jQuery(document).ready(function($) {
           }
           var initColor = $(colorBoxDiv).css('background-color');
 
-            // Initialize modal
-            // NOTE: A number of options cause bizarre behavior if used: modal, colorFormat ...
-          var colorPickModal = $('#color-picker').colorpicker({
-            inline: false,
-            title: 'Choose color for '+moteName,
-            // color: initColor,  // not working properly
-            select: function(event, color) {
-              $(colorBoxDiv).css('background-color', '#'+color.formatted);
+          // Initialize Iris color picker
+          // NOTE: Requires Wordpress 3.5+ (uses built-in Iris library)
+        $('#color-picker').iris({
+            change: function(event, ui) {
+              $(colorBoxDiv).css('background-color', ui.color.toString());
             },
-              // We need to catch close events and destroy widget so we can create again later
-            close: function(event, color) {
-              colorPickModal.colorpicker('destroy');
-            }
-          });
+            hide: false,
+            width: 350,
+            palettes: true
+        });
+        $('#color-picker').iris('color', initColor);
+        $('#color-picker').iris('show');
 
-          colorPickModal.colorpicker('setColor', initColor);
-          colorPickModal.colorpicker('open');
           break;
 
         case 'pngs':
@@ -1358,6 +1367,12 @@ jQuery(document).ready(function($) {
               $('#add-new-term').button({ disabled: true });
               dhpCreateTermInTax(newTerm, theMote.name, insertNewTerm);
             }
+
+            // If color picker is showing, hide it
+            if ($('.iris-picker').length) {
+              $('#color-picker').iris('hide');
+            }
+
           } // if new term
         });
 
@@ -1366,6 +1381,11 @@ jQuery(document).ready(function($) {
         $('#viz-type-reset').click(function() {
             // construct new default visualization data
           var defaultViz = getDefaultViz();
+
+          // If color picker is showing, hide it
+          if ($('.iris-picker').length) {
+            $('#color-picker').iris('hide');
+          }
 
           $('#category-tree .dd3-item').each( function() {
               // Remove and replace all viz-div elements (don't alter child nodes!)

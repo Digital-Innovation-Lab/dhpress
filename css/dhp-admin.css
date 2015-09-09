@@ -118,6 +118,11 @@ ul.wp-submenu {
     z-index: 2;
 }
 
+/* ---- Iris Color Picker slider ---- */
+.iris-slider-offset {
+  margin: 0 !important;
+}
+
 /* ---- Geo Locate Selector ---- */
 
 /* .geo-locate-widget {

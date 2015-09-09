@@ -2464,8 +2464,6 @@ function add_dhp_project_admin_scripts( $hook )
 				// Library styles
 			wp_enqueue_style('jquery-ui-style', plugins_url('/lib/jquery-ui/jquery-ui.min.css', dirname(__FILE__)) );
 
-			wp_enqueue_style('jquery-colorpicker-style', plugins_url('/lib/colorpicker/jquery.colorpicker.css',  dirname(__FILE__)),
-					array('jquery-ui-style') );
 			// wp_enqueue_style('wp-jquery-ui-dialog' );
 			wp_enqueue_style('maki-sprite-style', plugins_url('/lib/maki/maki-sprite.css',  dirname(__FILE__)) );
 				// Lastly, our plug-in specific styles
@@ -2481,9 +2479,10 @@ function add_dhp_project_admin_scripts( $hook )
 
 				// JS libraries specific to DH Press
 			wp_enqueue_script('jquery-nestable', plugins_url('/lib/jquery.nestable.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('jquery-colorpicker', plugins_url('/lib/colorpicker/jquery.colorpicker.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('jquery-colorpicker-en', plugins_url('/lib/colorpicker/i18n/jquery.ui.colorpicker-en.js', dirname(__FILE__)),
-				array('jquery', 'jquery-colorpicker') );
+
+				// WP color picker
+			wp_enqueue_style('wp-color-picker');
+			wp_enqueue_script('wp-color-picker');
 
 				// For touch-screen mechanisms
 			wp_enqueue_script('dhp-touch-punch', plugins_url('/lib/jquery.ui.touch-punch.js', dirname(__FILE__)),
@@ -2494,7 +2493,7 @@ function add_dhp_project_admin_scripts( $hook )
 			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)) );
 
 				// Custom JavaScript for Admin Edit Panel
-			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'jquery-colorpicker',
+			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'wp-color-picker',
 								'knockout', 'dhp-map-services');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
