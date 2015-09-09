@@ -2606,11 +2606,15 @@ add_filter('the_content', 'dhp_mod_page_content');
 // INPUT:	$content = material to show on page
 // RETURNS:	$content with ID of this post and DH Press hooks for marker text and visualization
 
-function dhp_mod_page_content($content) {
+function dhp_mod_page_content($content)
+{
 	global $post;
 
-		// NOTE: This is not called in case of Viewing Projects
-	return $content.'<div class="dhp-post" id="'.$post->ID.'"><div class="dhp-entrytext"></div></div>';
+	if ($post && $post->post_type == 'dhp-markers') {
+
+			// NOTE: This is not called in case of Viewing Projects
+		return $content.'<div class="dhp-post" id="'.$post->ID.'"><div class="dhp-entrytext"></div></div>';
+	}
 } // dhp_mod_page_content()
 
 
