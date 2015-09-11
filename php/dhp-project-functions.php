@@ -52,7 +52,7 @@ function dhp_register_project_cpt()
 	'hierarchical' => false,
 	'menu_position' => null,
 	/* if hierarchical, then may want to add 'page-attributes' to supports */
-	'supports' => array( 'title', 'thumbnail', 'revisions', 'custom-fields' )
+	'supports' => array( 'title', 'revisions', 'custom-fields' )
   ); 
   register_post_type('dhp-project',$args);
 } // dhp_register_project_cpt()
@@ -410,6 +410,9 @@ function add_dhp_project_admin_edit()
 		'dhp-project',					// name of custom post type
 		'normal',						// part of page to add box
 		'high'); 						// priority
+
+	// Hide Custom Fields meta box
+	remove_meta_box('postcustom', 'dhp-project', 'normal');
 } // add_dhp_project_settings_box()
 
 
