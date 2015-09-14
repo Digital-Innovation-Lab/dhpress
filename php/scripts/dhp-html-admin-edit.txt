@@ -612,6 +612,10 @@
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>The name of your mote is too long: a mote name cannot be longer than 32 characters.</p>
     </div>
 
+    <div id="mdl-select-color" title="Select Color">
+      <p>Select a color:</p>
+    </div>
+
     <div id="mdl-select-png" title="Select PNG image">
         <p id="mdl-select-png-title"></p>
         <ol class="png-list" id="select-png-list">

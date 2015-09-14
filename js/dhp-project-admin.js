@@ -916,11 +916,6 @@ jQuery(document).ready(function($) {
             {
               text: 'Cancel',
               click: function() {
-                // If color picker is showing, hide it
-                if ($('.iris-picker').length) {
-                  $('#color-picker').iris('hide');
-                }
-                
                 $(this).dialog('close');
               }
             },
@@ -959,11 +954,6 @@ jQuery(document).ready(function($) {
                 }); // arrayForEach
 
                 saveLegendValuesInWP(theMote.name, flatArray);
-
-                // If color picker is showing, hide it
-                if ($('.iris-picker').length) {
-                  $('#color-picker').iris('hide');
-                }
 
                   // Close modal on assumption that save works
                 $(this).dialog('close');
@@ -1187,10 +1177,39 @@ jQuery(document).ready(function($) {
             },
             hide: false,
             width: 350,
-            palettes: true
+            palettes: true,
+            target: '#mdl-select-color'
         });
         $('#color-picker').iris('color', initColor);
         $('#color-picker').iris('show');
+
+        var newModal = $('#mdl-select-color');
+          newModal.dialog({
+              width: 400,
+              height: 480,
+              modal : true,
+              autoOpen: false,
+              dialogClass: 'wp-dialog',
+              draggable: false,
+              buttons: [
+                {
+                  text: 'Cancel',
+                  click: function() { 
+                    $(colorBoxDiv).css('background-color', initColor);
+                    $('#color-picker').iris('hide');
+                    $(this).dialog('close');
+                  }
+                },
+                {
+                  text: 'Save',
+                  click: function() {
+                    $('#color-picker').iris('hide');
+                    $(this).dialog('close');
+                  }
+                }
+              ]
+          });
+          newModal.dialog('open');
 
           break;
 
@@ -1367,12 +1386,6 @@ jQuery(document).ready(function($) {
               $('#add-new-term').button({ disabled: true });
               dhpCreateTermInTax(newTerm, theMote.name, insertNewTerm);
             }
-
-            // If color picker is showing, hide it
-            if ($('.iris-picker').length) {
-              $('#color-picker').iris('hide');
-            }
-
           } // if new term
         });
 
@@ -1381,11 +1394,6 @@ jQuery(document).ready(function($) {
         $('#viz-type-reset').click(function() {
             // construct new default visualization data
           var defaultViz = getDefaultViz();
-
-          // If color picker is showing, hide it
-          if ($('.iris-picker').length) {
-            $('#color-picker').iris('hide');
-          }
 
           $('#category-tree .dd3-item').each( function() {
               // Remove and replace all viz-div elements (don't alter child nodes!)

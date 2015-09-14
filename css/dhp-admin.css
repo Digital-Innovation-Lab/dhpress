@@ -118,7 +118,11 @@ ul.wp-submenu {
     z-index: 2;
 }
 
-/* ---- Iris Color Picker slider ---- */
+/* ---- Iris Color Picker ---- */
+#mdl-select-color .iris-picker {
+  margin: 0 auto;
+}
+
 .iris-slider-offset {
   margin: 0 !important;
 }
