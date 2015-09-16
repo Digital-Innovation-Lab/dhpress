@@ -616,6 +616,20 @@
       <p>Select a color:</p>
     </div>
 
+    <div id="mdl-reset-color-options" title="Reset Colors">
+      <p>
+        <strong>Clear All:</strong> Resets all colors to default gray value<br />
+        <strong>Random Colors:</strong> Assigns a random color value to each term<br />
+        <strong>Gradient:</strong> Assigns a color value to each term within a range of colors:
+      </p>
+
+      <div id="gradient-colors">
+        <input type="hidden" id="color-range" />
+        <em>Start Color: </em><div class="color-box"></div>
+        <em>End Color: </em><div class="color-box"></div> 
+      </div>    
+    </div>
+
     <div id="mdl-select-png" title="Select PNG image">
         <p id="mdl-select-png-title"></p>
         <ol class="png-list" id="select-png-list">

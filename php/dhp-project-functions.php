@@ -2487,6 +2487,10 @@ function add_dhp_project_admin_scripts( $hook )
 			wp_enqueue_style('wp-color-picker');
 			wp_enqueue_script('wp-color-picker');
 
+				// Random/gradient color libraries
+			wp_enqueue_script('randomColor', plugins_url('/lib/randomColor.js', dirname(__FILE__)));
+			wp_enqueue_script('rainbowvis', plugins_url('/lib/rainbowvis.js', dirname(__FILE__)));
+
 				// For touch-screen mechanisms
 			wp_enqueue_script('dhp-touch-punch', plugins_url('/lib/jquery.ui.touch-punch.js', dirname(__FILE__)),
 				array('jquery', 'dhp-jquery-ui') );
@@ -2497,7 +2501,7 @@ function add_dhp_project_admin_scripts( $hook )
 
 				// Custom JavaScript for Admin Edit Panel
 			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'wp-color-picker',
-								'knockout', 'dhp-map-services');
+								'randomColor', 'rainbowvis', 'knockout', 'dhp-map-services');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
 			$pngs = dhp_get_attached_PNGs($postID);

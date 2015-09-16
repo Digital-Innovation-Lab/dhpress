@@ -981,13 +981,21 @@ jQuery(document).ready(function($) {
           digits = /rgb\((\d+), (\d+), (\d+)\)/.exec(colorStr);
         }
 
-        var red = parseInt(digits[1]);
-        var green = parseInt(digits[2]);
-        var blue = parseInt(digits[3]);
+        var red = componentToHex(digits[1]);
+        var green = componentToHex(digits[2]);
+        var blue = componentToHex(digits[3]);
 
-        var rgb = blue | (green << 8) | (red << 16);
-        return '#' + rgb.toString(16);
+        return '#' + red + green + blue;
       } // formatColor()
+
+        // PURPOSE: Converts r/g/b component to hex value
+        // NOTES:   Adapted from example by Tim Down (http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb)
+        //          Fixes missing zero bug
+        // RETURNS  Hex value of color component
+      function componentToHex (c) {
+        var hex = parseInt(c).toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
 
         // PURPOSE: Given a DOM element, parse its maki-icon class
         // RETURN:  Maki-icon class prefixed by '.'
@@ -1392,14 +1400,146 @@ jQuery(document).ready(function($) {
           // Bind code to reset viz data
         $('#viz-type-reset').off('click');
         $('#viz-type-reset').click(function() {
-            // construct new default visualization data
-          var defaultViz = getDefaultViz();
 
-          $('#category-tree .dd3-item').each( function() {
-              // Remove and replace all viz-div elements (don't alter child nodes!)
-            $('.viz-div:first', this).remove();
-            $('.select-legend:first', this).append(defaultViz.html);
-          });
+          // Display random/gradient color reset options if type is set to colors
+          if ($('input:radio[value="colors"]').prop('checked')) {
+            // construct new default visualization data
+            var defaultViz = getDefaultViz();
+
+            // Defines initial gradient color range using random colors
+            var gradientRange = [randomColor(), randomColor()];
+
+            // Loops through each legend item and updates color according to type (clear, random, or gradient)
+            function updateColors (type) {
+              if (type == 'gradient') {
+                var rainbow = new Rainbow();
+                rainbow.setSpectrum(gradientRange[0], gradientRange[1]);
+
+                var gradientSize = $('#category-tree .dd3-item').length - 1;
+                rainbow.setNumberRange(0, gradientSize);
+              }
+              
+              $('#category-tree .dd3-item').each( function(index) {
+                // Remove and replace all viz-div elements (don't alter child nodes!)
+                $('.viz-div:first', this).remove();
+                $('.select-legend:first', this).append(defaultViz.html);
+
+                switch (type) {
+                  case 'random' :
+                    var color = randomColor();
+                    break;
+                  case 'gradient' :
+                    var color = '#' + rainbow.colourAt(index);
+                    break;
+                  default :
+                    var color = defaultViz.data;
+                    break;
+                }
+
+                $('.dd3-content .select-legend .color-box', this).css('background-color', color);
+              });
+                      
+              $(newModal).dialog('close');
+            }
+
+            var newModal = $('#mdl-reset-color-options');
+            newModal.dialog({
+                width: 450,
+                height: 210,
+                modal : true,
+                autoOpen: false,
+                dialogClass: 'wp-dialog',
+                draggable: false,
+                buttons: [
+                  {
+                    text: 'Cancel',
+                    click: function() { $(this).dialog('close'); }
+                  },
+                  {
+                    text: 'Clear All',
+                    click: function() { updateColors(); }
+                  },
+                  {
+                    text: 'Random Colors',
+                    click: function() { updateColors('random'); }
+                  },
+                  {
+                    text: 'Gradient',
+                    click: function() { updateColors('gradient'); }
+                  }
+                ]
+            });
+            newModal.dialog('open');
+
+
+            var colorBoxes = $('#mdl-reset-color-options #gradient-colors .color-box');
+
+            // Sets initial colors for each color box
+            colorBoxes.each(function(index) {
+              $(this).css('background-color', gradientRange[index]);
+            });
+
+            colorBoxes.click(function () {
+              var colorBox = this;
+              var initColor = $(this).css('background-color');
+
+              // Finds index of selected color box to correspond with gradientRange array
+              var boxIndex = colorBoxes.index(this);
+
+              $('#color-range').iris({
+                change: function(event, ui) {
+                  $(colorBox).css('background-color', ui.color.toString());
+                  gradientRange[boxIndex] = ui.color.toString();
+                },
+                hide: false,
+                width: 350,
+                palettes: true,
+                target: '#mdl-select-color'
+              });
+              $('#color-range').iris('color', initColor);
+              $('#color-range').iris('show');
+
+              var colorModal = $('#mdl-select-color');
+              colorModal.dialog({
+                  width: 400,
+                  height: 480,
+                  modal : true,
+                  autoOpen: false,
+                  dialogClass: 'wp-dialog',
+                  draggable: false,
+                  buttons: [
+                    {
+                      text: 'Cancel',
+                      click: function() { 
+                        $(colorBox).css('background-color', initColor);
+                        $('#color-range').iris('hide');
+                        $(this).dialog('close');
+                      }
+                    },
+                    {
+                      text: 'Save',
+                      click: function() {
+                        $('#color-range').iris('hide');
+                        $(this).dialog('close');
+                      }
+                    }
+                  ]
+              });
+              colorModal.dialog('open');
+            });
+
+          }
+          // Otherwise, simply reset values
+          else {
+            // construct new default visualization data
+            var defaultViz = getDefaultViz();
+  
+            $('#category-tree .dd3-item').each( function() {
+                // Remove and replace all viz-div elements (don't alter child nodes!)
+              $('.viz-div:first', this).remove();
+              $('.select-legend:first', this).append(defaultViz.html);
+            });
+          }
         }); // click()
 
           // After all material inserted, activate nestable-sortable GUI

@@ -119,12 +119,32 @@ ul.wp-submenu {
 }
 
 /* ---- Iris Color Picker ---- */
+
 #mdl-select-color .iris-picker {
   margin: 0 auto;
 }
 
 .iris-slider-offset {
   margin: 0 !important;
+}
+
+/* ---- Color Reset Modal ---- */
+
+#mdl-reset-color-options .color-box {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 20px;
+  cursor: cell;
+}
+
+#mdl-reset-color-options p {
+  margin-bottom: 0;
+}
+
+#mdl-reset-color-options #gradient-colors {
+  text-align: center;
+  font-weight: bold;
 }
 
 /* ---- Geo Locate Selector ---- */
