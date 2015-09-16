@@ -3,14 +3,20 @@
 
 @charset "UTF-8";
 
+#dhp-visual {
+    overflow: auto;
+}
+
 .hide {
 	display: hidden;
 }
 
     /* Enable scroll bar in case background image is too large */
 #svg-container {
-    overflow-x: auto;
-    overflow-y: auto;
+    position: absolute;
+    padding-top: 45px;
+    padding-left: 4px;
+
 }
 
 svg {
