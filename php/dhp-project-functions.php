@@ -411,7 +411,7 @@ function add_dhp_project_admin_edit()
 		'normal',						// part of page to add box
 		'high'); 						// priority
 
-	// Hide Custom Fields meta box
+		// Hide Custom Fields meta box
 	remove_meta_box('postcustom', 'dhp-project', 'normal');
 } // add_dhp_project_settings_box()
 

@@ -1179,7 +1179,8 @@ jQuery(document).ready(function($) {
 
           // Initialize Iris color picker
           // NOTE: Requires Wordpress 3.5+ (uses built-in Iris library)
-        $('#color-picker').iris({
+        var colorPicker = $('#color-picker');
+        colorPicker.iris({
             change: function(event, ui) {
               $(colorBoxDiv).css('background-color', ui.color.toString());
             },
@@ -1188,8 +1189,8 @@ jQuery(document).ready(function($) {
             palettes: true,
             target: '#mdl-select-color'
         });
-        $('#color-picker').iris('color', initColor);
-        $('#color-picker').iris('show');
+        colorPicker.iris('color', initColor);
+        colorPicker.iris('show');
 
         var newModal = $('#mdl-select-color');
           newModal.dialog({
@@ -1204,15 +1205,15 @@ jQuery(document).ready(function($) {
                   text: 'Cancel',
                   click: function() { 
                     $(colorBoxDiv).css('background-color', initColor);
-                    $('#color-picker').iris('hide');
-                    $(this).dialog('close');
+                    colorPicker.iris('hide');
+                    newModal.dialog('close');
                   }
                 },
                 {
                   text: 'Save',
                   click: function() {
-                    $('#color-picker').iris('hide');
-                    $(this).dialog('close');
+                    colorPicker.iris('hide');
+                    newModal.dialog('close');
                   }
                 }
               ]
@@ -1243,7 +1244,7 @@ jQuery(document).ready(function($) {
               buttons: [
                 {
                   text: 'Cancel',
-                  click: function() { $(this).dialog('close'); }
+                  click: function() { newModal.dialog('close'); }
                 },
                 {
                   text: 'Save',
@@ -1253,7 +1254,7 @@ jQuery(document).ready(function($) {
                       // Create new HTML indicating selection and replace old
                     $('.viz-div:first', liElement).remove();
                     $('.select-legend:first', liElement).append(getVizHTML(pngTitle, false));
-                    $(this).dialog('close');
+                    newModal.dialog('close');
                   }
                 }
               ]
@@ -1401,15 +1402,15 @@ jQuery(document).ready(function($) {
         $('#viz-type-reset').off('click');
         $('#viz-type-reset').click(function() {
 
-          // Display random/gradient color reset options if type is set to colors
+            // Display random/gradient color reset options if type is set to colors
           if ($('input:radio[value="colors"]').prop('checked')) {
-            // construct new default visualization data
+              // construct new default visualization data
             var defaultViz = getDefaultViz();
 
-            // Defines initial gradient color range using random colors
+              // Defines initial gradient color range using random colors
             var gradientRange = [randomColor(), randomColor()];
 
-            // Loops through each legend item and updates color according to type (clear, random, or gradient)
+              // Loops through each legend item and updates color according to type (clear, random, or gradient)
             function updateColors (type) {
               if (type == 'gradient') {
                 var rainbow = new Rainbow();
@@ -1420,7 +1421,7 @@ jQuery(document).ready(function($) {
               }
               
               $('#category-tree .dd3-item').each( function(index) {
-                // Remove and replace all viz-div elements (don't alter child nodes!)
+                  // Remove and replace all viz-div elements (don't alter child nodes!)
                 $('.viz-div:first', this).remove();
                 $('.select-legend:first', this).append(defaultViz.html);
 
@@ -1439,7 +1440,7 @@ jQuery(document).ready(function($) {
                 $('.dd3-content .select-legend .color-box', this).css('background-color', color);
               });
                       
-              $(newModal).dialog('close');
+              newModal.dialog('close');
             }
 
             var newModal = $('#mdl-reset-color-options');
@@ -1453,7 +1454,7 @@ jQuery(document).ready(function($) {
                 buttons: [
                   {
                     text: 'Cancel',
-                    click: function() { $(this).dialog('close'); }
+                    click: function() { newModal.dialog('close'); }
                   },
                   {
                     text: 'Clear All',
@@ -1474,7 +1475,7 @@ jQuery(document).ready(function($) {
 
             var colorBoxes = $('#mdl-reset-color-options #gradient-colors .color-box');
 
-            // Sets initial colors for each color box
+              // Sets initial colors for each color box
             colorBoxes.each(function(index) {
               $(this).css('background-color', gradientRange[index]);
             });
@@ -1483,10 +1484,11 @@ jQuery(document).ready(function($) {
               var colorBox = this;
               var initColor = $(this).css('background-color');
 
-              // Finds index of selected color box to correspond with gradientRange array
+                // Finds index of selected color box to correspond with gradientRange array
               var boxIndex = colorBoxes.index(this);
 
-              $('#color-range').iris({
+              var colorRange = $('#color-range');
+              colorRange.iris({
                 change: function(event, ui) {
                   $(colorBox).css('background-color', ui.color.toString());
                   gradientRange[boxIndex] = ui.color.toString();
@@ -1496,8 +1498,8 @@ jQuery(document).ready(function($) {
                 palettes: true,
                 target: '#mdl-select-color'
               });
-              $('#color-range').iris('color', initColor);
-              $('#color-range').iris('show');
+              colorRange.iris('color', initColor);
+              colorRange.iris('show');
 
               var colorModal = $('#mdl-select-color');
               colorModal.dialog({
@@ -1512,15 +1514,15 @@ jQuery(document).ready(function($) {
                       text: 'Cancel',
                       click: function() { 
                         $(colorBox).css('background-color', initColor);
-                        $('#color-range').iris('hide');
-                        $(this).dialog('close');
+                        colorRange.iris('hide');
+                        colorModal.dialog('close');
                       }
                     },
                     {
                       text: 'Save',
                       click: function() {
-                        $('#color-range').iris('hide');
-                        $(this).dialog('close');
+                        colorRange.iris('hide');
+                        colorModal.dialog('close');
                       }
                     }
                   ]
@@ -1529,9 +1531,9 @@ jQuery(document).ready(function($) {
             });
 
           }
-          // Otherwise, simply reset values
+            // Otherwise, simply reset values
           else {
-            // construct new default visualization data
+              // construct new default visualization data
             var defaultViz = getDefaultViz();
   
             $('#category-tree .dd3-item').each( function() {
