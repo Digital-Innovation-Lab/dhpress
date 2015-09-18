@@ -31,7 +31,7 @@ svg {
 
     /* image movement & animation control icons */
 #dhp-pin-controls {
-    height: 38px;
+    height: 48px;
     margin: 3px;
     margin-right: 6px;
     padding: 0;
@@ -50,7 +50,8 @@ svg {
     margin-left: 4px;
     margin-right: 4px;
     font-size: 32px;
-    line-height: 28px;
+    line-height: 32px;
+    height: 36px;
 }
     /* style for control buttons */
 .pin-fndn-icon button:before {
@@ -59,8 +60,8 @@ svg {
 }
 .pin-fndn-icon button {
     background-color: white;
-    font-size: 18px;
-    padding: 8px;
+    font-size: 28px;
+    padding: 10px 8px 8px 8px;
 }
     /*gives user feedback of hovering over control*/
 .pin-fndn-icon button:hover {
