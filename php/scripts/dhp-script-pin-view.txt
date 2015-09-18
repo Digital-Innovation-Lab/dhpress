@@ -16,13 +16,13 @@
 <script id="dhp-script-pin-iconpanel" type="x-tmpl-mustache">
 <div id="dhp-pin-controls">
 	<div class="pin-fndn-icon">
-		<i class="fi-arrow-left" title="Move Image Left" id="pin-left"></i>
-		<i class="fi-arrow-right" title="Move Image Right" id="pin-right"></i>
-		<i class="fi-arrow-down" title="Move Image Down" id="pin-down"></i>
-		<i class="fi-arrow-up" title="Move Image Up" id="pin-up"></i>
-		<i class="fi-arrows-in" title="Reduce Image Size" id="pin-reduce"></i>
-		<i class="fi-arrows-out" title="Zoom Image" id="pin-zoom"></i>
-		<i class="fi-refresh" title="Reset Image Settings" id="pin-refresh"></i>
+		<button class="fi-arrow-left" title="Move Image Left" id="pin-left"></button>
+		<button class="fi-arrow-right" title="Move Image Right" id="pin-right"></button>
+		<button class="fi-arrow-down" title="Move Image Down" id="pin-down"></button>
+		<button class="fi-arrow-up" title="Move Image Up" id="pin-up"></button>
+		<button class="fi-arrows-in" title="Reduce Image Size" id="pin-reduce"></button>
+		<button class="fi-arrows-out" title="Zoom Image" id="pin-zoom"></button>
+		<button class="fi-refresh" title="Reset Image Settings" id="pin-refresh"></button>
 	</div>
 </div>
 </script>
