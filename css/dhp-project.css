@@ -272,6 +272,7 @@ spinner:after {
 			Only the min-height setting is used; max-height is ignored.
 		 */
 	min-height: 300px;
+	height: 300px;
 /*	min-height: 220px; */
 /*	max-height: 90% !important; */
 	max-height: 700px !important;
