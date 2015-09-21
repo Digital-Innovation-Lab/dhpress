@@ -3,6 +3,7 @@
 
 @charset "UTF-8";
 
+    /* Enable scroll bar in case background image is too large */
 #dhp-visual {
     overflow: auto;
 }
@@ -11,12 +12,9 @@
 	display: hidden;
 }
 
-    /* Enable scroll bar in case background image is too large */
 #svg-container {
-
     padding-top: 45px;
     padding-left: 4px;
-
 }
 
 svg {
