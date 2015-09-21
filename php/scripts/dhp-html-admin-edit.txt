@@ -612,6 +612,24 @@
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>The name of your mote is too long: a mote name cannot be longer than 32 characters.</p>
     </div>
 
+    <div id="mdl-select-color" title="Select Color">
+      <p>Select a color:</p>
+    </div>
+
+    <div id="mdl-reset-color-options" title="Reset Colors">
+      <p>
+        <strong>Clear All:</strong> Resets all colors to default gray value<br />
+        <strong>Random Colors:</strong> Assigns a random color value to each term<br />
+        <strong>Gradient:</strong> Assigns a color value to each term within a range of colors:
+      </p>
+
+      <div id="gradient-colors">
+        <input type="hidden" id="color-range" />
+        <em>Start Color: </em><div class="color-box"></div>
+        <em>End Color: </em><div class="color-box"></div> 
+      </div>    
+    </div>
+
     <div id="mdl-select-png" title="Select PNG image">
         <p id="mdl-select-png-title"></p>
         <ol class="png-list" id="select-png-list">
