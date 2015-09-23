@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
           },
           post: {
             title: '',
-            content: [],
+            content: []
           },
           transcript: {
             audio: 'disable',
@@ -193,6 +193,7 @@ jQuery(document).ready(function($) {
     self.type = 'pinboard';
     self.label= ko.observable(epSettings.label || 'name me');
     self.settings = { };
+    self.settings.bckGrd = ko.observable(epSettings.settings.bckGrd);
     self.settings.imageURL = ko.observable(epSettings.settings.imageURL);
     self.settings.dw = ko.observable(epSettings.settings.dw);
     self.settings.dh = ko.observable(epSettings.settings.dh);
@@ -417,6 +418,8 @@ jQuery(document).ready(function($) {
         case 'pinboard':
           savedEP.settings.dw = theEP.settings.dw();
           savedEP.settings.dh = theEP.settings.dh();
+          savedEP.settings.bckGrd = theEP.settings.bckGrd();
+            console.log(savedEP.settings.bckGrd);
           savedEP.settings.imageURL = theEP.settings.imageURL();
           savedEP.settings.iw = theEP.settings.iw();
           savedEP.settings.ih = theEP.settings.ih();
@@ -1643,6 +1646,7 @@ jQuery(document).ready(function($) {
         settings: {
           dw: 500,
           dh: 500,
+          bckGrd: '',
           imageURL: '',
           iw: 500,
           ih: 500,

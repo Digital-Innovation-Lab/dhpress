@@ -81,6 +81,8 @@ var dhpPinboardView = {
 		dhpPinboardView.viewScale=100;
 		dhpPinboardView.zoomStep=10;
 
+
+
 			// Add pinboard elements to nav bar
 		if (pinboardEP.legends.length) {
 			jQuery('.dhp-nav .top-bar-section .left').append(Mustache.render(jQuery("#dhp-script-pin-leg-menu").html()));
@@ -115,6 +117,12 @@ var dhpPinboardView = {
 		jQuery("#dhp-visual").append('<div id="svg-container"></div>');
 		jQuery("#svg-container").append(dhpPinboardView.svgRoot);
 		dhpPinboardView.paper = Snap(dhpPinboardView.svgRoot);
+
+		//Change background color if user provided
+
+		if(dhpPinboardView.pinboardEP.bckGrd && dhpPinboardView.pinboardEP.bckGrd !== ''){
+			jQuery("#svg-container svg").css("background-color", dhpPinboardView.pinboardEP.bckGrd);
+		}
 			// Create initial zoombox
 		dhpPinboardView.recalcViewBox();
 

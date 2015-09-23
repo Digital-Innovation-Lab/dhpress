@@ -319,6 +319,9 @@
             <input data-bind="value: theEP.settings.dw" type="number" size="4"/>
             Height (in pixels) <input data-bind="value: theEP.settings.dh" type="number" size="4"/>
         </li>
+        <li>Background Color 
+            <input data-bind="value: theEP.settings.bckGrd" type="text" size="12"/> (CSS color name, #hexvalue, or blank for default)
+        </li>
         <li>Background Image URL
             <input data-bind="value: theEP.settings.imageURL" type="text" size="48"/>
         </li>
