@@ -435,7 +435,6 @@ function show_dhp_project_admin_edit()
 {
 	global $post;
 
-
 		// BUG -- Post does not have appropriate value
 	$projObj = new DHPressProject($post->ID);
 	$project_settings = $projObj->getAllSettings();
@@ -444,16 +443,9 @@ function show_dhp_project_admin_edit()
 	if (is_null($project_settings)) {
 		$project_settings = '';
 	} else {
-
 		$project_settings = json_encode($project_settings);
-
-		$fp = fopen("../project_settings.json", 'w');
-		fwrite($fp, $project_settings);
-		fclose($fp);
 	}
-		//save project_settings to JSON file
 	
-
 		// Info about DH Press and this project
 	echo '<p><b>'.__('DH Press version ', 'dhpress').DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;'.__('Project ID ', 'dhpress').$post->ID.'</p>';
 	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >'.__('Category Manager', 'dhpress').'</a></p>';
