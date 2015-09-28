@@ -328,7 +328,6 @@ jQuery(document).ready(function($) {
 
         // Must save them in custom metabox in case user hits "Update" button in WP!
       $('#project_settings').val(settingsData);
-
       saveSettingsInWP(settingsData);
     };
 
@@ -419,7 +418,6 @@ jQuery(document).ready(function($) {
           savedEP.settings.dw = theEP.settings.dw();
           savedEP.settings.dh = theEP.settings.dh();
           savedEP.settings.bckGrd = theEP.settings.bckGrd();
-            console.log(savedEP.settings.bckGrd);
           savedEP.settings.imageURL = theEP.settings.imageURL();
           savedEP.settings.iw = theEP.settings.iw();
           savedEP.settings.ih = theEP.settings.ih();
