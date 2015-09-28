@@ -5,6 +5,8 @@ Plugin URI: http://dhpress.org/
 Description: DHPress is a flexible, repurposable, fully extensible digital humanities toolkit designed for non-technical users.
 Version: 2.6.7
 Author: DHPress Team: Michael Newton, Joe E Hope, Pam Lach
+Text Domain: dhpress
+Domain Path: /languages
 License: GPLv2
 */
 /*  Copyright 2014  DHPress Team  (email : info@dhpress.org)
