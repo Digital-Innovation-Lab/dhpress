@@ -35,9 +35,6 @@ var dhpCardsView = {
 	{
 		var menuHTML, active;
 
-			// Language-dependent text
-		dhpCardsView.btnTextApply   = dhpServices.getText('#dhp-script-btn-apply');
-
 			// Save reset data for later
 		dhpCardsView.cardsEP        = cardsEP;
 
@@ -133,7 +130,7 @@ var dhpCardsView = {
 				// Don't know why this is needed -- but Select Modal Close button won't work without it
 			jQuery('#filterModal a.close-select-modal').click(function() {
 			  jQuery('#filterModal').foundation('reveal', 'close');
-			  if (jQuery(this).text() === dhpCardsView.btnTextApply) {
+			  if (jQuery(this).hasClass('success')) {
 				jQuery('body').addClass('waiting');
 					// Return control to browser briefly to ensure cursor is changed
 				window.setTimeout(function() {
