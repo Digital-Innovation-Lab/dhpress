@@ -16,13 +16,15 @@
 <script id="dhp-script-pin-iconpanel" type="x-tmpl-mustache">
 <div id="dhp-pin-controls">
 	<div class="pin-fndn-icon">
-		<i class="fi-arrow-left" title="<?php _e('Move Image Left', 'dhpress'); ?>" id="pin-left"></i>
-		<i class="fi-arrow-right" title="<?php _e('Move Image Right', 'dhpress'); ?>" id="pin-right"></i>
-		<i class="fi-arrow-down" title="<?php _e('Move Image Down', 'dhpress'); ?>" id="pin-down"></i>
-		<i class="fi-arrow-up" title="<?php _e('Move Image Up', 'dhpress'); ?>" id="pin-up"></i>
-		<i class="fi-arrows-in" title="<?php _e('Reduce Image Size', 'dhpress'); ?>" id="pin-reduce"></i>
-		<i class="fi-arrows-out" title="<?php _e('Zoom Image', 'dhpress'); ?>" id="pin-zoom"></i>
-		<i class="fi-refresh" title="<?php _e('Reset Image Settings', 'dhpress'); ?>" id="pin-refresh"></i>
+
+		<button class="fi-arrow-left" title="<?php _e('Move Image Left', 'dhpress'); ?>" id="pin-left"></button>
+		<button class="fi-arrow-right" title="<?php _e('Move Image Right', 'dhpress'); ?>" id="pin-right"></button>
+		<button class="fi-arrow-down" title="<?php _e('Move Image Down', 'dhpress'); ?>" id="pin-down"></button>
+		<button class="fi-arrow-up" title="<?php _e('Move Image Up', 'dhpress'); ?>" id="pin-up"></button>
+		<button class="fi-arrows-in" title="<?php _e('Reduce Image Size', 'dhpress'); ?>" id="pin-reduce"></button>
+		<button class="fi-arrows-out" title="<?php _e('Zoom Image', 'dhpress'); ?>" id="pin-zoom"></button>
+		<button class="fi-refresh" title="<?php _e('Reset Image Settings', 'dhpress'); ?>" id="pin-refresh"></button>
+
 	</div>
 </div>
 </script>

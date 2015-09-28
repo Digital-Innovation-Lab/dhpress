@@ -2696,13 +2696,13 @@ function dhp_page_template( $page_template )
 			wp_enqueue_style('dhp-jquery-ui-style', plugins_url('/lib/jquery-ui/jquery-ui.min.css', dirname(__FILE__)));
 
 			wp_enqueue_style('dhp-map-css', plugins_url('/css/dhp-map.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
-			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.3/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
+			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.5/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			wp_enqueue_style('maki-sprite-style', plugins_url('/lib/maki/maki-sprite.css',  dirname(__FILE__)) );
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
 			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
 
-			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.3/leaflet.js', dirname(__FILE__)));
+			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.5/leaflet.js', dirname(__FILE__)));
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
 
 				// Has user specified to use Marker Clustering?

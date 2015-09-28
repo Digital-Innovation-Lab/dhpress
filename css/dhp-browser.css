@@ -120,6 +120,7 @@
 
 #marker-list {
     padding: 4px;
+    cursor: pointer;
 }
 
 .marker-item:hover {
