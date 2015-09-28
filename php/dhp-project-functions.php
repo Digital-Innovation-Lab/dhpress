@@ -13,6 +13,7 @@
 
 define('DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.php');
 define('DHP_SCRIPT_SERVICES',  'dhp-script-services.php');
+define('DHP_SCRIPT_TAX',  	'dhp-script-tax-trans.php');
 
 
 // ================== Localization ===================
@@ -2915,6 +2916,7 @@ function dhp_tax_template( $page_template )
 		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
 
 		dhp_include_script(DHP_SCRIPT_SERVICES);
+		dhp_include_script(DHP_SCRIPT_TAX);
 
 			// Are we on a taxonomy/archive page that corresponds to transcript "source"?
 		$isTranscript = ($project_settings->views->transcript->source == $term_parent->name);
