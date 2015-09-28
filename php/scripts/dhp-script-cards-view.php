@@ -43,8 +43,8 @@
       <div class="modal-body clearfix">
       </div>
       <div class="reveal-modal-footer clearfix ">
-        <ul class="button-group left"><li><a class="button success close-select-modal"> <?php _e('Apply', 'dhpress'); ?></a></li></ul>
-        <ul class="button-group right"><li><a class="button close-select-modal"> <?php _e('Cancel', 'dhpress'); ?></a></li></ul>
+        <ul class="button-group left"><li><a class="button success close-select-modal"><?php _e('Apply', 'dhpress'); ?></a></li></ul>
+        <ul class="button-group right"><li><a class="button close-select-modal"><?php _e('Cancel', 'dhpress'); ?></a></li></ul>
       </div>
     </div> <!-- modal-content -->
     <a class="close-reveal-modal close-select-modal">&#215;</a>
