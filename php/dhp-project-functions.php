@@ -11,8 +11,17 @@
 
 // ================== Global Constants and Variables ===================
 
-define('DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.txt');
-define('DHP_SCRIPT_SERVICES',  'dhp-script-services.txt');
+define('DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.php');
+define('DHP_SCRIPT_SERVICES',  'dhp-script-services.php');
+
+
+// ================== Localization ===================
+
+add_action('plugins_loaded', 'dhp_load_textdomain');
+function dhp_load_textdomain()
+{
+	load_plugin_textdomain('dhpress', false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/');
+}
 
 
 // ================== Initialize Plug-in ==================
@@ -446,21 +455,20 @@ function show_dhp_project_admin_edit()
 	
 
 		// Info about DH Press and this project
-	echo '<p><b>DH Press version '.DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;Project ID '.$post->ID.'</p>';
-	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >Category Manager</a></p>';
+	echo '<p><b>'.__('DH Press version ', 'dhpress').DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;'.__('Project ID ', 'dhpress').$post->ID.'</p>';
+	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >'.__('Category Manager', 'dhpress').'</a></p>';
 
 		// Insert Edit Panel's HTML
-	$projscript = dhp_get_script_text(DHP_HTML_ADMIN_EDIT);
-	echo $projscript;
+	dhp_include_script(DHP_HTML_ADMIN_EDIT);
 
 		// Use nonce for verification
 	echo '<input type="hidden" name="dhp_nonce" id="dhp_nonce" value="'.wp_create_nonce('dhp_nonce'.$post->ID).'" />';
 
 		// Insert HTML for special Project Settings
 	echo '<table class="project-form-table">';
-	echo '<tr><th><label for="project_settings">Project Settings</label></th>';
+	echo '<tr><th><label for="project_settings">'.__('Project Settings', 'dhpress').'</label></th>';
 	echo '<td><textarea name="project_settings" id="project_settings" cols="60" rows="4">'.$project_settings.'</textarea>
-		<br /><span class="description">Stores the project_settings as JSON object</span>';
+		<br /><span class="description">'.__('Stores the project_settings as JSON object', 'dhpress').'</span>';
 	echo '</td></tr>';
 		// Icons not currently used
 	// echo '<input type="hidden" name="project_icons" id="project_icons" value="'.get_post_meta($post->ID, 'project_icons', true).'" />';
@@ -540,12 +548,12 @@ add_action( 'admin_action_dhp_export_as_csv', 'dhp_export_as_csv' );
 function dhp_export_as_csv()
 {
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'rd_duplicate_post_as_draft' == $_REQUEST['action'] ) ) ) {
-		wp_die('No post to export has been supplied!');
+		wp_die(__('No post to export has been supplied!', 'dhpress'));
 	}
 
 		// ensure that this URL has not been faked by non-admin user
 	if (!current_user_can('edit_posts')) {
-		wp_die('Invalid request');
+		wp_die(__('Invalid request', 'dhpress'));
 	}
  
 		// Get post ID and associated Project Data
@@ -2597,21 +2605,14 @@ function dhp_get_map_layer_data($mapLayers)
 } // dhp_get_map_layer_data()
 
 
-// PURPOSE: Called to retrieve file content to insert into HTML for a particular DH Press page
-// INPUT:   $scriptname = base name of script file (not pathname)
-// RETURNS: Contents of file as string
+// PURPOSE: Includes file with internationalized HTML corresponding to a particular DH Press page
+// INPUT: $scriptName = base name of script file (not pathname)
 
-function dhp_get_script_text($scriptname)
+function dhp_include_script($scriptName)
 {
-	$scriptpath = plugin_dir_path( __FILE__ ).'scripts/'.$scriptname;
-	if (!file_exists($scriptpath)) {
-		trigger_error("Script file ".$scriptpath." not found");
-	}
-	$scripthandle = fopen($scriptpath, "r");
-	$scripttext = file_get_contents($scriptpath);
-	fclose($scripthandle);
-	return $scripttext;
-} // dhp_get_script_text()
+	$scriptsPath = plugin_dir_path( __FILE__ ).'scripts/';
+	include($scriptsPath.$scriptName);
+} // dhp_include_script()
 
 
 add_filter('the_content', 'dhp_mod_page_content');
@@ -2862,8 +2863,8 @@ function dhp_page_template( $page_template )
 
 			// Must insert text needed for dhpServices
 		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
-		$projscript = dhp_get_script_text(DHP_SCRIPT_SERVICES);
-		echo $projscript;
+
+		dhp_include_script(DHP_SCRIPT_SERVICES);
 
 		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 
@@ -2920,8 +2921,8 @@ function dhp_tax_template( $page_template )
 
 			// Must insert text needed for dhpServices
 		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
-		$projscript = dhp_get_script_text(DHP_SCRIPT_SERVICES);
-		echo $projscript;
+
+		dhp_include_script(DHP_SCRIPT_SERVICES);
 
 			// Are we on a taxonomy/archive page that corresponds to transcript "source"?
 		$isTranscript = ($project_settings->views->transcript->source == $term_parent->name);
