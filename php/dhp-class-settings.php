@@ -45,7 +45,7 @@ if (!class_exists( 'DHPressSettings')) {
 			// Add options page for global utilities
 		static function add_menu()
 		{
-			add_options_page('Global Options', 'DH Press Options', 'manage_options', 'dhp-global-options', array(__CLASS__, 'dhp_settings_page'));
+			add_options_page(__('Global Options', 'dhpress'), __('DH Press Options', 'dhpress'), 'manage_options', 'dhp-global-options', array(__CLASS__, 'dhp_settings_page'));
 		} // add_menu()
 
 			// Add menu callback function
@@ -64,7 +64,7 @@ if (!class_exists( 'DHPressSettings')) {
 		static function dhp_list_pages_for_tips()
 		{ 
 			$pages = get_pages();
-			$options = '<option value="0" '. selected(get_option('tip_url'),0) . '>-- No Tip Page --</option>';
+			$options = '<option value="0" '. selected(get_option('tip_url'),0) . '>' . __('-- No Tip Page --', 'dhpress') . '</option>';
 			foreach ( $pages as $page ) {
 				$option  = '<option value="' . $page->ID . '" '. selected(get_option('tip_url'),$page->ID) . '>';
 				$option  .= $page->post_title;
@@ -79,40 +79,40 @@ if (!class_exists( 'DHPressSettings')) {
 		{
 			ob_start(); ?>
 				<div class="wrap">
-					<h2>DH Press Global Options</h2>
+					<h2><?php _e('DH Press Global Options', 'dhpress'); ?></h2>
 					<form method="post" action="options.php"> 
 						<?php @settings_fields( 'dhp_global_settings-group' ); ?>
 						<?php @do_settings_fields( 'dhp_global_settings-group' ); ?>
 
 						<table class="form-table">
 							<tr valign="top">
-								<th scope="row"><label for="tip_url">Site Tip Page</label></th>
+								<th scope="row"><label for="tip_url"><?php _e('Site Tip Page', 'dhpress'); ?></label></th>
 								<td>
 									<select name="tip_url" id="tip_url">
 										<?php echo self::dhp_list_pages_for_tips(); ?>
 									</select>
-									Select the Page whose text is used for global tips here.
+									<?php _e('Select the Page whose text is used for global tips here.', 'dhpress'); ?>
 								</td>
 							</tr>
 
 							<tr valign="top">
-								<th scope="row"><label for="timeout_duration">Timeout Duration (minutes)</label></th>
+								<th scope="row"><label for="timeout_duration"><?php _e('Timeout Duration (minutes)', 'dhpress'); ?></label></th>
 								<td><input type="text" name="timeout_duration" id="timeout_duration" value="<?php echo get_option( 'timeout_duration' ); ?>" />
-									Leave blank if no timeout is needed.</td>
+									<?php _e('Leave blank if no timeout is needed.', 'dhpress'); ?></td>
 							</tr>
 							<tr valign="top">
-								<th scope="row"><label for="redirect_url">Redirect URL</label></th>
+								<th scope="row"><label for="redirect_url"><?php _e('Redirect URL', 'dhpress'); ?></label></th>
 								<td><input type="text" name="redirect_url" id="redirect_url" value="<?php echo get_option( 'redirect_url' ); ?>" />
-									Enter URL to redirect site when timeout occurs.</td>
+									<?php _e('Enter URL to redirect site when timeout occurs.', 'dhpress'); ?></td>
 							</tr>
 							<tr valign="top">
-								<th scope="row"><label for="redirect_url">Kiosk User Agent</label></th>
+								<th scope="row"><label for="redirect_url"><?php _e('Kiosk User Agent', 'dhpress'); ?></label></th>
 								<td><input type="text" name="kiosk_useragent" id="kiosk_useragent" value="<?php echo get_option( 'kiosk_useragent' ); ?>" /> 
-									Only block external URLs for a specific device or browser. Leave empty if enabled for all devices and browsers.</td>
+									<?php _e('Only block external URLs for a specific device or browser. Leave empty if enabled for all devices and browsers.', 'dhpress'); ?></td>
 							</tr>
 							<tr valign="top">
-								<th scope="row"><label for="redirect_url">Block External URLs </label></th>
-								<td>Enter comma separated list of domains that you wish to block if they appear in URLs on a webpage.<br/>
+								<th scope="row"><label for="redirect_url"><?php _e('Block External URLs', 'dhpress'); ?></label></th>
+								<td><?php _e('Enter comma separated list of domains that you wish to block if they appear in URLs on a webpage.', 'dhpress'); ?><br/>
 									<textarea name="kiosk_blockurls" id="kiosk_blockurls"><?php echo get_option( 'kiosk_blockurls' ); ?></textarea> 
 								</td>
 							</tr>
@@ -154,7 +154,7 @@ if (!class_exists( 'DHPressSettings')) {
 							<?php echo apply_filters( 'the_content', $tip_obj->post_content ); ?>
 						</div>
 						<div class="reveal-modal-footer clearfix ">
-						  <ul class="button-group right"><li><a class="button close-tip" >Close</a></li></ul>
+						  <ul class="button-group right"><li><a class="button close-tip" ><?php _e('Close', 'dhpress'); ?></a></li></ul>
 						</div>
 					  </div>
 						<a class="close-reveal-modal close-tip">&#215;</a>
