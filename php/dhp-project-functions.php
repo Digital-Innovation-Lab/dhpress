@@ -292,13 +292,13 @@ function dhp_project_updated_messages( $messages )
 	3 => __('Custom field deleted.'),
 	4 => __('Project updated.'),
 	/* translators: %s: date and time of the revision */
-	5 => isset($_GET['revision']) ? sprintf( __('Project restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	5 => isset($_GET['revision']) ? sprintf( _x('Project restored to revision from %s', 'translators: %s: date and time of the revision'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 	6 => sprintf( __('Project published. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
 	7 => __('Project saved.'),
 	8 => sprintf( __('Project submitted. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
 	9 => sprintf( __('Project scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview project</a>'),
 	  // translators: Publish box date format, see http://php.net/date
-	  date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	  date_i18n( _x( 'M j, Y @ G:i', 'translators: Publish box date format, see http://php.net/date' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
 	10 => sprintf( __('Project draft updated. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
   );
 

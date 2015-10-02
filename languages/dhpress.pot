@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-09-30 15:11-0400\n"
+"POT-Creation-Date: 2015-10-02 15:11-0400\n"
 "PO-Revision-Date: 2015-09-28 13:22-0400\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -201,6 +201,7 @@ msgstr ""
 
 #: php/dhp-marker-functions.php:145
 #, php-format
+msgctxt "translators: %s: date and time of the revision"
 msgid "Marker restored to revision from %s"
 msgstr ""
 
@@ -226,6 +227,7 @@ msgid ""
 msgstr ""
 
 #: php/dhp-marker-functions.php:151 php/dhp-project-functions.php:301
+msgctxt "translators: Publish box date format, see http://php.net/date"
 msgid "M j, Y @ G:i"
 msgstr ""
 
@@ -301,6 +303,7 @@ msgstr ""
 
 #: php/dhp-project-functions.php:295
 #, php-format
+msgctxt "translators: %s: date and time of the revision"
 msgid "Project restored to revision from %s"
 msgstr ""
 

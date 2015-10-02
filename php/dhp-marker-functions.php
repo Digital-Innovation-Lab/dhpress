@@ -142,13 +142,13 @@ function dhp_marker_updated_messages( $messages )
     3 => __('Custom field deleted.'),
     4 => __('Marker updated.'),
     /* translators: %s: date and time of the revision */
-    5 => isset($_GET['revision']) ? sprintf( __('Marker restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+    5 => isset($_GET['revision']) ? sprintf( _x('Marker restored to revision from %s', 'translators: %s: date and time of the revision'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
     6 => sprintf( __('Marker published. <a href="%s">View marker</a>'), esc_url( get_permalink($post_ID) ) ),
     7 => __('Marker saved.'),
     8 => sprintf( __('Marker submitted. <a target="_blank" href="%s">Preview marker</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
     9 => sprintf( __('Marker scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview marker</a>'),
       // translators: Publish box date format, see http://php.net/date
-      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+      date_i18n( _x( 'M j, Y @ G:i', 'translators: Publish box date format, see http://php.net/date'), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
     10 => sprintf( __('Marker draft updated. <a target="_blank" href="%s">Preview marker</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
   );
 
