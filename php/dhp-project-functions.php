@@ -2738,6 +2738,7 @@ function dhp_page_template( $page_template )
 		$vizParams['menu'] = $vizMenu;
 
 			// Visualization specific -- only 1st Entry Point currently supported
+			// NOTE: When enqueueing new scripts and styles, ensure that you add them to the appropriate script and style arrays in dhp-view-template.php or they will be dequeued and not load
 		$thisEP = $projObj->getEntryPointByIndex($vizIndex);
 		switch ($thisEP->type) {
 		case 'map':

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-09-30 15:11-0400\n"
-"PO-Revision-Date: 2015-10-02 14:36-0400\n"
+"POT-Creation-Date: 2015-10-05 13:37-0400\n"
+"PO-Revision-Date: 2015-10-05 20:00-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -200,6 +200,7 @@ msgstr ""
 
 #: php/dhp-marker-functions.php:145
 #, php-format
+msgctxt "translators: %s: date and time of the revision"
 msgid "Marker restored to revision from %s"
 msgstr ""
 
@@ -225,6 +226,7 @@ msgid ""
 msgstr ""
 
 #: php/dhp-marker-functions.php:151 php/dhp-project-functions.php:301
+msgctxt "translators: Publish box date format, see http://php.net/date"
 msgid "M j, Y @ G:i"
 msgstr ""
 
@@ -300,6 +302,7 @@ msgstr ""
 
 #: php/dhp-project-functions.php:295
 #, php-format
+msgctxt "translators: %s: date and time of the revision"
 msgid "Project restored to revision from %s"
 msgstr ""
 
@@ -1837,7 +1840,7 @@ msgstr ""
 
 #: php/scripts/dhp-script-cards-view.php:78
 msgid "Filter options for {{label}}"
-msgstr ""
+msgstr " "
 
 #: php/scripts/dhp-script-cards-view.php:82
 msgid "Date Filter Error"
@@ -1986,6 +1989,29 @@ msgstr ""
 #: php/scripts/dhp-script-time-view.php:4
 msgid "Jan|Feb|Mar|Apr|May|June|July|Aug|Sep|Oct|Nov|Dec"
 msgstr ""
+
+#: php/scripts/dhp-script-time-view.php:10
+msgctxt "D3 Localization. See https://github.com/mbostock/d3/wiki/Localization"
+msgid "default"
+msgstr ""
+"{\n"
+"  \"decimal\": \",\",\n"
+"  \"thousands\": \" \",\n"
+"  \"grouping\": [3],\n"
+"  \"currency\": [\"\", \" руб.\"],\n"
+"  \"dateTime\": \"%A, %e %B %Y г. %X\",\n"
+"  \"date\": \"%d.%m.%Y\",\n"
+"  \"time\": \"%H:%M:%S\",\n"
+"  \"periods\": [\"AM\", \"PM\"],\n"
+"  \"days\": [\"воскресенье\", \"понедельник\", \"вторник\", \"среда\", "
+"\"четверг\", \"пятница\", \"суббота\"],\n"
+"  \"shortDays\": [\"вс\", \"пн\", \"вт\", \"ср\", \"чт\", \"пт\", \"сб\"],\n"
+"  \"months\": [\"января\", \"февраля\", \"марта\", \"апреля\", \"мая\", "
+"\"июня\", \"июля\", \"августа\", \"сентября\", \"октября\", \"ноября\", "
+"\"декабря\"],\n"
+"  \"shortMonths\": [\"янв\", \"фев\", \"мар\", \"апр\", \"май\", \"июн\", "
+"\"июл\", \"авг\", \"сен\", \"окт\", \"ноя\", \"дек\"]\n"
+"}"
 
 #: php/scripts/dhp-view-template.php:7
 msgid "My Site"
