@@ -43,9 +43,14 @@ svg {
     -webkit-box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
     box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
 }
+/*
+#dhp-pin-controls button {
+    background: none;
+    border-bottom: none;
+}*/
 
     /* control buttons are Foundation font icons */
-.pin-fndn-icon {
+#dhp-pin-controls .pin-fndn-icon {
     margin-left: 4px;
     margin-right: 4px;
     font-size: 32px;
@@ -53,22 +58,22 @@ svg {
     height: 36px;
 }
     /* style for control buttons */
-.pin-fndn-icon button:before {
+#dhp-pin-controls .pin-fndn-icon button:before {
     color: black;
 
 }
-.pin-fndn-icon button {
-    background-color: white;
+#dhp-pin-controls .pin-fndn-icon button {
+    background-color: white !important;
     font-size: 28px;
     padding: 10px 8px 8px 8px;
 }
     /*gives user feedback of hovering over control*/
-.pin-fndn-icon button:hover {
+#dhp-pin-controls .pin-fndn-icon button:hover {
     box-shadow: inset 0 0 2px 2px rgba(0,0,0,0.3);
-    background-color: transparent;
+    background-color: transparent !important;
 }
-.pin-fndn-icon button:focus {
-    background-color: transparent;
+#dhp-pin-controls .pin-fndn-icon button:focus {
+    background-color: transparent !important;
 }
 
 

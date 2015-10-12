@@ -278,7 +278,7 @@ spinner:after {
 	
 /*	min-height: 220px; */
 /*	max-height: 90% !important; */
-	max-height: 400px !important;
+	max-height: 500px !important;
 
 	top: 6px;
 	left: 6px;
@@ -331,7 +331,7 @@ spinner:after {
 
 		/*For dynamic resizing height*/
 	/*position: absolute;*/
-	max-height: 400px;
+	max-height: 500px;
 	overflow-y: auto;
 
 	top:38px;
