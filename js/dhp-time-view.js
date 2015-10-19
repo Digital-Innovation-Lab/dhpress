@@ -101,7 +101,7 @@ var dhpTimeline = {
 
 			// Do we need to localize D3?
 		var d3Local = dhpServices.getText('#dhp-script-d3-local');
-		if (d3Local.length > 1) {
+		if (d3Local != 'default') {
 			var locale = d3.locale(JSON.parse(d3Local));
 			dhpTimeline.local = locale.timeFormat.multi([
 				["%H:%M", function(d) { return d.getMinutes(); }],

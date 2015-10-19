@@ -51,6 +51,7 @@ jQuery(document).ready(function($) {
   var ajax_url     = dhpDataLib.ajax_url;
   var projectID    = dhpDataLib.projectID;
   var pngImages    = dhpDataLib.pngImages;
+  var localized    = $.parseJSON(dhpDataLib.localized);
 
 
     // Parameters passed via HTML elements
@@ -575,13 +576,13 @@ jQuery(document).ready(function($) {
 
 
       // User-editable values
-    self.edMoteType = ko.observable('- choose -');
+    self.edMoteType = ko.observable(localized['choose']);
     self.edMoteName = ko.observable('');
-    self.edMoteCF = ko.observable('- choose -');
+    self.edMoteCF = ko.observable(localized['choose']);
     self.edMoteDelim = ko.observable('');
 
       // Insert empty custom field to front of list
-    self.optionsCF = ['- choose -'].concat(allCustomFields);
+    self.optionsCF = [localized['choose']].concat(allCustomFields);
 
       // Configurable data
     self.allMotes = ko.observableArray([]);
@@ -645,7 +646,7 @@ jQuery(document).ready(function($) {
       // PURPOSE: Create new mote definition via user interface
     self.createMote = function() {
         // Make sure valid CF and mote type chosen
-      if (self.edMoteType() === '- choose -' || self.edMoteCF()  === '- choose -') {
+      if (self.edMoteType() === localized['choose'] || self.edMoteCF()  === localized['choose']) {
         $("#mdl-def-mote").dialog({
           modal: true,
           buttons: {
@@ -707,8 +708,8 @@ jQuery(document).ready(function($) {
             self.allMotes.push(new Mote(newName, self.edMoteType(), self.edMoteCF(), self.edMoteDelim()));
               // reset GUI default values
             self.edMoteName('');
-            self.edMoteType('- choose -');
-            self.edMoteCF('- choose -');
+            self.edMoteType(localized['choose']);
+            self.edMoteCF(localized['choose']);
             self.edMoteDelim('');
 
             self.settingsDirty(true);
@@ -2297,37 +2298,35 @@ jQuery(document).ready(function($) {
         // Home URL but no label, or vice-versa?
       if ((self.edHomeBtnLbl() && self.edHomeBtnLbl() != '') || (self.edHomeURL() && self.edHomeURL() != '')) {
         if (self.edHomeBtnLbl() == '' || self.edHomeURL() == '') {
-          $('#testResults').append('<p>If you wish to create a "Home" button, you must supply both a URL and label.</p>');
+          $('#testResults').append(localized['home_button']);
         }
           // ensure a well-formed URL
         var testURL = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
         if (!testURL.test(self.edHomeURL())) {
-          $('#testResults').append('<p>The Home address does not appear to be a full, well-formed URL.</p>');
+          $('#testResults').append(localized['home_address']);
         }
       }
 
       if (self.optionsCF.length == 0) {
-          $('#testResults').append('<p>Your project will not work until you import Markers which are associated with this Project (by using this Project ID).</p>');
+          $('#testResults').append(localized['import_markers']);
       }
 
         // Check the settings of Mote definitions ---------
 
       if (self.allMotes().length == 0) {
-          $('#testResults').append('<p>Your project will not work until you define some motes.</p>');
+          $('#testResults').append(localized['define_motes']);
       }
 
       ko.utils.arrayForEach(self.allMotes(), function(theMote) {
         switch(theMote.type) {
         case 'Pointer':
           if (theMote.delim == '') {
-            $('#testResults').append('<p>Motes of type Pointer require a delimiter character; the Mote named '+
-                                  theMote.name+' has not yet been assigned a delimiter.</p>');
+            $('#testResults').append(sprintf(localized['pointer_delimiter'], theMote.name));
           }
           break;
         case 'Lat/Lon Coordinates':
           if (theMote.delim == ',') {
-            $('#testResults').append('<p>You have specified the commas as the delimiter character for the Lat-Lon Coordinate Mote named '+
-                                  theMote.name+'; you cannot use it as a delimiter, as it is reserved for separating Lat from Lon and cannot be used to form Polygons.</p>');
+            $('#testResults').append(sprintf(localized['comma_delimiter'], theMote.name));
           }
           break;
         } // switch()
@@ -2336,119 +2335,119 @@ jQuery(document).ready(function($) {
         // Check the settings of Entry Points -----------
 
       if (self.entryPoints().length == 0) {
-          $('#testResults').append('<p>Your project will not work until you create at least one entry point.</p>');
+          $('#testResults').append(localized['no_entry_points']);
       }
 
       ko.utils.arrayForEach(self.entryPoints(), function(theEP) {
           // Report errors with help of this utility function
         function epErrorMessage(errString) {
-          $('#testResults').append('<p>'+errString+' (entry point "'+theEP.label()+'").</p>');
+          $('#testResults').append(sprintf(localized['ep_error'], errString, theEP.label()));
         }
           // Ensure that all EPs have labels if multiple EPs
         if (theEP.label() == '' && self.entryPoints().length > 1) {
-          $('#testResults').append('<p>You have an unlabeled entry point. All multiple entry points must be named.</p>');
+          $('#testResults').append(localized['unlabeled_entry_point']);
         }
         switch(theEP.type) {
         case 'map':
             // Do maps have at least one legend?
           if (theEP.settings.legends().length == 0) {
-            epErrorMessage('You have not yet added a legend to the Map');
+            epErrorMessage(localized['map_legend']);
           }
           if (theEP.settings.coordMote() == '') {
-            epErrorMessage('You must specify the mote that will provide the coordinate for the Map');
+            epErrorMessage(localized['map_coord_mote']);
           }
           break;
         case 'cards':
           var colorName = theEP.settings.color();
           if (!colorName || colorName === 'disable') {
-            epErrorMessage('We recommend specifying a color legend for the Cards visualization, but none is provided');
+            epErrorMessage(localized['cards_color_legend']);
           }
             // Do cards have at least one content mote?
           if (theEP.settings.content().length == 0) {
-            epErrorMessage('You haven\'t yet specified content for the Cards visualization');
+            epErrorMessage(localized['cards_content']);
           }
           break;
         case 'pinboard':
           var w;
           if (theEP.settings.dw() == '' || isNaN(w=parseInt(theEP.settings.dw(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid display width for the Pinboard');
+            epErrorMessage(localized['pinboard_width']);
           }
           var h;
           if (theEP.settings.dh() == '' || isNaN(h=parseInt(theEP.settings.dh(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid display height for the Pinboard');
+            epErrorMessage(localized['pinboard_height']);
           }
           if (theEP.settings.iw() == '' || isNaN(w=parseInt(theEP.settings.iw(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid background image width for the Pinboard');
+            epErrorMessage(localized['pinboard_bg_width']);
           }
           if (theEP.settings.ih() == '' || isNaN(h=parseInt(theEP.settings.ih(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid background image height for the Pinboard');
+            epErrorMessage(localized['pinboard_bg_height']);
           }
             // Do pinboards have at least one legend?
           if (theEP.settings.legends().length == 0) {
-            epErrorMessage('You have not yet added a legend to the Pinboard');
+            epErrorMessage(localized['pinboard_legend']);
           }
           if (theEP.settings.coordMote() == '') {
-            epErrorMessage('You must specify the mote that will provide the coordinate for the Pinboard');
+            epErrorMessage(localized['pinboard_coord_mote']);
           }
           break;
         case 'tree':
           if (theEP.settings.head() == '') {
-            epErrorMessage('You must specify the head marker for the Tree');
+            epErrorMessage(localized['tree_head']);
           }
           if (theEP.settings.children() == '') {
-            epErrorMessage('You must specify the Pointer mote which indicates descending generations for the Tree');
+            epErrorMessage(localized['tree_pointer']);
           }
           var i;
           if (theEP.settings.fSize() == '' || isNaN(i=parseInt(theEP.settings.fSize(),10)) || i <= 8) {
-            epErrorMessage('You must specify a valid font size for the Tree');
+            epErrorMessage(localized['tree_font_size']);
           }
           if (theEP.settings.width() == '' || isNaN(i=parseInt(theEP.settings.width(),10)) || i <= 20) {
-            epErrorMessage('You must specify a valid image width for the Tree');
+            epErrorMessage(localized['tree_image_width']);
           }
           if (theEP.settings.height() == '' || isNaN(i=parseInt(theEP.settings.height(),10)) || i <= 20) {
-            epErrorMessage('You must specify a valid image height for the Tree');
+            epErrorMessage(localized['tree_image_height']);
           }
           break;
         case 'time':
           if (theEP.settings.date() == '') {
-            epErrorMessage('You must specify the Date mote for the Timeline');
+            epErrorMessage(localized['time_date_mote']);
           }
           if (theEP.settings.color() == '') {
-            epErrorMessage('You must specify a color legend for the Timeline');
+            epErrorMessage(localized['time_color_legend']);
           }
           var i;
           if (theEP.settings.bandHt() == '' || isNaN(i=parseInt(theEP.settings.bandHt(),10)) || i <= 8) {
-            epErrorMessage('You must specify a valid band height for the Timeline');
+            epErrorMessage(localized['time_band_height']);
           }
           if (theEP.settings.wAxisLbl() == '' || isNaN(i=parseInt(theEP.settings.wAxisLbl(),10)) || i <= 10) {
-            epErrorMessage('You must specify a valid x axis label width for the Timeline');
+            epErrorMessage(localized['time_label_width']);
           }
             // Check Dates and their formats -- must be a specific date (can't be fuzzy)
           var dateRegEx = /^(open|-?\d+(-(\d)+)?(-(\d)+)?)$/;
           if (!dateRegEx.test(theEP.settings.from())) {
-            epErrorMessage('You must specify a valid Date for the start frame of the Timeline');
+            epErrorMessage(localized['time_date_start_frame']);
           }
           if (!dateRegEx.test(theEP.settings.to())) {
-            epErrorMessage('You must specify a valid Date for the end frame of the Timeline');
+            epErrorMessage(localized['time_date_end_frame']);
           }
           if (!dateRegEx.test(theEP.settings.openFrom())) {
-            epErrorMessage('You must specify a valid Date for the start zoom of the Timeline');
+            epErrorMessage(localized['time_date_start_zoom']);
           }
           if (!dateRegEx.test(theEP.settings.openTo())) {
-            epErrorMessage('You must specify a valid Date for the end zoom of the Timeline');
+            epErrorMessage(localized['time_date_end_zoom']);
           }
           break;
         case 'flow':
           var w;
           if (theEP.settings.width() == '' || isNaN(w=parseInt(theEP.settings.width(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid background palette width for the Facet Flow view');
+            epErrorMessage(localized['facet_bg_width']);
           }
           var h;
           if (theEP.settings.height() == '' || isNaN(h=parseInt(theEP.settings.height(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid background palette height for the Facet Flow view');
+            epErrorMessage(localized['facet_bg_height']);
           }
           if (theEP.settings.motes().length < 2) {
-            epErrorMessage('You need at least two sets of motes for the Facet Flow');
+            epErrorMessage(localized['facet_two_motes']);
           }
             // Ensure that each facet-mote is only used once in list
           var redundFacets=false;
@@ -2460,12 +2459,12 @@ jQuery(document).ready(function($) {
             if (matchCnt > 1) { redundFacets=true; }
           });
           if (redundFacets) {
-            epErrorMessage('Facet Flow requires unique (not redundant) motes in the list to display');
+            epErrorMessage(localized['facet_unique_motes']);
           }
           break;
         case 'browser':
           if (theEP.settings.motes().length < 1) {
-            epErrorMessage('You need at least one mote for the Facet Browser');
+            epErrorMessage(localized['facet_browser_mote']);
           }
             // Ensure that each facet-mote is only used once in list
           var redundFacets=false;
@@ -2477,7 +2476,7 @@ jQuery(document).ready(function($) {
             if (matchCnt > 1) { redundFacets=true; }
           });
           if (redundFacets) {
-            epErrorMessage('You have listed redundant motes to display');
+            epErrorMessage(localized['redundant_motes']);
           }
           break;          
         } // switch
@@ -2485,7 +2484,7 @@ jQuery(document).ready(function($) {
 
         // Is there at least one mote for select modal content?
       if (self.selMoteList().length < 1) {
-          $('#testResults').append('<p>Your list of motes for the select modal is empty. We suggest you add at least one content mote.</p>');
+          $('#testResults').append(localized['empty_content_mote']);
       }
 
         // Anamoly: If no selection possible, edTrnsTime() == undefined; added '' for extra protection
@@ -2493,13 +2492,12 @@ jQuery(document).ready(function($) {
         // If Transcript Source mote selected, ensure other settings are as well
       if (self.edTrnsSrc() !== 'disable') {
         if ((self.edTrnsAudio() === 'disable' && self.edTrnsVideo() === 'disable') || self.edTrnsTransc() === 'disable') {
-          $('#testResults').append('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>');
+          $('#testResults').append(localized['transcript_settings']);
         }
       }
 
         // Call PHP functions to test any transcript texts
-      $('#testResults').append('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p>'+
-          '<p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>');
+      $('#testResults').append(localized['tests_being_conducted']);
       dhpPerformTests();
     }; // runTests
 
