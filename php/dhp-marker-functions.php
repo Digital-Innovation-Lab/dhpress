@@ -14,8 +14,8 @@
 	// GUI components added to Marker Settings box in Edit Marker admin panel
 $dhp_marker_settings_fields = array(
 	array(
-		'label'=> 'Associated Project',
-		'desc'	=> 'Select Project to which this marker should belong',
+		'label' => __('Associated Project', 'dhpress'),
+		'desc'	=> __('Select Project to which this marker should belong', 'dhpress'),
 		'id'	=> 'project_id',
 		'type'	=> 'select',
 		'options' => dhp_get_projects()
@@ -109,12 +109,17 @@ function add_dhp_marker_admin_scripts( $hook )
 			wp_enqueue_style('dhp-admin', plugins_url('/css/dhp-admin.css',  dirname(__FILE__) ));
 			wp_enqueue_script('jquery');
 
+            $localized = array(
+                'choose_field' => __('Choose a custom field to add/edit.', 'dhpress'),
+                'add_edit' => __('Add/Update', 'dhpress')
+            );
 			wp_enqueue_script('dhp-marker-script', plugins_url('/js/dhp-marker-admin.js', dirname(__FILE__) ));
 			wp_localize_script('dhp-marker-script', 'dhpDataLib', array(
 				'ajax_url' => $dev_url,
                 'projectID' => $project_id,
                 'markerID' => $markerID,
-                'customFields' => $custom_fields
+                'customFields' => $custom_fields,
+                'localized' => json_encode($localized)
 			) );
         }
 
@@ -239,7 +244,7 @@ add_action('add_meta_boxes', 'add_dhp_marker_settings_box');
 function add_dhp_marker_settings_box() {
     add_meta_box(
 		'dhp_marker_settings_meta_box', 		// $id
-		'Marker Settings', 						// $title
+		__('Marker Settings', 'dhpress'), 		// $title
 		'show_dhp_marker_settings_box', 		// $callback
 		'dhp-markers', 						// $page
 		'normal',								// $context
