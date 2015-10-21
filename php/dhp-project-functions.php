@@ -1167,23 +1167,23 @@ function dhp_get_marker_tree()
 
 // ====================== AJAX Functions ======================
 
-add_action( 'wp_ajax_dhpExportProjectSettings', 'dhp_export_project_settings' );
+// add_action( 'wp_ajax_dhpExportProjectSettings', 'dhp_export_project_settings' );
 
-//PURPOSE: Called by JS code on page to export the settings (constructed by JS) to local computer
-//ASSUMES: Project ID encoded in string
+// //PURPOSE: Called by JS code on page to export the settings (constructed by JS) to local computer
+// //ASSUMES: Project ID encoded in string
 
-function dhp_export_project_settings()
-{
-	$settings = $_POST['settings'];
-	$dhp_projectID = $_POST['project'];
+// function dhp_export_project_settings()
+// {
+// 	$settings = $_POST['settings'];
+// 	$dhp_projectID = $_POST['project'];
 
-	$fp = fopen("../project_settings.json", 'w');
-	fwrite($fp, $settings);
-	fclose($fp);
+// 	$fp = fopen("../project_settings.json", 'w');
+// 	fwrite($fp, $settings);
+// 	fclose($fp);
 
-		//Ajax call must terminate with "die"
-	die('exporting... ' . $json_settings);
-} //dhp_export_project_settings()
+// 		//Ajax call must terminate with "die"
+// 	die('exporting... ' . $json_settings);
+// } //dhp_export_project_settings()
 
 add_action( 'wp_ajax_dhpSaveProjectSettings', 'dhp_save_project_settings' );
 

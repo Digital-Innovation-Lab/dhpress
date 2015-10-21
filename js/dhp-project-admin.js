@@ -2602,25 +2602,25 @@ jQuery(document).ready(function($) {
 
   //=================================== AJAX FUNCTIONS ==================================
 
-    //PURPOSE: Exports project settings data object
-  function exportSettingsInWP(settingsData){
-    jQuery.ajax({
-          type: 'POST',
-          url: ajax_url,
-          data: {
-              action: 'dhpExportProjectSettings',
-              project: projectID,
-              settings: settingsData
-          },
-          success: function(data, textStatus, XMLHttpRequest) {
-            $('#exportSaveSettings').button('enable');
-          },
-          error: function(XMLHttpRequest, textStatus, erroThrown){
-            alert(errorThrown);
-            $('#exportSaveSettings').button('enable');
-          }
-    });
-  }
+  //   //PURPOSE: Exports project settings data object
+  // function exportSettingsInWP(settingsData){
+  //   jQuery.ajax({
+  //         type: 'POST',
+  //         url: ajax_url,
+  //         data: {
+  //             action: 'dhpExportProjectSettings',
+  //             project: projectID,
+  //             settings: settingsData
+  //         },
+  //         success: function(data, textStatus, XMLHttpRequest) {
+  //           $('#exportSaveSettings').button('enable');
+  //         },
+  //         error: function(XMLHttpRequest, textStatus, erroThrown){
+  //           alert(errorThrown);
+  //           $('#exportSaveSettings').button('enable');
+  //         }
+  //   });
+  // }
 
     // PURPOSE: Saves project settings data object
   function saveSettingsInWP(settingsData) {

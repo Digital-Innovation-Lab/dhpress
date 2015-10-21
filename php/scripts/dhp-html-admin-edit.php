@@ -6,7 +6,7 @@
 
     <div data-bind="visible: optionsCF.length > 0">
       <button id="btnSaveSettings" data-bind="jqButton, click: saveSettings, style: { color: settingsDirty() ? 'red' : 'green' }"><?php _e('Save Settings', 'dhpress'); ?></button>
-      <button id="exportSaveSettings" data-bind="jqButton, click: exportSettings"><?php _e('Export Settings', 'dhpress'); ?></button>
+      <!-- <button id="exportSaveSettings" data-bind="jqButton, click: exportSettings"><?php _e('Export Settings', 'dhpress'); ?></button> -->
       <button data-bind ="jqButton, click: showSettings"><?php _e('Show Settings in Console', 'dhpress'); ?></button>
     </div>
 
