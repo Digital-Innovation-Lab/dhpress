@@ -1,5 +1,78 @@
-<title><?php the_title(); ?></title>
-<?php wp_head(); ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title><?php the_title(); ?></title>
+	<?php 
+		add_action('wp_enqueue_scripts', 'dhp_dequeue_unused_scripts');
+		
+		// PURPOSE: Dequeues unnecessary scripts and styles in order to prevent conflicts from themes
+		function dhp_dequeue_unused_scripts() {
+			global $wp_scripts, $wp_styles;
+			global $post;
+
+			$postID = $post->ID;
+			$projObj = new DHPressProject($postID);
+		
+				// Which visualization is being shown
+			$vizIndex = (get_query_var('viz')) ? get_query_var('viz') : 0;
+			$ep = $projObj->getEntryPointByIndex($vizIndex);
+
+			switch ($ep->type) {
+				case 'map':
+					$page_scripts = array('dhp-jquery-ui', 'leaflet', 'leaflet-maki', 'dhp-maps-cluster', 'dhp-maps-view', 'dhp-map-services');
+					$page_styles = array('dhp-jquery-ui-style', 'dhp-map-css', 'leaflet-css', 'maki-sprite-style', 'dhp-map-cluster-css', 'dhp-map-clusterdef-css');
+					break;
+				case 'cards':
+					$page_scripts = array('isotope', 'dhp-cards-view');
+					$page_styles = array('dhp-cards-css');
+					break;
+				case 'pinboard':
+					$page_scripts = array('dhp-jquery-ui', 'snap', 'dhp-pinboard-view');
+					$page_styles = array('dhp-jquery-ui-style', 'foundation-icons-css', 'dhp-pinboard-css');
+					break;
+				case 'tree':
+					$page_scripts = array('d3', 'dhp-tree-view');
+					$page_styles = array('dhp-tree-css');
+					break;
+				case 'time':
+					$page_scripts = array('d3', 'dhp-time-view');
+					$page_styles = array('dhp-time-css');
+					break;
+				case 'flow':
+					$page_scripts = array('d3', 'd3-parsets', 'dhp-flow-view');
+					$page_styles = array('dhp-flow-css');
+					break;
+				case 'browser':
+					$page_scripts = array('d3', 'dhp-browser-view');
+					$page_styles = array('dhp-browser-css');
+					break;
+			}
+		
+
+			// Scripts
+			$global_scripts = array('admin-bar', 'underscore', 'jquery', 'dhp-foundation', 'dhp-modernizr', 'mustache', 'dhp-services', 'dhp-public-project-script', 'soundcloud-api', 'dhp-widget');
+			$scripts = array_merge($global_scripts, $page_scripts);
+			foreach ($wp_scripts->queue as $script) {
+				if (!in_array($script, $scripts)) {
+					wp_dequeue_script($script);
+				}
+			}	
+		
+			// Styles
+			$global_styles = array('admin-bar', 'dhp-foundation-style', 'dhp-foundation-icons', 'dhp-project-css', 'dhp-transcript-css');
+			$styles = array_merge($global_styles, $page_styles);
+			foreach ($wp_styles->queue as $style) {
+				if (!in_array($style, $styles)) {
+					wp_dequeue_style($style);
+				}
+			}
+		}
+		
+		
+		wp_head();	
+	?>
+</head>
+<body>
 
 <nav class="top-bar dhp-nav" data-topbar data-options="is_hover: false">
 	<ul class="title-area">
@@ -143,3 +216,5 @@
 	</div>
 	<br/>
 </script>
+</body>
+</html>

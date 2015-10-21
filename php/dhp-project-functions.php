@@ -27,78 +27,6 @@ function dhp_load_textdomain()
 
 // ================== Initialize Plug-in ==================
 
-// PURPOSE: To create custom post type for Projects in WP
-// NOTES:   Called by both dhp_project_init() and dhp_project_activate()
-
-function dhp_register_project_cpt()
-{
-  $labels = array(
-	'name' => _x('Projects', 'post type general name'),
-	'singular_name' => _x('Project', 'post type singular name'),
-	'add_new' => _x('Add New', 'project'),
-	'add_new_item' => __('Add New Project'),
-	'edit_item' => __('Edit Project'),
-	'new_item' => __('New Project'),
-	'all_items' => __('Projects'),
-	'view_item' => __('View Project'),
-	'search_items' => __('Search Projects'),
-	'not_found' =>  __('No projects found'),
-	'not_found_in_trash' => __('No projects found in Trash'), 
-	'parent_item_colon' => '',
-	'menu_name' => __('Projects'),
-	'menu_icon' => plugins_url( 'dhpress/images/dhpress-plugin-icon.png' )  // Icon Path
-  );
-  $args = array(
-	'labels' => $labels,
-	'public' => true,
-	'publicly_queryable' => true,
-	'show_ui' => true, 
-	'show_in_menu' => 'dhp-top-level-handle', 
-	'query_var' => true,
-	'rewrite' => array('slug' => 'dhp-projects','with_front' => FALSE),
-	'capability_type' => 'page',
-	'has_archive' => true,
-	/* if we want to subclass project types in future (i.e., Entry Points), will need to set 'hierarchical' => true */
-	'hierarchical' => false,
-	'menu_position' => null,
-	/* if hierarchical, then may want to add 'page-attributes' to supports */
-	'supports' => array( 'title', 'revisions', 'custom-fields' )
-  ); 
-  register_post_type('dhp-project',$args);
-} // dhp_register_project_cpt()
-
-
-// init action called to initialize a plug-in
-add_action( 'init', 'dhp_project_init' );
-
-// NOTES:   This is called by dhp_project_activate(), which only expects it to register CPT
-function dhp_project_init()
-{
-	dhp_register_project_cpt();
-
-		// Are there any 'project' custom post types from 2.5.4 or earlier -- if so, change CPT
-
-		// If no version # in DB, definitely old version of DH Press whose data needs checking
-	if (get_option('dhp_plugin_version') === false) {
-		$args = array('post_type' => 'project', 'posts_per_page' => -1);
-		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$proj_id = get_the_ID();
-
-				// Only does this change if CPT has associated metadata
-			$proj_set = get_post_meta($proj_id, 'project_settings', true);
-			if(!empty($proj_set)) {
-				$update_params = array( 'ID' => $proj_id, 'post_type' => 'dhp-project');
-				wp_update_post($update_params);
-			}
-		endwhile;
-		wp_reset_query();
-	}
-		// store version # in options
-	update_option('dhp_plugin_version', DHP_PLUGIN_VERSION);
-} // dhp_project_init
-
-
 	// Hook into delete of posts so that all data associated with Project gets deleted
 add_action('admin_init', 'dhp_admin_init');
 
@@ -171,17 +99,6 @@ if (function_exists('add_theme_support')) {
 		// default Post Thumbnail dimensions
 	set_post_thumbnail_size(32, 37);
 }
-
-
-register_activation_hook( __FILE__, 'dhp_project_activate');
-
-// PURPOSE: Ensure that custom post types have been registered before we flush rewrite rules
-//			See http://solislab.com/blog/plugin-activation-checklist/#flush-rewrite-rules
-function dhp_project_activate()
-{
-	dhp_register_project_cpt();
-	flush_rewrite_rules();
-} // dhp_project_activate()
 
 
 // PURPOSE: Ensure that txt and png files are able to be added to the Media Library
@@ -292,13 +209,13 @@ function dhp_project_updated_messages( $messages )
 	3 => __('Custom field deleted.'),
 	4 => __('Project updated.'),
 	/* translators: %s: date and time of the revision */
-	5 => isset($_GET['revision']) ? sprintf( __('Project restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	5 => isset($_GET['revision']) ? sprintf( _x('Project restored to revision from %s', 'translators: %s: date and time of the revision'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 	6 => sprintf( __('Project published. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
 	7 => __('Project saved.'),
 	8 => sprintf( __('Project submitted. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
 	9 => sprintf( __('Project scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview project</a>'),
 	  // translators: Publish box date format, see http://php.net/date
-	  date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	  date_i18n( _x( 'M j, Y @ G:i', 'translators: Publish box date format, see http://php.net/date' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
 	10 => sprintf( __('Project draft updated. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
   );
 
@@ -2115,7 +2032,7 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 
 		// Problem if timecode not defined
 	if ($tcMote == null || $tcMote == '' || $tcMote == 'disable') {
-		$result = '<p>You have not specified the Timestamp setting for the Transcription (despite setting Transcript motes).</p>';
+		$result = __('<p>You have not specified the Timestamp setting for the Transcription (despite setting Transcript motes).</p>', 'dhpress');
 	} else {
 		$numErrors = 0;
 
@@ -2138,19 +2055,19 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 				if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 1) {
 					$content = @file_get_contents($transFile);
 					if ($content == false) {
-						$result .= '<p>Problem reading file '.$transFile.' </p>';
+						$result .= sprintf(__('<p>Problem reading file %s </p>', 'dhpress'), $transFile);
 						$error = true;
 					} else {
 						$content  = utf8_encode($content);
 						$stamps	  = explode("-", $timecode);
 						$clipStart= mb_strpos($content, $stamps[0]);
 						if ($clipStart == false) {
-							$result .= '<p> Cannot find timestamp '.$stamps[0].' in file '.$transFile.'</p>';
+							$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[0], $transFile);
 							$error = true;
 						}
 						$clipEnd  = mb_strpos($content, $stamps[1]);
 						if ($clipEnd == false) {
-							$result .= '<p> Cannot find timestamp '.$stamps[1].' in file '.$transFile.'</p>';
+							$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[1], $transFile);
 							$error = true;
 						}
 					} // file contents
@@ -2176,7 +2093,7 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 {
 	if ($theLegend === null || $theLegend === '' || $theLegend === 'disable') {
-		return '<p>Cannot verify unspecified legend.</p>';
+		return __('<p>Cannot verify unspecified legend.</p>', 'dhpress');
 	}
 
 	$moteDef = $projObj->getMoteByName($theLegend);
@@ -2185,7 +2102,7 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 
 		// Has Legend not been created yet?
 	if (!term_exists($moteDef->name, $rootTaxName)) {
-		return '<p>Legend "'.$theLegend.'" has not yet been created but must be for project to work.</p>';
+		return sprintf(__('<p>Legend "%s" has not yet been created but must be for project to work.</p>', 'dhpress'), $theLegend);
 	}
 
 	$results    = '';
@@ -2224,7 +2141,7 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 		if ($t_count > 0) {
 			foreach ($terms_loaded as $term) {
 				if ($term->description == null || $term->description == '') {
-					$results .= '<p>The value '.$term->name.' for legend '.$theLegend.' has no visual setting.</p>';
+					$results .= sprintf(__('<p>The value %1$s for legend %2$s has no visual setting.</p>', 'dhpress'), $term->name, $theLegend);
 				} else {
 					$isColor = preg_match("/^#[:xdigit:]{6}$/", $term->description);
 					$isMaki = preg_match("/^.maki\-\S/", $term->description);
@@ -2232,27 +2149,27 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 					if ($isColor) {
 						$usedColor = true;
 						if (!$mixFlagged && ($usedMaki || $usedPNG)) {
-							$results .= '<p>Illegal mixture of color and icon settings in legend '.$theLegend.'.</p>';
+							$results .= sprintf(__('<p>Illegal mixture of color and icon settings in legend %s.</p>', 'dhpress'), $theLegend);
 							$mixFlagged = true;
 						}
 					} elseif ($isMaki) {
 						$usedMaki = true;
 						if (!$makiOK) {
-							$results .= '<p>The assigned Entry Point cannot use maki-icon setting '.$term->description.' for legend '.$theLegend.' value '.$term->name.'.</p>';
+							$results .= sprintf(__('<p>The assigned Entry Point cannot use maki-icon setting %1$s for legend %2$s value %3$s.</p>', 'dhpress'), $term->description, $theLegend, $term->name);
 						} elseif ($usedColor && !$mixFlagged) {
-							$results .= '<p>Illegal mixture of color and icon settings in legend '.$theLegend.'.</p>';
+							$results .= sprintf(__('<p>Illegal mixture of color and icon settings in legend %s.</p>', 'dhpress'), $theLegend);
 							$mixFlagged = true;
 						}
 					} elseif ($isPNG) {
 						$usedPNG = true;
 						if (!$pngOK) {
-							$results .= '<p>The assigned Entry Point cannot use PNG image '.$term->description.' for legend '.$theLegend.' value '.$term->name.'.</p>';
+							$results .= sprintf(__('<p>The assigned Entry Point cannot use PNG image %1$s for legend %2$s value %3$s.</p>', 'dhpress'), $term->description, $theLegend, $term->name);
 						} elseif ($usedColor && !$mixFlagged) {
-							$results .= '<p>Illegal mixture of color and icon settings in legend '.$theLegend.'.</p>';
+							$results .= sprintf(__('<p>Illegal mixture of color and icon settings in legend %s.</p>', 'dhpress'), $theLegend);
 							$mixFlagged = true;
 						}
 					} else {
-						$results .= '<p>Unknown setting '.$term->description.' for legend '.$theLegend.' value '.$term->name.'.</p>';
+						$results .= sprintf(__('<p>Unknown setting %1$s for legend %2$s value %3$s.</p>', 'dhpress'), $term->description, $theLegend, $term->name);
 					}
 				}
 			}
@@ -2279,7 +2196,7 @@ function dhp_perform_tests()
 
 		// There will be no project settings for New project
 	if (empty($projSettings)) {
-		$results = 'This is a new project and cannot be verified until it is saved and Markers imported';
+		$results = __('This is a new project and cannot be verified until it is saved and Markers imported', 'dhpress');
 
 	} else {
 			// Ensure any legends used by visualizations have been configured
@@ -2353,14 +2270,14 @@ function dhp_perform_tests()
 					case 'Lat/Lon Coordinates':
 					case 'X-Y Coordinates':
 						if (preg_match("/(-?\d+(\.?\d?)?),(\s?-?\d+(\.?\d?)?)/", $moteValue) === 0) {
-							$results .= '<p>Invalid Coordinate '.$moteValue;
+							$results .= sprintf(__('<p>Invalid Coordinate %s', 'dhpress'), $moteValue);
 							$error = true;
 						}
 						break;
 					case 'SoundCloud':
 							// Just look at the beginning of the URL
 						if (preg_match("!https://soundcloud\.com/\w!i", $moteValue) === 0) {
-							$results .= '<p>Invalid SoundCloud URL';
+							$results .= __('<p>Invalid SoundCloud URL', 'dhpress');
 							$error = true;
 						}
 						break;
@@ -2371,21 +2288,21 @@ function dhp_perform_tests()
 					case 'Image':
 							// Just look at beginning and end of URL
 						if (preg_match("!^(https?|ftp)://[^\s]*!i", $moteValue) === 0) {
-							$results .= '<p>Invalid URL';
+							$results .= __('<p>Invalid URL', 'dhpress');
 							$error = true;
 						}
 						break;
 					case 'Transcript':
 							// Just look at beginning and end of URL
 						if ($moteValue !== 'none' && (preg_match("!(https?|ftp)://!i", $moteValue) === 0 || preg_match("!\.txt$!i", $moteValue) === 0)) {
-							$results .= '<p>Invalid textfile URL';
+							$results .= __('<p>Invalid textfile URL', 'dhpress');
 							$error = true;
 							$transcErrors = true;
 						}
 						break;
 					case 'Timestamp':
 						if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 0) {
-							$results .= '<p>Invalid Timestamp '.$moteValue;
+							$results .= sprintf(__('<p>Invalid Timestamp %s', 'dhpress'), $moteValue);
 							$error = true;
 							$transcErrors = true;
 						}
@@ -2397,21 +2314,21 @@ function dhp_perform_tests()
 					case 'Date':
 							// Single Date or Range, inc. fuzzy
 						if (preg_match("/^(open|~?-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|~?-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
-							$results .= '<p>Invalid Date range';
+							$results .= __('<p>Invalid Date range', 'dhpress');
 							$error = true;
 						}
 						break;
 					} // switch
 						// Add rest of error information
 					if ($error) {
-						$results .=  ' given for mote '.$mote->name.' (custom field '.$mote->cf.') in marker '.get_the_title().'</p>';
+						$results .=  ' ' . sprintf(__('given for mote %1$s (custom field %2$s) in marker %3$s</p>', 'dhpress'), $mote->name, $mote->cf, get_the_title());
 						$numErrors++;
 					}
 				} // if (!is_null)
 			} // foreach
 				// don't continue if excessive errors found
 			if ($numErrors >= 20) {
-				$results .= '<p>Stopped checking errors in Marker data because more than 20 errors have been found. Correct these and try again.</p>';
+				$results .= __('<p>Stopped checking errors in Marker data because more than 20 errors have been found. Correct these and try again.</p>', 'dhpress');
 				break;
 			}
 		endwhile;
@@ -2421,8 +2338,7 @@ function dhp_perform_tests()
 		if ($source && $source !== '' && $source !== 'disable') {
 			$transSrcCheck = dhp_verify_legend($projObj, $source, false, false, false);
 			if ($transSrcCheck != '') {
-				$results .= '<p>You have specified the Source mote '.$source.
-							' for Transcription fragmentation but you have not built it yet as a category.</p>';
+				$results .= sprintf(__('<p>You have specified the Source mote %s for Transcription fragmentation but you have not built it yet as a category.</p>', 'dhpress'), $source);
 			}
 		}
 
@@ -2438,9 +2354,9 @@ function dhp_perform_tests()
 
 			// Are the results all clear?
 		if ($results === '') {
-			$results = '<p>All data on server has been examined and approved.</p>';
+			$results = __('<p>All data on server has been examined and approved.</p>', 'dhpress');
 		} else {
-			$results .= '<p>Data tests now complete.</p>';
+			$results .= __('<p>Data tests now complete.</p>', 'dhpress');
 		}
 	} // if projSettings
 
@@ -2521,6 +2437,9 @@ function add_dhp_project_admin_scripts( $hook )
 				// For touch-screen mechanisms
 			wp_enqueue_script('dhp-touch-punch', plugins_url('/lib/jquery.ui.touch-punch.js', dirname(__FILE__)),
 				array('jquery', 'dhp-jquery-ui') );
+			wp_enqueue_script('sprintf', plugins_url('/lib/sprintf.min.js', dirname(__FILE__)));
+				// Javascript sprintf implementation
+
 
 			wp_enqueue_script('knockout', plugins_url('/lib/knockout-3.1.0.js', dirname(__FILE__)) );
 
@@ -2528,14 +2447,59 @@ function add_dhp_project_admin_scripts( $hook )
 
 				// Custom JavaScript for Admin Edit Panel
 			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'wp-color-picker',
-								'randomColor', 'rainbowvis', 'knockout', 'dhp-map-services');
+								'randomColor', 'rainbowvis', 'sprintf', 'knockout', 'dhp-map-services');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
 			$pngs = dhp_get_attached_PNGs($postID);
+			$localized = array(
+				'choose' 				=> __('- choose -', 'dhpress'),
+				'home_button' 			=> __('<p>If you wish to create a "Home" button, you must supply both a URL and label.</p>', 'dhpress'),
+				'home_address' 			=> __('<p>The Home address does not appear to be a full, well-formed URL.</p>', 'dhpress'),
+				'import_markers' 		=> __('<p>Your project will not work until you import Markers which are associated with this Project (by using this Project ID).</p>', 'dhpress'),
+				'define_motes' 			=> __('<p>Your project will not work until you define some motes.</p>', 'dhpress'),
+				'pointer_delimiter' 	=> __('<p>Motes of type Pointer require a delimiter character; the Mote named %s has not yet been assigned a delimiter.</p>', 'dhpress'),
+				'comma_delimiter' 		=> __('<p>You have specified the commas as the delimiter character for the Lat-Lon Coordinate Mote named %s; you cannot use it as a delimiter, as it is reserved for separating Lat from Lon and cannot be used to form Polygons.</p>', 'dhpress'),
+				'no_entry_points' 		=> __('<p>Your project will not work until you create at least one entry point.</p>', 'dhpress'),
+				'ep_error'				=> __('<p>%1$s (entry point "%2$s").</p>', 'dhpress'),
+				'unlabeled_entry_point' => __('<p>You have an unlabeled entry point. All multiple entry points must be named.</p>', 'dhpress'),
+				'map_legend'			=> __('You have not yet added a legend to the Map', 'dhpress'),
+				'map_coord_mote'		=> __('You must specify the mote that will provide the coordinate for the Map', 'dhpress'),
+				'cards_color_legend'	=> __('We recommend specifying a color legend for the Cards visualization, but none is provided', 'dhpress'),
+				'cards_content'			=> __("You haven't yet specified content for the Cards visualization", 'dhpress'),
+				'pinboard_width'		=> __('You must specify a valid display width for the Pinboard', 'dhpress'),
+				'pinboard_height'		=> __('You must specify a valid display height for the Pinboard', 'dhpress'),
+				'pinboard_bg_width'		=> __('You must specify a valid background image width for the Pinboard', 'dhpress'),
+				'pinboard_bg_height'	=> __('You must specify a valid background image height for the Pinboard', 'dhpress'),
+				'pinboard_legend'		=> __('You have not yet added a legend to the Pinboard', 'dhpress'),
+				'pinboard_coord_mote'	=> __('You must specify the mote that will provide the coordinate for the Pinboard', 'dhpress'),
+				'tree_head'				=> __('You must specify the head marker for the Tree', 'dhpress'),
+				'tree_pointer'			=> __('You must specify the Pointer mote which indicates descending generations for the Tree', 'dhpress'),
+				'tree_font_size'		=> __('You must specify a valid font size for the Tree', 'dhpress'),
+				'tree_image_width'		=> __('You must specify a valid image width for the Tree', 'dhpress'),
+				'tree_image_height'		=> __('You must specify a valid image height for the Tree', 'dhpress'),
+				'time_date_mote'		=> __('You must specify the Date mote for the Timeline', 'dhpress'),
+				'time_color_legend'		=> __('You must specify a color legend for the Timeline', 'dhpress'),
+				'time_band_height'		=> __('You must specify a valid band height for the Timeline', 'dhpress'),
+				'time_label_width'		=> __('You must specify a valid x axis label width for the Timeline', 'dhpress'),
+				'time_date_start_frame'	=> __('You must specify a valid Date for the start frame of the Timeline', 'dhpress'),
+				'time_date_end_frame'	=> __('You must specify a valid Date for the end frame of the Timeline', 'dhpress'),
+				'time_date_start_zoom'	=> __('You must specify a valid Date for the start zoom of the Timeline', 'dhpress'),
+				'time_date_end_zoom'	=> __('You must specify a valid Date for the end zoom of the Timeline', 'dhpress'),
+				'facet_bg_width'		=> __('You must specify a valid background palette width for the Facet Flow view', 'dhpress'),
+				'facet_bg_height'		=> __('You must specify a valid background palette height for the Facet Flow view', 'dhpress'),
+				'facet_two_motes'		=> __('You need at least two sets of motes for the Facet Flow', 'dhpress'),
+				'facet_unique_motes'	=> __('Facet Flow requires unique (not redundant) motes in the list to display', 'dhpress'),
+				'facet_browser_mote'	=> __('You need at least one mote for the Facet Browser', 'dhpress'),
+				'redundant_motes'		=> __('You have listed redundant motes to display', 'dhpress'),
+				'empty_content_mote'	=> __('<p>Your list of motes for the select modal is empty. We suggest you add at least one content mote.</p>', 'dhpress'),
+				'transcript_settings'	=> __('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>', 'dhpress'),
+				'tests_being_conducted'	=> __('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>', 'dhpress')
+			);
 			wp_localize_script('dhp-project-script', 'dhpDataLib', array(
 				'ajax_url' => $dev_url,
 				'projectID' => $postID,
-				'pngImages' => $pngs
+				'pngImages' => $pngs,
+				'localized' => json_encode($localized)
 			) );
 
 		} else if ( $post->post_type == 'dhp-markers' ) {
@@ -2592,7 +2556,7 @@ function dhp_get_map_layer_data($mapLayers)
 			$loop = new WP_Query($args);
 				// We can only abort if not found
 			if (!$loop->have_posts()) {
-				trigger_error("Map ID cannot be found");
+				trigger_error(__('Map ID cannot be found', 'dhpress'));
 				return null;
 			}
 
@@ -2604,7 +2568,7 @@ function dhp_get_map_layer_data($mapLayers)
 
 				// Do basic error checking to ensure necessary fields exist
 			if ($mapData['id'] == '') {
-				trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
+				trigger_error(sprintf(__('No dhp_map_typeid metadata for map named %1$s of id %2$s', 'dhpress'), $layer->name, $layer->id));
 			}
 			array_push($mapArray, $mapData);
 		}
@@ -2709,6 +2673,7 @@ function dhp_page_template( $page_template )
 		$vizParams['menu'] = $vizMenu;
 
 			// Visualization specific -- only 1st Entry Point currently supported
+			// NOTE: When enqueueing new scripts and styles, ensure that you add them to the appropriate script and style arrays in dhp-view-template.php or they will be dequeued and not load
 		$thisEP = $projObj->getEntryPointByIndex($vizIndex);
 		switch ($thisEP->type) {
 		case 'map':
