@@ -143,7 +143,7 @@ var dhpTimeline = {
 		jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
 
 			// Create placeholder for Legend menu
-		jQuery('#dhp-controls').append(Mustache.render(jQuery("#dhp-script-legend-head").html()));
+		jQuery('#dhp-controls').append(jQuery("#dhp-script-legend-head").html());
 
 			// Create SVG and frame for graphics
 			// svgMargin is for space inside of dhp-timeline occupied by #svg-container

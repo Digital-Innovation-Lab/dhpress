@@ -143,7 +143,7 @@ var dhpWidget = {
 		}
 
 		if (usingAV && haveTransc) {
-			jQuery(appendPos).append(Mustache.render(jQuery("#dhp-script-transc-scroll").html()));
+			jQuery(appendPos).append(jQuery("#dhp-script-transc-scroll").html());
 		}
 	}, // prepareOneTranscript()
 

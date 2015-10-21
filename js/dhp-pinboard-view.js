@@ -81,18 +81,20 @@ var dhpPinboardView = {
 		dhpPinboardView.viewScale=100;
 		dhpPinboardView.zoomStep=10;
 
+
+
 			// Add pinboard elements to nav bar
 		if (pinboardEP.legends.length) {
-			jQuery('.dhp-nav .top-bar-section .left').append(Mustache.render(jQuery("#dhp-script-pin-leg-menu").html()));
+			jQuery('.dhp-nav .top-bar-section .left').append(jQuery("#dhp-script-pin-leg-menu").html());
 				// We only need Layers button "switch" if there are also Legends
-			jQuery('.dhp-nav .top-bar-section .left').append(Mustache.render(jQuery("#dhp-script-pin-layer-menu").html()));
+			jQuery('.dhp-nav .top-bar-section .left').append(jQuery("#dhp-script-pin-layer-menu").html());
 		}
 
 			// Create control div for Legend and image navigation buttons
 		jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
 
 			// Always need Legend head for Layer Opacity settings at the minimum
-		jQuery('#dhp-controls').prepend(Mustache.render(jQuery("#dhp-script-legend-head").html()));
+		jQuery('#dhp-controls').prepend(jQuery("#dhp-script-legend-head").html());
 
 			// Create buttons for navigating & zooming background image
 		jQuery('#dhp-controls').append(jQuery("#dhp-script-pin-iconpanel").html());
@@ -115,6 +117,12 @@ var dhpPinboardView = {
 		jQuery("#dhp-visual").append('<div id="svg-container"></div>');
 		jQuery("#svg-container").append(dhpPinboardView.svgRoot);
 		dhpPinboardView.paper = Snap(dhpPinboardView.svgRoot);
+
+		//Change background color if user provided
+
+		if(dhpPinboardView.pinboardEP.bckGrd && dhpPinboardView.pinboardEP.bckGrd !== ''){
+			jQuery("#svg-container svg").css("background-color", dhpPinboardView.pinboardEP.bckGrd);
+		}
 			// Create initial zoombox
 		dhpPinboardView.recalcViewBox();
 
@@ -1003,7 +1011,7 @@ var dhpPinboardView = {
 		var svgLayer;
 
 			// Create slider for background image
-		jQuery('#layers-panel').append(Mustache.render(jQuery("#dhp-script-bkgnd-slider").html()));
+		jQuery('#layers-panel').append(jQuery("#dhp-script-bkgnd-slider").html());
 		jQuery('#layer-opct-base .layer-opacity').slider({
 					range: false,
 					min: 0,
@@ -1026,7 +1034,7 @@ var dhpPinboardView = {
 
 			// Create slider for SVG markers
 			// Don't create on/off checkmark, as Legends do that and it would complicate logic
-		jQuery('#layers-panel').append(Mustache.render(jQuery("#dhp-script-mrkr-slider").html()));
+		jQuery('#layers-panel').append(jQuery("#dhp-script-mrkr-slider").html());
 		jQuery('#layer-opct-markers .layer-opacity').slider({
 					range: false,
 					min: 0,

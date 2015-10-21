@@ -1,5 +1,5 @@
     <!-- Templates for Pinboard View -->
-<script id="dhp-script-pin-leg-menu" type="x-tmpl-mustache">
+<script id="dhp-script-pin-leg-menu">
   <li class="has-dropdown">
       <a href="#"><?php _e('Legends', 'dhpress'); ?></a>
       <ul class="dropdown legend-dropdown">
@@ -9,11 +9,11 @@
   <li class="divider"></li>
 </script>
 
-<script id="dhp-script-pin-layer-menu" type="x-tmpl-mustache">
+<script id="dhp-script-pin-layer-menu">
   <li><a id="layers-button" href="#"><?php _e('Opacities', 'dhpress'); ?></a></li>
 </script>
 
-<script id="dhp-script-pin-iconpanel" type="x-tmpl-mustache">
+<script id="dhp-script-pin-iconpanel">
 <div id="dhp-pin-controls">
 	<div class="pin-fndn-icon">
 
@@ -29,11 +29,11 @@
 </div>
 </script>
 
-<script id="dhp-script-pin-lbl-opacities" type="x-tmpl-mustache">
+<script id="dhp-script-pin-lbl-opacities">
 <?php _e('Layer Opacities', 'dhpress'); ?>
 </script>
 
-<script id="dhp-script-bkgnd-slider" type="x-tmpl-mustache">
+<script id="dhp-script-bkgnd-slider">
 <div class="layer-set" id="layer-opct-base">
 	<div><input type="checkbox" checked="checked">
 		<a class="value"><?php _e('Background Image', 'dhpress'); ?></a>
@@ -45,7 +45,7 @@
 </div>
 </script>
 
-<script id="dhp-script-mrkr-slider" type="x-tmpl-mustache">
+<script id="dhp-script-mrkr-slider">
 <div class="layer-set" id="layer-opct-markers">
 	<div>
 		<a class="value"><?php _e('Markers', 'dhpress'); ?></a>
@@ -57,7 +57,7 @@
 </div>
 </script>
 
-<script id="dhp-script-layer-slider" type="x-tmpl-mustache">
+<script id="dhp-script-layer-slider" type="">
 <div class="layer-set" id="layer-opct-{{i}}">
 	<div>
 		<input type="checkbox" checked="checked">

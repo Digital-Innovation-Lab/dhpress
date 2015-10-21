@@ -240,7 +240,7 @@ jQuery(document).ready(function($) {
 		var vizTitle = '';
 		if (dhpData.vizParams.menu.length > 1) {
 				// Insert slot into nav-bar
-			$('.top-bar-section .right').prepend(Mustache.render($('#dhp-script-epviz-menu').html()));
+			$('.top-bar-section .right').prepend($('#dhp-script-epviz-menu').html());
 
 				// Matches viz parameter in URL
 			var vizPattern = /viz=\d+/;
@@ -290,7 +290,7 @@ jQuery(document).ready(function($) {
 			// If tipsModal exists, create link to open it
 		var helpText = $('#tipModal .modal-body').text();
 		if (helpText !== undefined && helpText.length > 1) {
-			$('.dhp-nav .top-bar-section .right').append(Mustache.render($('#dhp-script-tip-div').html()));
+			$('.dhp-nav .top-bar-section .right').append($('#dhp-script-tip-div').html());
 				// Don't know why this is needed -- but Select Modal Close button won't work without it
 			$('#tipModal .close-tip').click(function() {
 			  $('#tipModal').foundation('reveal', 'close');

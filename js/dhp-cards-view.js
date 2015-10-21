@@ -53,7 +53,7 @@ var dhpCardsView = {
 
 			// Add Sort By controls
 		if (cardsEP.sortMotes.length > 0) {
-			jQuery('.top-bar-section .left').append(Mustache.render(jQuery("#dhp-script-cards-sort").html()));
+			jQuery('.top-bar-section .left').append(jQuery("#dhp-script-cards-sort").html());
 			_.each(cardsEP.sortMotes, function(theMote, index) {
 				dhpCardsView.allDataMotes.push(theMote);
 				if (index == 0) {
@@ -88,7 +88,7 @@ var dhpCardsView = {
 
 			// Add Filter By controls
 		if (cardsEP.filterMotes.length > 0) {
-			jQuery('.top-bar-section .left').append(Mustache.render(jQuery("#dhp-script-cards-filter-menu").html()));
+			jQuery('.top-bar-section .left').append(jQuery("#dhp-script-cards-filter-menu").html());
 			_.each(cardsEP.filterMotes, function(theMote, index) {
 				dhpCardsView.allDataMotes.push(theMote);
 				if (index == 0) {
@@ -123,7 +123,7 @@ var dhpCardsView = {
 			jQuery('#dhp-filter-reset').click(dhpCardsView.resetFilter);
 
 				// Insert Marker modal window HTML
-			jQuery('body').append(Mustache.render(jQuery('#dhp-script-filterModal').html()));
+			jQuery('body').append(jQuery('#dhp-script-filterModal').html());
 
 				// Must bind handlers to modals just once -- here
 
@@ -141,7 +141,7 @@ var dhpCardsView = {
 			});
 
 				// Insert Filter Error modal HTML
-			jQuery('body').append(Mustache.render(jQuery('#dhp-script-fltrErrorModal').html()));
+			jQuery('body').append(jQuery('#dhp-script-fltrErrorModal').html());
 
 			jQuery('#filterErrModal a.close-select-modal').click(function() {
 				jQuery('#filterErrModal').foundation('reveal', 'close');
@@ -246,13 +246,13 @@ var dhpCardsView = {
 		switch (moteDef.type) {
 		case 'Long Text':
 				// Insert Long Text-specific HTML into filter modal
-			jQuery('#filterModal .modal-body').append(Mustache.render(jQuery('#dhp-script-filter-ltext').html()));
+			jQuery('#filterModal .modal-body').append(jQuery('#dhp-script-filter-ltext').html());
 				// Give current filter value (if any) as default
 			jQuery('#filter-text-input').val(dhpCardsView.curFilterVal || '');
 			break;
 		case 'Short Text':
 				// Insert Short Text-specific HTML into filter modal
-			jQuery('#filterModal .modal-body').append(Mustache.render(jQuery('#dhp-script-filter-stext').html()));
+			jQuery('#filterModal .modal-body').append(jQuery('#dhp-script-filter-stext').html());
 				// create the set of choices from category filter
 			var filterMote = dhpCardsView.findFilterByMoteName(dhpCardsView.currentFilter);
 			if (filterMote) {
@@ -283,7 +283,7 @@ var dhpCardsView = {
 			break;
 		case 'Date':
 				// Insert Date-specific HTML into modal
-			jQuery('#filterModal .modal-body').append(Mustache.render(jQuery('#dhp-script-filter-dates').html()));
+			jQuery('#filterModal .modal-body').append(jQuery('#dhp-script-filter-dates').html());
 				// if previously set, use last selection as default
 			if (dhpCardsView.curFilterVal) {
 				jQuery('#filter-date1Y-input').val(dhpCardsView.curFilterVal.date1Y);
@@ -663,7 +663,7 @@ var dhpCardsView = {
 
 			// Create Legend for colors (if colors exist)
 		if (dhpCardsView.colorValues && dhpCardsView.colorValues.length > 1) {
-			jQuery('#dhp-visual').prepend(Mustache.render(jQuery("#dhp-script-legend-head").html()));
+			jQuery('#dhp-visual').prepend(jQuery("#dhp-script-legend-head").html());
 			dhpServices.create1Legend(dhpCardsView.cardsEP.color, dhpCardsView.colorValues);
 		} // if colorValues
 
