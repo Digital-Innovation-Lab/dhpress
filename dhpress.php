@@ -31,7 +31,6 @@ define('DHP_REQUIRED_WP_VERSION', '3.1');
 define('DHP_PLUGIN_URL', plugins_url('', __FILE__ ));
 define('DHP_MAPS_TABLE_VERSION', '0.1');
 define('DHP_PLUGIN_VERSION', '2.6.7');
-define('SCRIPT_DEBUG', true);
 
 /**
  * Checks if the system requirements are met
