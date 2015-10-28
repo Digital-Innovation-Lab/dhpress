@@ -63,7 +63,7 @@
             <button data-bind="jqButton, click: createTimeEP"><?php _e('New Timeline', 'dhpress'); ?></button>
             <button data-bind="jqButton, click: createFlowEP"><?php _e('New Facet Flow', 'dhpress'); ?></button>
           </p>
-          <div data-bind="template: { name: calcEPTemplate, foreach: entryPoints, as: 'theEP' }"></div>
+          <div id="entryPoints" data-bind="template: { name: calcEPTemplate, foreach: entryPoints, as: 'theEP' }, sortableList: entryPoints"></div>
       </div>
 
 
@@ -181,15 +181,15 @@
 
 <!-- Map Entry Point Templates -->
 <script type="text/html" id="ep-map-template">
-    <h2><b><?php _e('Map Entry Point', 'dhpress'); ?></b>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('Map Entry Point', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Map', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Map short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li><?php _e('Map Center (Lat)', 'dhpress'); ?>
@@ -210,6 +210,7 @@
         <div data-bind="template: { name: 'map-legend-template', foreach: theEP.settings.legends }"></div>
         <button data-bind="jqButton, click: $root.addMapLegend.bind(theEP)"><?php _e('Add Legend', 'dhpress'); ?></button>
     </ul>
+  </div>
 </script>
 
 <script type="text/html" id="map-layer-template">
@@ -238,15 +239,15 @@
 
 <!-- Card Entry Point Template -->
 <script type="text/html" id="ep-cards-template">
-    <h2><b><?php _e('Cards Entry Point', 'dhpress'); ?></b>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('Cards Entry Point', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Cards', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Card short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li>
@@ -278,6 +279,7 @@
         <div data-bind="template: { name: 'cards-sort-template', foreach: theEP.settings.sortMotes }"></div>
         <button data-bind="jqButton, click: $root.addCardSort.bind(theEP)"><?php _e('Add Sort Mote', 'dhpress'); ?></button>
     </ul>
+  </div>
 </script>
 
 <script type="text/html" id="cards-content-template">
@@ -304,15 +306,15 @@
 
 <!-- Pinboard Point Templates -->
 <script type="text/html" id="ep-pin-template">
-    <h2><?php _e('<b>Pinboard Entry Point</b>', 'dhpress'); ?>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('<b>Pinboard Entry Point</b>', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Pinboard', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Pinboard short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li><?php _e('Display Frame Size: Width (in pixels)', 'dhpress'); ?>
@@ -348,6 +350,7 @@
         <div data-bind="template: { name: 'pin-legend-template', foreach: theEP.settings.legends }"></div>
         <button data-bind="jqButton, click: $root.addPinLegend.bind(theEP)"><?php _e('Add Legend', 'dhpress'); ?></button>
     </ul>
+  </div>
 </script>
 
 <script type="text/html" id="pin-layer-template">
@@ -369,15 +372,15 @@
 
 <!-- Tree Entry Point Templates -->
 <script type="text/html" id="ep-tree-template">
-    <h2><?php _e('<b>Tree Entry Point</b>', 'dhpress'); ?>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('<b>Tree Entry Point</b>', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Tree', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Tree short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li><?php _e('Tree Panel Size: Width (in pixels)', 'dhpress'); ?>
@@ -399,20 +402,21 @@
         </li>
         <li><?php _e('Marker Color', 'dhpress'); ?> <select data-bind="value: theEP.settings.color, options: $root.stdMoteNames"></select> <?php _e('(Must be configured for colors)', 'dhpress'); ?></li>
     </ul>
+  </div>
 </script>
 
 
 <!-- Timeline Entry Point Templates -->
 <script type="text/html" id="ep-time-template">
-    <h2><?php _e('<b>Timeline Entry Point</b>', 'dhpress'); ?>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('<b>Timeline Entry Point</b>', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Timeline', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Timeline short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li><?php _e('Date range', 'dhpress'); ?> <select data-bind="value: theEP.settings.date, options: $root.dateMoteNames"></select>
@@ -428,20 +432,21 @@
           <?php _e('to end date', 'dhpress'); ?> <input data-bind="value: theEP.settings.openTo" type="text" size="12"/>
         </li>
     </ul>
+  </div>
 </script>
 
 
 <!-- Facet Flow Entry Point Templates -->
 <script type="text/html" id="ep-flow-template">
-    <h2><?php _e('<b>Facet Flow Entry Point</b>', 'dhpress'); ?>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('<b>Facet Flow Entry Point</b>', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Facet Flow', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Facet Flow short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li><?php _e('Flow Panel Size: Width (in pixels)', 'dhpress'); ?>
@@ -452,6 +457,7 @@
         <div data-bind="template: { name: 'flow-mote-template', foreach: theEP.settings.motes }"></div>
         <button data-bind="jqButton, click: $root.addFlowMote.bind(theEP)"><?php _e('Add Mote to Flow', 'dhpress'); ?></button>
     </ul>
+  </div>
 </script>
 
 <script type="text/html" id="flow-mote-template">
@@ -464,15 +470,15 @@
 
 <!-- Facet Browser Entry Point Templates -->
 <script type="text/html" id="ep-browser-template">
-    <h2><?php _e('<b>Facet Browser Entry Point</b>', 'dhpress'); ?>
+  <div class="ep">
+    <div class="ep-header">
+      <div class="left">
+        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+        <?php _e('<b>Facet Browser Entry Point</b>', 'dhpress'); ?>
+      </div>
       <button data-bind="jqButton, click: $root.delEP"><?php _e('Delete Browser', 'dhpress'); ?></button>
-      <span data-bind="if: $index() > 0">
-        <button data-bind="jqButton, click: function() { $root.topEP($data, $index()); }"><?php _e('To Top', 'dhpress'); ?></button>
-      </span>
-      <span data-bind="if: $index() < $root.maxEPindex()">
-        <button data-bind="jqButton, click: function() { $root.bottomEP($data, $index()); }"><?php _e('To Bottom', 'dhpress'); ?></button>
-      </span>
-    </h2>
+      <div class="clear"></div>
+    </div>
     <ul>
         <li><?php _e('Browser short label', 'dhpress'); ?> <input data-bind="value: theEP.label" type="text" size="12"/></li>
         <li><?php _e('Group Date mote values by', 'dhpress'); ?> <select data-bind="value: theEP.settings.dateGrp">
@@ -487,6 +493,7 @@
         <div data-bind="template: { name: 'browser-mote-template', foreach: theEP.settings.motes }"></div>
         <button data-bind="jqButton, click: $root.addBrowserMote.bind(theEP)"><?php _e('Add Mote to Browser', 'dhpress'); ?></button>
     </ul>
+  </div>
 </script>
 
 <script type="text/html" id="browser-mote-template">

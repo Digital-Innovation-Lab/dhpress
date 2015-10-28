@@ -2555,6 +2555,32 @@ jQuery(document).ready(function($) {
   projObj.setViews(savedSettings.views);
 
 
+    // Allows entry points to be sorted and updates knockout respectively
+    // Adapted from http://stackoverflow.com/questions/9703647/knockout-custom-binding-for-jquery-ui-sortable-strange-behavior
+  ko.bindingHandlers.sortableList = {
+    init: function (element, valueAccessor) {
+      var theEPs = valueAccessor();
+      $('#entryPoints').sortable({ 
+        containment: 'parent',
+        tolerance: 'pointer',
+        update: function(event, ui) {
+          projObj.settingsDirty(true);
+          
+          var item = ko.dataFor(ui.item[0]),
+          newIndex = ui.item.index();
+
+          if (newIndex >= theEPs().length) newIndex = theEPs().length - 1;
+          if (newIndex < 0) newIndex = 0;
+
+          ui.item.remove();
+          theEPs.remove(item);
+          theEPs.splice(newIndex, 0, item);
+        } 
+      });
+    }
+  };
+
+
     // Add new functionality for jQueryUI slider
   ko.bindingHandlers.opacitySlider = {
     init: function (element, valueAccessor, allBindingsAccessor) {
