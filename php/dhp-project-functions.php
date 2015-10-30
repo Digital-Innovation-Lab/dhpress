@@ -16,15 +16,6 @@ define('DHP_SCRIPT_SERVICES',  'dhp-script-services.php');
 define('DHP_SCRIPT_TAX',  	'dhp-script-tax-trans.php');
 
 
-// ================== Localization ===================
-
-add_action('plugins_loaded', 'dhp_load_textdomain');
-function dhp_load_textdomain()
-{
-	load_plugin_textdomain('dhpress', false, dirname(dirname(plugin_basename(__FILE__))) . '/languages/');
-}
-
-
 // ================== Initialize Plug-in ==================
 
 	// Hook into delete of posts so that all data associated with Project gets deleted

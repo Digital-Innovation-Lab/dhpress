@@ -29,45 +29,6 @@ $dhp_map_custom_fields = array( 'dhp_map_id', 'dhp_map_sname', 'dhp_map_url', 'd
 
 // ============================== Init Functions ============================
 
-add_action( 'init', 'dhp_mapset_init' );
-
-    // PURPOSE: Add new taxonomy for mapsets
-function dhp_mapset_init()
-{
-  $labels = array(
-    'name' => _x( 'Maps', 'taxonomy general name' ),
-    'singular_name' => _x( 'Map', 'taxonomy singular name' ),
-    'add_new' => __('Add New', 'dhp-maps'),
-    'add_new_item' => __('Add New Map'),
-    'edit_item' => __('Edit Map'),
-    'new_item' => __('New Map'),
-    'all_items' => __('Map Library'),
-    'view_item' => __('View Map'),
-     'search_items' => __('Search Maps'),
-    'not_found' =>  __('No maps found'),
-    'not_found_in_trash' => __('No maps found in Trash'), 
-    'parent_item_colon' => '',
-    'menu_name' => __('Map Library')
-  ); 
-
-  $args = array(
-    'labels' => $labels,
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true, 
-    'show_in_menu' => 'dhp-top-level-handle', 
-    'query_var' => true,
-    'rewrite' => false,
-    'capability_type' => 'post',
-    'has_archive' => true, 
-    'hierarchical' => false,
-    'menu_position' => null,
-    'supports' => array( 'title', 'author', 'excerpt', 'comments', 'revisions','custom-fields' )
-//'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions','custom-fields' )
-  );
-  register_post_type('dhp-maps',$args);
-}
-
 
 add_action( 'admin_enqueue_scripts', 'add_dhp_map_library_scripts', 10, 1 );
 

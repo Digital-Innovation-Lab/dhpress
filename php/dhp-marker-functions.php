@@ -11,16 +11,7 @@
 
 // ====================== Global Variables ==========================
 
-	// GUI components added to Marker Settings box in Edit Marker admin panel
-$dhp_marker_settings_fields = array(
-	array(
-		'label' => __('Associated Project', 'dhpress'),
-		'desc'	=> __('Select Project to which this marker should belong', 'dhpress'),
-		'id'	=> 'project_id',
-		'type'	=> 'select',
-		'options' => dhp_get_projects()
-		)
-);
+$dhp_marker_settings_fields = null;
 
 // ====================== Init Functions ==========================
 
@@ -31,36 +22,18 @@ add_action( 'init', 'dhp_marker_init' );
 
 function dhp_marker_init()
 {
-  $labels = array(
-    'name' => _x('Markers', 'post type general name'),
-    'singular_name' => _x('Marker', 'post type singular name'),
-    'add_new' => _x('Add New', 'dhp-markers'),
-    'add_new_item' => __('Add New Marker'),
-    'edit_item' => __('Edit Marker'),
-    'new_item' => __('New Marker'),
-    'all_items' => __('Markers'),
-    'view_item' => __('View Marker'),
-     'search_items' => __('Search Markers'),
-    'not_found' =>  __('No markers found'),
-    'not_found_in_trash' => __('No markers found in Trash'), 
-    'parent_item_colon' => '',
-    'menu_name' => __('Markers')
-  );
-  $args = array(
-    'labels' => $labels,
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true, 
-    'show_in_menu' => 'dhp-top-level-handle', 
-    'query_var' => true,
-    'rewrite' => true,
-    'capability_type' => 'post',
-    'has_archive' => true, 
-    'hierarchical' => false,
-    'menu_position' => null,
-    'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions','custom-fields' )
-  ); 
-  register_post_type('dhp-markers',$args);
+    global $dhp_marker_settings_fields;
+
+    // GUI components added to Marker Settings box in Edit Marker admin panel
+    $dhp_marker_settings_fields = array(
+        array(
+            'label' => __('Associated Project', 'dhpress'),
+            'desc'  => __('Select Project to which this marker should belong', 'dhpress'),
+            'id'    => 'project_id',
+            'type'  => 'select',
+            'options' => dhp_get_projects()
+        )
+    );
 } // dhp_marker_init()
 
 
