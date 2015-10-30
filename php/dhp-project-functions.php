@@ -354,7 +354,7 @@ function show_dhp_project_admin_edit()
 	} else {
 		$project_settings = json_encode($project_settings);
 	}
-
+	
 		// Info about DH Press and this project
 	echo '<p><b>'.__('DH Press version ', 'dhpress').DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;'.__('Project ID ', 'dhpress').$post->ID.'</p>';
 	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >'.__('Category Manager', 'dhpress').'</a></p>';
@@ -1074,6 +1074,24 @@ function dhp_get_marker_tree()
 
 
 // ====================== AJAX Functions ======================
+
+// add_action( 'wp_ajax_dhpExportProjectSettings', 'dhp_export_project_settings' );
+
+// //PURPOSE: Called by JS code on page to export the settings (constructed by JS) to local computer
+// //ASSUMES: Project ID encoded in string
+
+// function dhp_export_project_settings()
+// {
+// 	$settings = $_POST['settings'];
+// 	$dhp_projectID = $_POST['project'];
+
+// 	$fp = fopen("../project_settings.json", 'w');
+// 	fwrite($fp, $settings);
+// 	fclose($fp);
+
+// 		//Ajax call must terminate with "die"
+// 	die('exporting... ' . $json_settings);
+// } //dhp_export_project_settings()
 
 add_action( 'wp_ajax_dhpSaveProjectSettings', 'dhp_save_project_settings' );
 

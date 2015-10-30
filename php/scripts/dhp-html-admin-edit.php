@@ -6,6 +6,7 @@
 
     <div data-bind="visible: optionsCF.length > 0">
       <button id="btnSaveSettings" data-bind="jqButton, click: saveSettings, style: { color: settingsDirty() ? 'red' : 'green' }"><?php _e('Save Settings', 'dhpress'); ?></button>
+      <!-- <button id="exportSaveSettings" data-bind="jqButton, click: exportSettings"><?php _e('Export Settings', 'dhpress'); ?></button> -->
       <button data-bind ="jqButton, click: showSettings"><?php _e('Show Settings in Console', 'dhpress'); ?></button>
     </div>
 
@@ -321,6 +322,7 @@
             <input data-bind="value: theEP.settings.dw" type="number" size="4"/>
             <?php _e('Height (in pixels)', 'dhpress'); ?> <input data-bind="value: theEP.settings.dh" type="number" size="4"/>
         </li>
+        <li><?php _e('Background Color', 'dhpress'); ?> <input data-bind="value: theEP.settings.bckGrd" type="text" size="12"/> <?php _e('(CSS color name, #hexvalue, or blank for default)', 'dhpress'); ?> </li>
         <li><?php _e('Background Image URL', 'dhpress'); ?>
             <input data-bind="value: theEP.settings.imageURL" type="text" size="48"/>
         </li>

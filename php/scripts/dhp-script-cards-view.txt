@@ -1,0 +1,123 @@
+    <!-- Templates for Cards View -->
+
+<script id="dhp-script-cards-sort" type="x-tmpl-mustache">
+  <li class="has-dropdown">
+      <a href="#">Sort By</a>
+      <ul class="dropdown" id="dhp-cards-sort"">
+          <!-- links -->
+      </ul>
+  </li>
+</script>
+
+<script id="dhp-script-cards-filter-menu" type="x-tmpl-mustache">
+  <li class="has-dropdown">
+      <a href="#">Filter By</a>
+      <ul class="dropdown" id="dhp-cards-filter-menu"">
+          <!-- links -->
+      </ul>
+  </li>
+  <li class="active"><a id="dhp-filter-set" href="#">Filter Options</a></li>
+  <li class="divider"></li>
+  <li class="active"><a id="dhp-filter-reset" href="#">No Filter</a></li>
+</script>
+
+<script id="dhp-script-fltrErrorModal" type="x-tmpl-mustache">
+  <div id="filterErrModal" class="reveal-modal small" data-reveal>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="errorModalLabel"></h3>
+      </div>
+      <div class="modal-body clearfix">
+      </div>
+    </div> <!-- modal-content -->
+    <a class="close-reveal-modal close-select-modal">&#215;</a>
+  </div>
+</script>
+
+<script id="dhp-script-filterModal" type="x-tmpl-mustache">
+  <div id="filterModal" class="reveal-modal large" data-reveal>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="filterModalLabel"></h3>
+      </div>
+      <div class="modal-body clearfix">
+      </div>
+      <div class="reveal-modal-footer clearfix ">
+        <ul class="button-group left"><li><a class="button success close-select-modal">Apply</a></li></ul>
+        <ul class="button-group right"><li><a class="button close-select-modal">Cancel</a></li></ul>
+      </div>
+    </div> <!-- modal-content -->
+    <a class="close-reveal-modal close-select-modal">&#215;</a>
+  </div> <!-- filterModal -->
+</script>
+
+<script id="dhp-script-filter-ltext" type="x-tmpl-mustache">
+  Filter by text (pattern) <input id="filter-text-input" type="text" size="8"/> <br/>
+</script>
+
+<script id="dhp-script-filter-stext" type="x-tmpl-mustache">
+  <input type="radio" name="filter-type" value="valSel"/>Select Legend value(s)
+  <div id="st-filter-vals"></div>
+  <input type="radio" name="filter-type" value="text"/> Or filter by text pattern <input id="filter-text-input" type="text" size="12"/> <br/>
+</script>
+
+<script id="dhp-script-filter-dates" type="x-tmpl-mustache">
+  <div class="date-boxes">Date <input id="filter-date1Y-input" type="text" size="5" placeholder="Year"/> <input id="filter-date1M-input" type="text" size="2" placeholder="Month#"/> <input id="filter-date1D-input" type="text" size="2" placeholder="Date"/></div>
+  <input type="radio" name="date1Order" value="before"/>Before or <input type="radio" name="date1Order" value="after" checked="checked"/> After<br/>
+
+  <input type="checkbox" id="dateAnd"/> (override) After date above and before date below <br/>
+  <div class="date-boxes">Date <input id="filter-date2Y-input" type="text" size="5" placeholder="Year"/> <input id="filter-date2M-input" type="text" size="2" placeholder="Month#"/> <input id="filter-date2D-input" type="text" size="2" placeholder="Date"/></div>
+</script>
+
+<!-- This must be the verbatim text for "Apply" button label that appears on all Filter modals -->
+<script id="dhp-script-btn-apply" type="x-tmpl-mustache">
+Apply
+</script>
+
+<script id="dhp-script-lbl-filter" type="x-tmpl-mustache">
+Filter options for {{label}}
+</script>
+
+<script id="dhp-script-err-date-filter" type="x-tmpl-mustache">
+Date Filter Error
+</script>
+
+<script id="dhp-script-err-req-val" type="x-tmpl-mustache">
+The value for {{t}} is required but you left it blank.
+</script>
+
+<script id="dhp-script-err-invalid-num" type="x-tmpl-mustache">
+The value you entered for {{t}} is not a valid number.
+</script>
+
+<script id="dhp-script-err-too-small" type="x-tmpl-mustache">
+The value you entered for {{t}} is too small.
+</script>
+
+<script id="dhp-script-err-too-big" type="x-tmpl-mustache">
+The value you entered for {{t}} is too large.
+</script>
+
+<script id="dhp-script-1st-year" type="x-tmpl-mustache">
+the first Date year
+</script>
+
+<script id="dhp-script-1st-month" type="x-tmpl-mustache">
+the first Date month
+</script>
+
+<script id="dhp-script-1st-day" type="x-tmpl-mustache">
+the first Date day
+</script>
+
+<script id="dhp-script-2nd-year" type="x-tmpl-mustache">
+the second Date year
+</script>
+
+<script id="dhp-script-2nd-month" type="x-tmpl-mustache">
+the second Date month
+</script>
+
+<script id="dhp-script-2nd-day" type="x-tmpl-mustache">
+the second Date day
+</script>
