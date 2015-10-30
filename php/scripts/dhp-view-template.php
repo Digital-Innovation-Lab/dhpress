@@ -204,13 +204,13 @@
 </script>
 
 
-<script id="dhp-script-tip-div" type="">
+<script id="dhp-script-tip-div">
 	<li>
 		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i><?php _e('Tips', 'dhpress'); ?></a>
 	</li>
 </script>
 
-<script id="dhp-script-transc-scroll" type="">
+<script id="dhp-script-transc-scroll">
 	<div style="padding-top:5px">
 		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> <?php _e('Scroll transcript to follow playback', 'dhpress'); ?>
 	</div>

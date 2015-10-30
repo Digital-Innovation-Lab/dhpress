@@ -56,7 +56,7 @@ var dhpTreeView = {
 			// set view/scroll window parameters
 
 			// Add elements to nav bar
-		// jQuery('.dhp-nav .top-bar-section .left').append(Query("#dhp-script-tree-menus").html());
+		// jQuery('.dhp-nav .top-bar-section .left').append(jQuery("#dhp-script-tree-menus").html());
 
 			// Create control div for Legend Key
 		jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
