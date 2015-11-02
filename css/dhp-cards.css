@@ -37,14 +37,6 @@ p {
     margin: 2px;
     overflow: hidden;
     z-index: 0 !important;
-    -webkit-transition: all 150ms ease-in-out;
-    -webkit-transform: scale(1);
-    -ms-transition: all 150ms ease-in-out;
-    -ms-transform: scale(1);   
-    -moz-transition: all 150ms ease-in-out;
-    -moz-transform: scale(1);
-    transition: all 150ms ease-in-out;
-    transform: scale(1);  
 }
 
     /* When user hovers over card, zoom in */
