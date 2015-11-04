@@ -769,12 +769,15 @@ var dhpCardsView = {
 				// Initialize Isotope
 			cardHolder.isotope(
 				{ itemSelector: '.card',
-				  getSortData: sortObj
+				  getSortData: sortObj,
+				  masonry: {
+					isFitWidth: true
+				  }
 				} );
 		} else {
 				// Initialize Isotope
 			cardHolder.isotope(
-				{ itemSelector: '.card' }
+				{ itemSelector: '.card', masonry: { isFitWidth: true } }
 			);
 
 		}
