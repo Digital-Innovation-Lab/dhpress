@@ -777,7 +777,7 @@ var dhpCardsView = {
 		} else {
 				// Initialize Isotope
 			cardHolder.isotope(
-				{ itemSelector: '.card' }
+				{ itemSelector: '.card', masonry: { isFitWidth: true } }
 			);
 
 		}
