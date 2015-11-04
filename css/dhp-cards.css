@@ -31,9 +31,10 @@ p {
 
 .card {
     background: #00BFFF;
+    border: 1px solid transparent;
     font-size: 11px;
     line-height: 13px;
-    padding: 5px;
+    padding: 4px;
     margin: 2px;
     overflow: hidden;
     z-index: 0 !important;
@@ -42,7 +43,6 @@ p {
     /* When user hovers over card, zoom in */
 .card:hover {
     border: 1px solid #222;
-    padding: 4px;
     cursor: pointer;
 
     -webkit-box-shadow: 0 0 15px 0 rgba(0,0,0,0.75);

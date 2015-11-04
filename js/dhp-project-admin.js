@@ -85,11 +85,12 @@ jQuery(document).ready(function($) {
   }
 
     // Prevents users from exiting page if there are unsaved changes
-  window.addEventListener("beforeunload", function(e) {
+  window.beforeunload = window.onbeforeunload = function (e) {
     if (projObj.settingsDirty()) {
+      e.returnValue = 'You have unsaved changes. If you leave the page, these changes will be lost.';
       return 'You have unsaved changes. If you leave the page, these changes will be lost.';
     }
-  });
+  }
 
 
 //===================================== UTILITIES ===================================
