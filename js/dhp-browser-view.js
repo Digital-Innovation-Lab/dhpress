@@ -415,17 +415,34 @@ var dhpBrowser = {
 			            jQuery('body').addClass('waiting');
 			            	// Return control briefly to browser to ensure cursor changed
 			            window.setTimeout(function() {
-							theFacet.selected = d.index;
+							
+							    // Make all buttons in this column inactive, but this one
+							var resetSel = fbSVG.select("#reset-"+theFacet.index);
+							var currSel = fbSVG.select("#facet-"+theFacet.index+"-"+d.index);
+
+								// Check if clicked on inactive facet or if no facet is currently selected
+							if(currSel.classed('inactive') || (!currSel.classed('inactive') && theFacet.selected < 0)){
+								theFacet.selected = d.index;
+								var btnSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
+									    .data(theFacet.vals)
+									    .classed('inactive', function(thisBtn) { return d.index != thisBtn.index } );
+								resetSel.classed('inactive', false);
+
+							}else{
+									// Reset facet selection if click on the currently selected facet
+								fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
+									.data(theFacet.vals)
+									.classed('inactive', false);
+
+
+								theFacet.selected = -1;
+								resetSel.classed('inactive', true);
+							}
+
+								// Update all values
 							computeRestrainedSet();
 							updateAllValButtons();
-							    // Make all buttons in this column inactive, but this one
-							var btnSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
-							    .data(theFacet.vals)
-							    .classed('inactive', function(thisBtn) { return d.index != thisBtn.index } );
-
-							    // Make this row's RESET button active
-							var resetSel = fbSVG.select("#reset-"+theFacet.index);
-							resetSel.classed('inactive', false);
+							
 							populateList();
 							jQuery('body').removeClass('waiting');
 						}, 100);
@@ -528,6 +545,7 @@ var dhpBrowser = {
 				    if (targetItem == null || targetItem == undefined) {
 				        return;
 				    }
+
 				        // Convert cardID to index of feature in marker array
 				    index = parseInt(jQuery(targetItem).data('index'));
 
