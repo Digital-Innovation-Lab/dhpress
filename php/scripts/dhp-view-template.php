@@ -198,7 +198,7 @@
 
 <script id="dhp-script-legend-hideshow">
   <div class="row check-all"> 
-    <div class="small-2 large-1 columns"><input type="checkbox" checked="checked"></div>
+    <div class="small-2 large-2 columns"><input type="checkbox" checked="checked"></div>
     <div class="small-10 large-10 columns"><a class="value" data-id="all"><b><?php _e('Hide/Show All', 'dhpress'); ?></b></a></div>
   </div>
 </script>

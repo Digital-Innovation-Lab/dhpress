@@ -253,7 +253,7 @@ var dhpServices = {
 													theTerm.id+'" data-parent="'+theTerm.parent+'">'+theTerm.name+'</a></div></div>');
 				}
 			});
-			jQuery('.terms',legendHtml).prepend(dhpServices.compileText(jQuery("#dhp-script-legend-hideshow").html()));
+			jQuery('.terms',legendHtml).prepend(jQuery("#dhp-script-legend-hideshow").html());
 
 			jQuery('#legends .legend-row').append(legendHtml);
 				// Add Legend title to dropdown menu in navbar -- make 1st Legend active by default
