@@ -49,10 +49,12 @@ function dhp_delete_all_project_markers($postID)
 
 		// Go through all of the Project's Markers and gather data
 	$loop = $projObj->setAllMarkerLoop();
-	while ($loop->have_posts()) : $loop->the_post();
-		$markerID = get_the_ID();
-		wp_delete_post($markerID, false);
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$markerID = $markerPost->ID;
+			wp_delete_post($markerID, false);
+		}
+	}
 } // dhp_delete_all_project_markers()
 
 
@@ -166,12 +168,14 @@ function dhp_get_map_layer_list()
 
 	$args = array('post_type' => 'dhp-maps', 'posts_per_page' => -1);
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$layer_id = get_the_ID();
 
-		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
-		array_push($layers, $mapMetaData);
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $layerPost){
+			$layer_id = $layerPost -> ID;
+			$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
+			array_push($layers, $mapMetaData);
+		}
+	}
 	wp_reset_query();
 
 		// Sort array according to map IDs
@@ -808,58 +812,57 @@ function dhp_get_markers()
 
 		// Run query to return all marker posts belonging to this Project
 	$loop = $projObj->setAllMarkerLoop();
-	while ( $loop->have_posts() ) : $loop->the_post();
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$markerID = $markerPost->ID;
+				// Feature will hold properties and some other values for each marker
+			$thisFeature = array();
 
-		$markerID = get_the_ID();
-
-			// Feature will hold properties and some other values for each marker
-		$thisFeature = array();
-
-			// Only add property if necessary
-		if ($addFeature) {
-			$thisFeature['type']    = 'Feature';
-		}
-
-			// Most data goes into properties field
-		$thisFeaturesProperties = $mQuery->getMarkerProperties($markerID);
-
-			// First set up fields required by visualizations, abandon marker if missing
-
-			// Map visualization features?
-			// Skip marker if missing necessary LatLong data or not valid numbers
-		if ($mapCF != null) {
-			$latlon = get_post_meta($markerID, $mapCF, true);
-			if (empty($latlon)) {
-				continue;
+				// Only add property if necessary
+			if ($addFeature) {
+				$thisFeature['type']    = 'Feature';
 			}
-				// Create Polygons? Only if delim given
-				// NOTE: Since no longer passing GeoJSON, coord order is: LatLon
-			if ($mapDelim) {
-				$split = explode($mapDelim, $latlon);
-					// Just treat as Point if only one data item
-				if (count($split) == 1) {
-					$split = explode(',', $latlon);
-					$thisFeature['geometry'] = array("type" => 1,
-													"coordinates"=> array((float)$split[0], (float)$split[1]));
 
-				} else {
-					$poly = array();
-					foreach ($split as $thisPt) {
-						$pts = explode(',', $thisPt);
-						array_push($poly, array((float)$pts[0], (float)$pts[1]));
-					}
-					if (count($poly) == 2) {
-						$thisFeature['geometry'] = array("type" => 2, "coordinates" => $poly);
+				// Most data goes into properties field
+			$thisFeaturesProperties = $mQuery->getMarkerProperties($markerID);
+
+				// First set up fields required by visualizations, abandon marker if missing
+
+				// Map visualization features?
+				// Skip marker if missing necessary LatLong data or not valid numbers
+			if ($mapCF != null) {
+				$latlon = get_post_meta($markerID, $mapCF, true);
+				if (empty($latlon)) {
+					continue;
+				}
+					// Create Polygons? Only if delim given
+					// NOTE: Since no longer passing GeoJSON, coord order is: LatLon
+				if ($mapDelim) {
+					$split = explode($mapDelim, $latlon);
+						// Just treat as Point if only one data item
+					if (count($split) == 1) {
+						$split = explode(',', $latlon);
+						$thisFeature['geometry'] = array("type" => 1,
+														"coordinates"=> array((float)$split[0], (float)$split[1]));
 
 					} else {
-						$thisFeature['geometry'] = array("type" => 3, "coordinates" => $poly);
+						$poly = array();
+						foreach ($split as $thisPt) {
+							$pts = explode(',', $thisPt);
+							array_push($poly, array((float)$pts[0], (float)$pts[1]));
+						}
+						if (count($poly) == 2) {
+							$thisFeature['geometry'] = array("type" => 2, "coordinates" => $poly);
+
+						} else {
+							$thisFeature['geometry'] = array("type" => 3, "coordinates" => $poly);
+						}
 					}
+				} else {
+					$split = explode(',', $latlon);
+					$thisFeature['geometry'] = array("type" => 1,
+													"coordinates"=> array((float)$split[0],(float)$split[1]));
 				}
-			} else {
-				$split = explode(',', $latlon);
-				$thisFeature['geometry'] = array("type" => 1,
-												"coordinates"=> array((float)$split[0],(float)$split[1]));
-			}
 		}
 
 			// Pinboard visualization features
@@ -895,7 +898,8 @@ function dhp_get_markers()
 		$thisFeature['properties'] = $thisFeaturesProperties;
 			// Save this marker
 		array_push($feature_array, $thisFeature);
-	endwhile;
+		}
+	}
 
 	$feature_collection['features'] = $feature_array;
 	array_push($json_Object, $feature_collection);
@@ -1148,33 +1152,36 @@ function dhp_bind_tax_to_markers($projObj, $custom_field, $parent_id, $rootTaxNa
 {
 		// Now (re)create all subterms
 	$loop = $projObj->setAllMarkerLoop();
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$marker_id = get_the_ID();
-		$tempMoteValue = get_post_meta($marker_id, $custom_field, true);
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			$tempMoteValue = get_post_meta($marker_id, $custom_field, true);
 
-			// ignore empty or null values
-		if (!is_null($tempMoteValue) && $tempMoteValue != '') {
-			$tempMoteArray = array();
-			if ($mote_delim) {
-				$tempMoteArray = explode($mote_delim, $tempMoteValue );
-			} else {
-				$tempMoteArray = array($tempMoteValue);
-			}
-			$theseTerms = array();
-			foreach ($tempMoteArray as $value) {
-					// Make sure spaces are removed
-				$value = trim($value);
-					// Since we are specifying $parent_id, term_exists() will return 0/NULL or hash
-				$term = term_exists($value, $rootTaxName, $parent_id);
-				if ($term !== 0 && $term !== null) {
-					array_push($theseTerms, intval($term['term_id']));
+				// ignore empty or null values
+			if (!is_null($tempMoteValue) && $tempMoteValue != '') {
+				$tempMoteArray = array();
+				if ($mote_delim) {
+					$tempMoteArray = explode($mote_delim, $tempMoteValue );
+				} else {
+					$tempMoteArray = array($tempMoteValue);
 				}
-			}
-				// Ensure that marker is tagged with category terms for this mote
-			wp_set_object_terms($marker_id, $theseTerms, $rootTaxName, true);
-			// wp_set_post_terms($marker_id, $theseTerms, $rootTaxName, true);
+				$theseTerms = array();
+				foreach ($tempMoteArray as $value) {
+						// Make sure spaces are removed
+					$value = trim($value);
+						// Since we are specifying $parent_id, term_exists() will return 0/NULL or hash
+					$term = term_exists($value, $rootTaxName, $parent_id);
+					if ($term !== 0 && $term !== null) {
+						array_push($theseTerms, intval($term['term_id']));
+					}
+				}
+					// Ensure that marker is tagged with category terms for this mote
+				wp_set_object_terms($marker_id, $theseTerms, $rootTaxName, true);
+				// wp_set_post_terms($marker_id, $theseTerms, $rootTaxName, true);
+			} 
 		}
-	endwhile;
+	}
+	
 	delete_option("{$rootTaxName}_children");
 } // dhp_bind_tax_to_markers()
 
@@ -1702,13 +1709,13 @@ function dhp_add_custom_field()
 
 	$args = array( 'post_type' => 'dhp-markers', 'meta_key' => 'project_id','meta_value'=>$dhp_project, 'posts_per_page' => -1 );
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
+		}
+	}
 
-		$marker_id = get_the_ID();
-		add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
-
-	endwhile;
-	
 	die();
 } // dhp_add_custom_field()
 
@@ -1748,12 +1755,12 @@ function dhp_create_custom_field_filter()
 	);
 
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-
-		$marker_id = get_the_ID();
-		add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
-				
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
+		}
+	}
 	
 	die();
 } // dhp_create_custom_field_filter()
@@ -1797,27 +1804,28 @@ function dhp_update_custom_field_filter()
 	);
 	$dhp_count=0;
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$dhp_count++;
-		$marker_id = get_the_ID();
-		if($dhp_custom_field_name=='the_content') {
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$dhp_count++;
+			$marker_id = $markerPost->ID;
+			if($dhp_custom_field_name=='the_content') {
 
-			$tempPostContent = get_the_content();
-			$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $tempPostContent);
-			
-			$new_post = array();
-			$new_post['ID'] = $marker_id;
-			$new_post['post_content'] = $new_value;
-			wp_update_post( $new_post );
+				$tempPostContent = get_the_content();
+				$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $tempPostContent);
+				
+				$new_post = array();
+				$new_post['ID'] = $marker_id;
+				$new_post['post_content'] = $new_value;
+				wp_update_post( $new_post );
+			}
+			else {
+				$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
+				//replaces string within the value not the whole value
+				$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $temp_value);
+				update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
+			}
 		}
-		else {
-			$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
-			//replaces string within the value not the whole value
-			$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $temp_value);
-			update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
-		}
-	endwhile;
-	
+	}
 	die(json_encode($dhp_count));
 } // dhp_update_custom_field_filter()
 
@@ -1919,26 +1927,27 @@ function dhp_find_replace_custom_field()
 
 	$loop = $projObj->setAllMarkerLoop();
 	$dhp_count=0;
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$dhp_count++;
-		$marker_id = get_the_ID();
-		if($dhp_custom_field_name=='the_content') {
-			$tempPostContent = get_the_content();
-			$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $tempPostContent);
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$dhp_count++;
+			$marker_id = $markerPost->ID;
+			if($dhp_custom_field_name=='the_content') {
+				$tempPostContent = get_the_content();
+				$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $tempPostContent);
 
-			$new_post = array();
-			$new_post['ID'] = $marker_id;
-			$new_post['post_content'] = $new_value;
-			wp_update_post( $new_post );
+				$new_post = array();
+				$new_post['ID'] = $marker_id;
+				$new_post['post_content'] = $new_value;
+				wp_update_post( $new_post );
+			}
+			else {
+				$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
+				//replaces string within the value not the whole value
+				$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $temp_value);
+				update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
+			}
 		}
-		else {
-			$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
-			//replaces string within the value not the whole value
-			$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $temp_value);
-			update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
-		}
-
-	endwhile;
+	}
 	
 	die(json_encode($dhp_count));
 } // dhp_find_replace_custom_field()
@@ -1957,12 +1966,12 @@ function dhp_delete_custom_field()
 	$projObj = new DHPressProject($projectID);
 	
 	$loop = $projObj->setAllMarkerLoop();
-	while ( $loop->have_posts() ) : $loop->the_post();
-
-		$marker_id = get_the_ID();
-		delete_post_meta($marker_id, $dhp_custom_field_name);
-
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			delete_post_meta($marker_id, $dhp_custom_field_name);
+		}
+	}
 	
 	die();
 } // dhp_delete_custom_field()
@@ -2031,43 +2040,44 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 		$transMoteDef = $projObj->getMoteByName($transcMoteName);
 
 		$loop = $projObj->setAllMarkerLoop();
+		if($loop->have_posts()){
+			foreach($loop->posts as $markerPost){
+				$error = false;
+				$marker_id = $markerPost->ID;
 
-		while ($loop->have_posts()) : $loop->the_post();
-			$error = false;
-			$marker_id = get_the_ID();
+					// Get this marker's values for 
+				$timecode = get_post_meta($marker_id, $tcMoteDef->cf, true);
+				$transFile= get_post_meta($marker_id, $transMoteDef->cf, true);
 
-				// Get this marker's values for 
-			$timecode = get_post_meta($marker_id, $tcMoteDef->cf, true);
-			$transFile= get_post_meta($marker_id, $transMoteDef->cf, true);
-
-				// Skip check if either one missing
-			if ($timecode != null && $timecode != '' && $transFile != null && $transFile != '' && $transFile !== 'none') {
-					// Don't check invalid timestamps -- they should have already been reported
-				if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 1) {
-					$content = @file_get_contents($transFile);
-					if ($content == false) {
-						$result .= sprintf(__('<p>Problem reading file %s </p>', 'dhpress'), $transFile);
-						$error = true;
-					} else {
-						$content  = utf8_encode($content);
-						$stamps	  = explode("-", $timecode);
-						$clipStart= mb_strpos($content, $stamps[0]);
-						if ($clipStart == false) {
-							$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[0], $transFile);
+					// Skip check if either one missing
+				if ($timecode != null && $timecode != '' && $transFile != null && $transFile != '' && $transFile !== 'none') {
+						// Don't check invalid timestamps -- they should have already been reported
+					if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 1) {
+						$content = @file_get_contents($transFile);
+						if ($content == false) {
+							$result .= sprintf(__('<p>Problem reading file %s </p>', 'dhpress'), $transFile);
 							$error = true;
-						}
-						$clipEnd  = mb_strpos($content, $stamps[1]);
-						if ($clipEnd == false) {
-							$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[1], $transFile);
-							$error = true;
-						}
-					} // file contents
-				} // if valid timestamp
-			} // if timecode and file values
-			if ($error && ++$numErrors >= 20) {
-				break;
+						} else {
+							$content  = utf8_encode($content);
+							$stamps	  = explode("-", $timecode);
+							$clipStart= mb_strpos($content, $stamps[0]);
+							if ($clipStart == false) {
+								$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[0], $transFile);
+								$error = true;
+							}
+							$clipEnd  = mb_strpos($content, $stamps[1]);
+							if ($clipEnd == false) {
+								$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[1], $transFile);
+								$error = true;
+							}
+						} // file contents
+					} // if valid timestamp
+				} // if timecode and file values
+				if ($error && ++$numErrors >= 20) {
+					break;
+				}
 			}
-		endwhile;
+		}
 	}
 
 	return $result;
@@ -2249,80 +2259,82 @@ function dhp_perform_tests()
 		$numErrors = 0;
 		$error = false;
 		$transcErrors = false;
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$marker_id = get_the_ID();
+		if($loop->have_posts()){
+			foreach($loop->posts as $markerPost){
+				$marker_id = $markerPost->ID;
 
-			foreach ($projSettings->motes as $mote) {
-				$moteValue = get_post_meta($marker_id, $mote->cf, true);
-					// ignore empty or null values
-				if (!is_null($moteValue) && $moteValue != '') {
-					$error = false;
-					switch ($mote->type) {
-					case 'Lat/Lon Coordinates':
-					case 'X-Y Coordinates':
-						if (preg_match("/(-?\d+(\.?\d?)?),(\s?-?\d+(\.?\d?)?)/", $moteValue) === 0) {
-							$results .= sprintf(__('<p>Invalid Coordinate %s', 'dhpress'), $moteValue);
-							$error = true;
+				foreach ($projSettings->motes as $mote) {
+					$moteValue = get_post_meta($marker_id, $mote->cf, true);
+						// ignore empty or null values
+					if (!is_null($moteValue) && $moteValue != '') {
+						$error = false;
+						switch ($mote->type) {
+						case 'Lat/Lon Coordinates':
+						case 'X-Y Coordinates':
+							if (preg_match("/(-?\d+(\.?\d?)?),(\s?-?\d+(\.?\d?)?)/", $moteValue) === 0) {
+								$results .= sprintf(__('<p>Invalid Coordinate %s', 'dhpress'), $moteValue);
+								$error = true;
+							}
+							break;
+						case 'SoundCloud':
+								// Just look at the beginning of the URL
+							if (preg_match("!https://soundcloud\.com/\w!i", $moteValue) === 0) {
+								$results .= __('<p>Invalid SoundCloud URL', 'dhpress');
+								$error = true;
+							}
+							break;
+						case 'YouTube':
+								// Cannot verify because it is just a raw code
+							break;
+						case 'Link To':
+						case 'Image':
+								// Just look at beginning and end of URL
+							if (preg_match("!^(https?|ftp)://[^\s]*!i", $moteValue) === 0) {
+								$results .= __('<p>Invalid URL', 'dhpress');
+								$error = true;
+							}
+							break;
+						case 'Transcript':
+								// Just look at beginning and end of URL
+							if ($moteValue !== 'none' && (preg_match("!(https?|ftp)://!i", $moteValue) === 0 || preg_match("!\.txt$!i", $moteValue) === 0)) {
+								$results .= __('<p>Invalid textfile URL', 'dhpress');
+								$error = true;
+								$transcErrors = true;
+							}
+							break;
+						case 'Timestamp':
+							if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 0) {
+								$results .= sprintf(__('<p>Invalid Timestamp %s', 'dhpress'), $moteValue);
+								$error = true;
+								$transcErrors = true;
+							}
+							break;
+						case 'Pointer':
+								// Only way to check would be to explode string and check existence of each
+								// marker, but this would likely break the WP Query loop -- so ignore for now
+							break;
+						case 'Date':
+								// Single Date or Range, inc. fuzzy
+							if (preg_match("/^(open|~?-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|~?-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
+								$results .= __('<p>Invalid Date range', 'dhpress');
+								$error = true;
+							}
+							break;
+						} // switch
+							// Add rest of error information
+						if ($error) {
+							$results .=  ' ' . sprintf(__('given for mote %1$s (custom field %2$s) in marker %3$s</p>', 'dhpress'), $mote->name, $mote->cf, get_the_title());
+							$numErrors++;
 						}
-						break;
-					case 'SoundCloud':
-							// Just look at the beginning of the URL
-						if (preg_match("!https://soundcloud\.com/\w!i", $moteValue) === 0) {
-							$results .= __('<p>Invalid SoundCloud URL', 'dhpress');
-							$error = true;
-						}
-						break;
-					case 'YouTube':
-							// Cannot verify because it is just a raw code
-						break;
-					case 'Link To':
-					case 'Image':
-							// Just look at beginning and end of URL
-						if (preg_match("!^(https?|ftp)://[^\s]*!i", $moteValue) === 0) {
-							$results .= __('<p>Invalid URL', 'dhpress');
-							$error = true;
-						}
-						break;
-					case 'Transcript':
-							// Just look at beginning and end of URL
-						if ($moteValue !== 'none' && (preg_match("!(https?|ftp)://!i", $moteValue) === 0 || preg_match("!\.txt$!i", $moteValue) === 0)) {
-							$results .= __('<p>Invalid textfile URL', 'dhpress');
-							$error = true;
-							$transcErrors = true;
-						}
-						break;
-					case 'Timestamp':
-						if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 0) {
-							$results .= sprintf(__('<p>Invalid Timestamp %s', 'dhpress'), $moteValue);
-							$error = true;
-							$transcErrors = true;
-						}
-						break;
-					case 'Pointer':
-							// Only way to check would be to explode string and check existence of each
-							// marker, but this would likely break the WP Query loop -- so ignore for now
-						break;
-					case 'Date':
-							// Single Date or Range, inc. fuzzy
-						if (preg_match("/^(open|~?-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|~?-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
-							$results .= __('<p>Invalid Date range', 'dhpress');
-							$error = true;
-						}
-						break;
-					} // switch
-						// Add rest of error information
-					if ($error) {
-						$results .=  ' ' . sprintf(__('given for mote %1$s (custom field %2$s) in marker %3$s</p>', 'dhpress'), $mote->name, $mote->cf, get_the_title());
-						$numErrors++;
-					}
-				} // if (!is_null)
-			} // foreach
-				// don't continue if excessive errors found
-			if ($numErrors >= 20) {
-				$results .= __('<p>Stopped checking errors in Marker data because more than 20 errors have been found. Correct these and try again.</p>', 'dhpress');
-				break;
+					} // if (!is_null)
+				} // foreach
+					// don't continue if excessive errors found
+				if ($numErrors >= 20) {
+					$results .= __('<p>Stopped checking errors in Marker data because more than 20 errors have been found. Correct these and try again.</p>', 'dhpress');
+					break;
+				}
 			}
-		endwhile;
+		}
 
 			// If transcript (fragmentation) source is set, ensure the category has been created
 		$source = $projSettings->views->transcript->source;
