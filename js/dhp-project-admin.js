@@ -1784,8 +1784,7 @@ jQuery(document).ready(function($) {
         resizable: false,
         height:160,
         modal: true,
-        dialogClass: 'wp-dialog',
-        draggable: false,
+        dialoable: false,
         buttons: {
           'Delete': function() {
             self.entryPoints.remove(theEP);
@@ -1795,7 +1794,8 @@ jQuery(document).ready(function($) {
           Cancel: function() {
             $(this).dialog('close');
           }
-        }
+        }gClass: 'wp-dialog',
+        dragg
       });
     }; // delEP()
 
