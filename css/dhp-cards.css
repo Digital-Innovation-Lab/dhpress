@@ -23,39 +23,42 @@ p {
     overflow: auto;
 }
 
-    /* move top down to make room for head of nav bar */
-    /* bottom padding necessary to compensate for top nav bar */
 #card-container {
-    top: 50px;
-    padding-bottom: 48px;
-    padding-left: 4px;
+    margin: 30px auto;
+    padding-bottom: 30px;
     z-index: 0 !important;
 }
 
 .card {
     background: #00BFFF;
+    border: 1px solid transparent;
     font-size: 11px;
     line-height: 13px;
-    margin: 1px;
-    padding: 5px;
+    padding: 4px;
+    margin: 2px;
     overflow: hidden;
-    margin-bottom: 2px;
     z-index: 0 !important;
 }
 
-    /* When user hovers over card, tilt it and greyscale it somewhat */
+    /* When user hovers over card, zoom in */
 .card:hover {
-    border: 1px solid black;
+    border: 1px solid #222;
+    cursor: pointer;
 
-  -webkit-transform: rotate(-3deg);
-     -moz-transform: rotate(-3deg);
-       -o-transform: rotate(-3deg);
-      -ms-transform: rotate(-3deg);
-          transform: rotate(-3deg);
+    -webkit-box-shadow: 0 0 15px 0 rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 15px 0 rgba(0,0,0,0.75);
+    box-shadow: 0 0 15px 0 rgba(0,0,0,0.75);
 
-    -webkit-box-shadow: 5px 5px 5px 2px rgba(0,0,0,0.75);
-    -moz-box-shadow: 5px 5px 5px 2px rgba(0,0,0,0.75);
-    box-shadow: 5px 5px 5px 2px rgba(0,0,0,0.75);
+    z-index: 1 !important;
+
+    -webkit-transition: all 150ms ease-in-out;
+    -webkit-transform: scale(1.1);
+    -ms-transition: all 150ms ease-in-out;
+    -ms-transform: scale(1.1);   
+    -moz-transition: all 150ms ease-in-out;
+    -moz-transform: scale(1.1);
+    transition: all 150ms ease-in-out;
+    transform: scale(1.1);  
 }
 
     /* Scale card acc to size */

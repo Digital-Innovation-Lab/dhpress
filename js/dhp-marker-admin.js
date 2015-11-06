@@ -14,10 +14,11 @@ jQuery(document).ready(function($) {
 	var markerID      = dhpDataLib.markerID;
 	var projectID     = dhpDataLib.projectID;
 	var custom_fields = dhpDataLib.customFields;
+	var localized = $.parseJSON(dhpDataLib.localized);
 
 		// Insert HTML code for option box to select which custom field to inspect/edit
 	$('#dhp_marker_settings_meta_box .inside').append(
-		'<div class="custom-field-editor"><div class="left">Choose a custom field to add/edit.<select></select><br/><a class="add-update-meta button button-primary">Add/Update</a></div><div class="right"><textarea class="edit-custom-field"></textarea></div></div>');
+		'<div class="custom-field-editor"><div class="left">'+localized['choose_field']+'<select></select><br/><a class="add-update-meta button button-primary">'+localized['add_edit']+'</a></div><div class="right"><textarea class="edit-custom-field"></textarea></div></div>');
 
 		// If user clicks on Add/Update button, save field to WP DB via AJAX
 	$('.add-update-meta').click(function() {

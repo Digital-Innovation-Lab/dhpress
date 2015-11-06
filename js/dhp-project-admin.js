@@ -84,6 +84,14 @@ jQuery(document).ready(function($) {
     }
   }
 
+    // Prevents users from exiting page if there are unsaved changes
+  window.beforeunload = window.onbeforeunload = function (e) {
+    if (projObj.settingsDirty()) {
+      e.returnValue = 'You have unsaved changes. If you leave the page, these changes will be lost.';
+      return 'You have unsaved changes. If you leave the page, these changes will be lost.';
+    }
+  }
+
 
 //===================================== UTILITIES ===================================
 
@@ -1811,26 +1819,7 @@ jQuery(document).ready(function($) {
       }
     }; // calcEPTemplate()
 
-      // PURPOSE: Move this entry point to the top of the list
-    self.topEP = function(theEP, index) {
-        // Only if not at top already
-      if (index > 0 && index < self.entryPoints().length) {
-        var savedEP = self.entryPoints.splice(index, 1);
-        self.entryPoints.unshift(savedEP[0]);
-        self.settingsDirty(true);
-      }
-    }; // topEP()
-
-      // PURPOSE: Move this entry point to the bottom of the list
-    self.bottomEP = function(theEP, index) {
-        // Only if not at bottom already
-      if (index < (self.entryPoints().length-1)) {
-        var savedEP = self.entryPoints.splice(index, 1);
-        self.entryPoints.push(savedEP[0]);
-        self.settingsDirty(true);
-      }
-    }; // bottomEP()
-
+      // No longer used?
     self.maxEPindex = function() {
       return self.entryPoints().length - 1;
     };
@@ -2563,6 +2552,32 @@ jQuery(document).ready(function($) {
     projObj.setEP(theEP);
   });
   projObj.setViews(savedSettings.views);
+
+
+    // Allows entry points to be sorted and updates knockout respectively
+    // Adapted from http://stackoverflow.com/questions/9703647/knockout-custom-binding-for-jquery-ui-sortable-strange-behavior
+  ko.bindingHandlers.sortableList = {
+    init: function (element, valueAccessor) {
+      var theEPs = valueAccessor();
+      $('#entryPoints').sortable({ 
+        containment: 'parent',
+        tolerance: 'pointer',
+        update: function(event, ui) {
+          projObj.settingsDirty(true);
+          
+          var item = ko.dataFor(ui.item[0]),
+          newIndex = ui.item.index();
+
+          if (newIndex >= theEPs().length) newIndex = theEPs().length - 1;
+          if (newIndex < 0) newIndex = 0;
+
+          ui.item.remove();
+          theEPs.remove(item);
+          theEPs.splice(newIndex, 0, item);
+        } 
+      });
+    }
+  };
 
 
     // Add new functionality for jQueryUI slider

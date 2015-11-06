@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-10-09 15:06-0400\n"
+"POT-Creation-Date: 2015-10-19 15:50-0400\n"
 "PO-Revision-Date: 2015-09-28 13:22-0400\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -180,6 +180,74 @@ msgstr ""
 msgid "No maps found in Trash"
 msgstr ""
 
+#: php/dhp-map-library.php:125
+msgid "Map Attributes"
+msgstr ""
+
+#: php/dhp-map-library.php:146
+msgid "Please enter the map information below:"
+msgstr ""
+
+#: php/dhp-map-library.php:147
+msgid "Map ID"
+msgstr ""
+
+#: php/dhp-map-library.php:148
+msgid "Short title"
+msgstr ""
+
+#: php/dhp-map-library.php:149
+msgid "URL"
+msgstr ""
+
+#: php/dhp-map-library.php:150
+msgid "Subdomains"
+msgstr ""
+
+#: php/dhp-map-library.php:152
+msgid "North bounds"
+msgstr ""
+
+#: php/dhp-map-library.php:153
+msgid "South bounds"
+msgstr ""
+
+#: php/dhp-map-library.php:154
+msgid "East bounds"
+msgstr ""
+
+#: php/dhp-map-library.php:155
+msgid "West bounds"
+msgstr ""
+
+#: php/dhp-map-library.php:156
+msgid "Minimum Zoom"
+msgstr ""
+
+#: php/dhp-map-library.php:157
+msgid "Maximum Zoom"
+msgstr ""
+
+#: php/dhp-map-library.php:158
+msgid "Inverse Y-axis"
+msgstr ""
+
+#: php/dhp-map-library.php:160
+msgid "Description"
+msgstr ""
+
+#: php/dhp-map-library.php:161
+msgid "Credits"
+msgstr ""
+
+#: php/dhp-marker-functions.php:17
+msgid "Associated Project"
+msgstr ""
+
+#: php/dhp-marker-functions.php:18
+msgid "Select Project to which this marker should belong"
+msgstr ""
+
 #: php/dhp-marker-functions.php:35
 msgctxt "post type general name"
 msgid "Markers"
@@ -229,66 +297,78 @@ msgstr ""
 msgid "No markers found in Trash"
 msgstr ""
 
-#: php/dhp-marker-functions.php:140
+#: php/dhp-marker-functions.php:113
+msgid "Choose a custom field to add/edit."
+msgstr ""
+
+#: php/dhp-marker-functions.php:114
+msgid "Add/Update"
+msgstr ""
+
+#: php/dhp-marker-functions.php:145
 #, php-format
 msgid "Marker updated. <a href=\"%s\">View marker</a>"
 msgstr ""
 
-#: php/dhp-marker-functions.php:141 php/dhp-project-functions.php:208
+#: php/dhp-marker-functions.php:146 php/dhp-project-functions.php:208
 msgid "Custom field updated."
 msgstr ""
 
-#: php/dhp-marker-functions.php:142 php/dhp-project-functions.php:209
+#: php/dhp-marker-functions.php:147 php/dhp-project-functions.php:209
 msgid "Custom field deleted."
 msgstr ""
 
-#: php/dhp-marker-functions.php:143
+#: php/dhp-marker-functions.php:148
 msgid "Marker updated."
 msgstr ""
 
-#: php/dhp-marker-functions.php:145
+#: php/dhp-marker-functions.php:150
 #, php-format
 msgctxt "translators: %s: date and time of the revision"
 msgid "Marker restored to revision from %s"
 msgstr ""
 
-#: php/dhp-marker-functions.php:146
+#: php/dhp-marker-functions.php:151
 #, php-format
 msgid "Marker published. <a href=\"%s\">View marker</a>"
 msgstr ""
 
-#: php/dhp-marker-functions.php:147
+#: php/dhp-marker-functions.php:152
 msgid "Marker saved."
 msgstr ""
 
-#: php/dhp-marker-functions.php:148
+#: php/dhp-marker-functions.php:153
 #, php-format
 msgid "Marker submitted. <a target=\"_blank\" href=\"%s\">Preview marker</a>"
 msgstr ""
 
-#: php/dhp-marker-functions.php:149
+#: php/dhp-marker-functions.php:154
 #, php-format
 msgid ""
 "Marker scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
 "\">Preview marker</a>"
 msgstr ""
 
-#: php/dhp-marker-functions.php:151 php/dhp-project-functions.php:218
+#: php/dhp-marker-functions.php:156 php/dhp-project-functions.php:218
 msgctxt "translators: Publish box date format, see http://php.net/date"
 msgid "M j, Y @ G:i"
 msgstr ""
 
-#: php/dhp-marker-functions.php:152
+#: php/dhp-marker-functions.php:157
 #, php-format
 msgid ""
 "Marker draft updated. <a target=\"_blank\" href=\"%s\">Preview marker</a>"
 msgstr ""
 
-#: php/dhp-marker-functions.php:420
+#: php/dhp-marker-functions.php:247
+msgid "Marker Settings"
+msgstr ""
+
+#: php/dhp-marker-functions.php:425
 msgid "Filter By Project"
 msgstr ""
 
-#: php/dhp-marker-functions.php:472
+#: php/dhp-marker-functions.php:477
 msgid "Project"
 msgstr ""
 

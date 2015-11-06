@@ -6,6 +6,6 @@
 
 <!-- Localization data for D3JS: see https://github.com/mbostock/d3/wiki/Localization -->
 <!-- Leave empty if no localization needed -->
-<script id="dhp-script-d3-local" type="">
+<script id="dhp-script-d3-local">
 <?php echo(_x('default', 'D3 Localization. See https://github.com/mbostock/d3/wiki/Localization', 'dhpress')); ?>
 </script>

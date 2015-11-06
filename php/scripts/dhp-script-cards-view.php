@@ -74,7 +74,7 @@
 <?php _e('Apply', 'dhpress'); ?>
 </script>
 
-<script id="dhp-script-lbl-filter" type="">
+<script id="dhp-script-lbl-filter">
 <?php _e('Filter options for {{label}}', 'dhpress'); ?>
 </script>
 
@@ -82,19 +82,19 @@
 <?php _e('Date Filter Error', 'dhpress'); ?>
 </script>
 
-<script id="dhp-script-err-req-val" type="">
+<script id="dhp-script-err-req-val">
 <?php _e('The value for {{t}} is required but you left it blank.', 'dhpress'); ?>
 </script>
 
-<script id="dhp-script-err-invalid-num" type="">
+<script id="dhp-script-err-invalid-num">
 <?php _e('The value you entered for {{t}} is not a valid number.', 'dhpress'); ?>
 </script>
 
-<script id="dhp-script-err-too-small" type="">
+<script id="dhp-script-err-too-small">
 <?php _e('The value you entered for {{t}} is too small.', 'dhpress'); ?>
 </script>
 
-<script id="dhp-script-err-too-big" type="">
+<script id="dhp-script-err-too-big">
 <?php _e('The value you entered for {{t}} is too large.', 'dhpress'); ?>
 </script>
 
