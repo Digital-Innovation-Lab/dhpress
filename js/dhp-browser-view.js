@@ -400,7 +400,7 @@ var dhpBrowser = {
 			        .attr("class", "facet-reset-text" )
 			        .attr("x", 3)
 			        .attr("y", facetLabelHeight-6)
-			        .text("RESET");
+			        .text(localize['reset'].toUpperCase());
 
 			        	// Create button for each facet value
 			    facetSel = fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
