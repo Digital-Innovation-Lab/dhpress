@@ -996,7 +996,12 @@ var dhpServices = {
 		_.templateSettings = {
  			 interpolate: /\{\{(.+?)\}\}/g
 		};
+		
 		var baseText = scriptName;
+
+		if(typeof baseText == "string"){
+			baseText = jQuery(scriptName).html().trim();
+		}
 
 		var template = _.template(baseText, vars);
 		return template;
