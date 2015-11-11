@@ -527,9 +527,28 @@ var dhpBrowser = {
 
 				jQuery('#facets-frame').width(intHeight <= extHeight ? width : width+resizeW)
 										.height(extHeight);
+				jQuery('.top-bar-section .left').append("<li><a id='dhp-reset-facets' href='#'> Reset All </a></li>")
 				jQuery('#list-scroll').width(intHeight <= extHeight ? width : width+resizeW);
 
 				createSVG();
+
+					// Capture clicks on reset link to reset currently selected facets
+				jQuery('#dhp-reset-facets').click(function(){
+					facetData.forEach(function(theFacet) {
+						fbSVG.select("#facet-"+theFacet.index).selectAll(".facet-val")
+							.data(theFacet.vals)
+							.classed('inactive', false);
+
+						var resetSel = fbSVG.select("#reset-"+theFacet.index);
+
+						resetSel.classed('inactive', true);
+						theFacet.selected = -1;
+					});
+
+					computeRestrainedSet();
+					updateAllValButtons();
+					populateList();
+				});
 
 				    // Capture clicks on select list and redirect to open associated marker
 				jQuery('#marker-list').click(function(evt) {
