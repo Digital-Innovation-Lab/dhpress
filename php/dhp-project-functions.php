@@ -2786,7 +2786,8 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('d3', plugins_url('/lib/d3.min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-browser-view', plugins_url('/js/dhp-browser-view.js', dirname(__FILE__)),
 				'd3' );
-			wp_localize_script('dhp-browser-view', 'localize', array('reset' => __('reset', 'dhpress')));
+			wp_localize_script('dhp-browser-view', 'localize', array('reset' => __('Reset', 'dhpress'),
+																	 'reset_all' => __('Reset All', 'dhpress')));
 
 			array_push($dependencies, 'd3', 'dhp-browser-view');
 			break;

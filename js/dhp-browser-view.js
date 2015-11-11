@@ -527,7 +527,7 @@ var dhpBrowser = {
 
 				jQuery('#facets-frame').width(intHeight <= extHeight ? width : width+resizeW)
 										.height(extHeight);
-				jQuery('.top-bar-section .left').append("<li><a id='dhp-reset-facets' href='#'> Reset All </a></li>")
+				jQuery('.top-bar-section .left').append("<li><a id='dhp-reset-facets' href='#'>"+ localize['reset_all'] +"</a></li>")
 				jQuery('#list-scroll').width(intHeight <= extHeight ? width : width+resizeW);
 
 				createSVG();

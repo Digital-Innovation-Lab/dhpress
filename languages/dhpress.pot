@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-11-09 15:22-0500\n"
+"POT-Creation-Date: 2015-11-11 13:49-0500\n"
 "PO-Revision-Date: 2015-09-28 13:22-0400\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -800,7 +800,11 @@ msgid "No dhp_map_typeid metadata for map named %1$s of id %2$s"
 msgstr ""
 
 #: php/dhp-project-functions.php:2789
-msgid "reset"
+msgid "Reset"
+msgstr ""
+
+#: php/dhp-project-functions.php:2790 php/scripts/dhp-html-admin-edit.php:600
+msgid "Reset All"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:4
@@ -1754,10 +1758,6 @@ msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:599
 msgid "Use PNG images"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:600
-msgid "Reset All"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:603
