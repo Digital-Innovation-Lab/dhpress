@@ -145,7 +145,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'map';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.lat = ko.observable(epSettings.settings.lat);
     self.settings.lon = ko.observable(epSettings.settings.lon);
@@ -169,7 +169,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'cards';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.titleOn = ko.observable(epSettings.settings.titleOn);
     self.settings.color = ko.observable(epSettings.settings.color);
@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'pinboard';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.bckGrd = ko.observable(epSettings.settings.bckGrd);
     self.settings.imageURL = ko.observable(epSettings.settings.imageURL);
@@ -231,7 +231,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'tree';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.form = ko.observable(epSettings.settings.form);
     self.settings.width = ko.observable(epSettings.settings.width);
@@ -250,7 +250,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'time';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.date = ko.observable(epSettings.settings.date);
     self.settings.color = ko.observable(epSettings.settings.color);
@@ -267,7 +267,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'flow';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.width = ko.observable(epSettings.settings.width);
     self.settings.height = ko.observable(epSettings.settings.height);
@@ -283,7 +283,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'browser';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.dateGrp = ko.observable(epSettings.settings.dateGrp);
 
@@ -805,25 +805,30 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Delete': function() {
+        buttons: [
+          {
+            text: localized['delete'],
+            click: function() {
+              self.extractMote(theMote);
 
-            self.extractMote(theMote);
+                // Delete Taxonomy/Legend if it exists
+              if (theMote.type == 'Short Text') {
+                deleteHeadTermInWP(moteName);
+              }
 
-              // Delete Taxonomy/Legend if it exists
-            if (theMote.type == 'Short Text') {
-              deleteHeadTermInWP(moteName);
+              self.allMotes.remove(theMote);
+
+              self.settingsDirty(true);
+              $(this).dialog('close');
             }
-
-            self.allMotes.remove(theMote);
-
-            self.settingsDirty(true);
-            $(this).dialog('close');
           },
-          Cancel: function() {
-            $(this).dialog('close');
-          }
-        }
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
+          } 
+        ]
       });
     }; // delMote()
 
@@ -858,13 +863,13 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: [
             {
-              text: 'Cancel',
+              text: localized['cancel'],
               click: function() {
                 $(this).dialog('close');
               }
             },
             {
-              text: 'Save',
+              text: localized['save'],
               click: function() {
                 self.extractMote(theMote);
                 self.allMotes.remove(theMote);
@@ -932,13 +937,13 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: [
             {
-              text: 'Cancel',
+              text: localized['cancel'],
               click: function() {
                 $(this).dialog('close');
               }
             },
             {
-              text: 'Save',
+              text: localized['save'],
               click: function() {
                   // Save reorganized data: only need to gather term_id, parent, term_order, icon_url
                   // Need to convert from nestable's format to flat format used by WP:
@@ -1142,11 +1147,11 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { $(this).dialog('close'); }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                       // Determine selected icon
                     selIcon = $('#mdl-select-icon #select-icon-list .selected');
@@ -1220,7 +1225,7 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { 
                     $(colorBoxDiv).css('background-color', initColor);
                     colorPicker.iris('hide');
@@ -1228,7 +1233,7 @@ jQuery(document).ready(function($) {
                   }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                     colorPicker.iris('hide');
                     newModal.dialog('close');
@@ -1261,11 +1266,11 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { newModal.dialog('close'); }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                       // Determine selected icon
                     var pngTitle = '@'+$('#mdl-select-png #select-png-list .selected').attr('alt');
@@ -1471,19 +1476,19 @@ jQuery(document).ready(function($) {
                 draggable: false,
                 buttons: [
                   {
-                    text: 'Cancel',
+                    text: localized['cancel'],
                     click: function() { newModal.dialog('close'); }
                   },
                   {
-                    text: 'Clear All',
+                    text: localized['clear_all'],
                     click: function() { updateColors(); }
                   },
                   {
-                    text: 'Random Colors',
+                    text: localized['random_colors'],
                     click: function() { updateColors('random'); }
                   },
                   {
-                    text: 'Gradient',
+                    text: localized['gradient'],
                     click: function() { updateColors('gradient'); }
                   }
                 ]
@@ -1529,7 +1534,7 @@ jQuery(document).ready(function($) {
                   draggable: false,
                   buttons: [
                     {
-                      text: 'Cancel',
+                      text: localized['cancel'],
                       click: function() { 
                         $(colorBox).css('background-color', initColor);
                         colorRange.iris('hide');
@@ -1537,7 +1542,7 @@ jQuery(document).ready(function($) {
                       }
                     },
                     {
-                      text: 'Save',
+                      text: localized['save'],
                       click: function() {
                         colorRange.iris('hide');
                         colorModal.dialog('close');
@@ -1593,18 +1598,24 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Rebuild': function() {
-              // Disable button until AJAX call returns
-            $('#btnRebuildMote').button('disable');
-            rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
+        buttons: [
+          {
+            text: localized['rebuild'],
+            click: function() {
+                // Disable button until AJAX call returns
+              $('#btnRebuildMote').button('disable');
+              rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
 
-            $(this).dialog('close');
+              $(this).dialog('close');
+            }
           },
-          Cancel: function() {
-            $(this).dialog('close');
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
           }
-        }
+        ]
       });
     };
 
@@ -1620,7 +1631,7 @@ jQuery(document).ready(function($) {
     self.createMapEP = function() {
       var _blankMapEP = {
         type: 'map',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
             lat: 0, lon: 0, zoom: 10, cluster: false, size: 'm',
             layers: [ { id: 0, name: '', opacity: 1, mapType: '', mapTypeId: '' } ],
@@ -1636,7 +1647,7 @@ jQuery(document).ready(function($) {
     self.createCardsEP = function() {
       var _blankCardsEP = {
         type: 'cards',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           titleOn: true,
           color: 'disable',
@@ -1657,7 +1668,7 @@ jQuery(document).ready(function($) {
     self.createPinEP = function() {
       var _blankPinEP = {
         type: 'pinboard',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           dw: 500,
           dh: 500,
@@ -1683,7 +1694,7 @@ jQuery(document).ready(function($) {
     self.createTreeEP = function() {
       var _blankTreeEP = {
         type: 'tree',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           form: '',
           width: 1000,
@@ -1704,7 +1715,7 @@ jQuery(document).ready(function($) {
     self.createTimeEP = function() {
       var _blankTimeEP = {
         type: 'time',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           date: '',
           color: '',
@@ -1724,7 +1735,7 @@ jQuery(document).ready(function($) {
     self.createFlowEP = function() {
       var _blankFlowEP = {
         type: 'flow',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           width: 500,
           height: 400,
@@ -1739,7 +1750,7 @@ jQuery(document).ready(function($) {
     self.createBrowserEP = function() {
       var _blankBrowserEP = {
         type: 'browser',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           dateGrp: 'year',
           motes: []
@@ -1786,16 +1797,22 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Delete': function() {
-            self.entryPoints.remove(theEP);
-            $(this).dialog('close');
-            self.settingsDirty(true);
+        buttons: [
+          {
+            text: localized['delete'],
+            click: function() {
+              self.entryPoints.remove(theEP);
+              $(this).dialog('close');
+              self.settingsDirty(true);
+            }
           },
-          Cancel: function() {
-            $(this).dialog('close');
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
           }
-        }
+        ]
       });
     }; // delEP()
 
@@ -2162,15 +2179,21 @@ jQuery(document).ready(function($) {
           modal: true,
           dialogClass: 'wp-dialog',
           draggable: false,
-          buttons: {
-            'Delete': function() {
-              $('#btnDelOldCF').button('disable');
-              deleteCustomField(this, cfToDelete);
+          buttons: [
+            {
+              text: localized['delete'],
+              click: function() {
+                $('#btnDelOldCF').button('disable');
+                deleteCustomField(this, cfToDelete);
+              }
             },
-            Cancel: function() {
-              $(this).dialog('close');
+            {
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             }
-          }
+          ]
         });
       }
     }; // delOldCF()
@@ -2256,29 +2279,35 @@ jQuery(document).ready(function($) {
           modal: true,
           dialogClass: 'wp-dialog',
           draggable: false,
-          buttons: {
-            'Execute': function() {
-              $('#btnDoFR').button('disable');
-              $(this).dialog('close');
-                // Which ajax function to call depends on checkboxes checked
-              var filterCF = $('#selFRFilterCF').val();
-              var filterVal = $('#selFRFilterValue').val();
-              var mustMatchVal = $('#getFRMustMatch').prop('checked');
-              var mustFilter = $('#getFRFilterCF').prop('checked');
-              if (mustFilter) {
-                if (mustMatchVal) {
-                  updateCustomFieldFilter(frCF, matchValue, newValue, filterCF, filterVal);
+          buttons: [
+            {
+              text: localized['execute'],
+              click: function() {
+                $('#btnDoFR').button('disable');
+                $(this).dialog('close');
+                  // Which ajax function to call depends on checkboxes checked
+                var filterCF = $('#selFRFilterCF').val();
+                var filterVal = $('#selFRFilterValue').val();
+                var mustMatchVal = $('#getFRMustMatch').prop('checked');
+                var mustFilter = $('#getFRFilterCF').prop('checked');
+                if (mustFilter) {
+                  if (mustMatchVal) {
+                    updateCustomFieldFilter(frCF, matchValue, newValue, filterCF, filterVal);
+                  } else {
+                    replaceCustomFieldFilter(frCF, newValue, filterCF, filterVal);
+                  }
                 } else {
-                  replaceCustomFieldFilter(frCF, newValue, filterCF, filterVal);
+                  findReplaceCustomField(frCF, matchValue, newValue);
                 }
-              } else {
-                findReplaceCustomField(frCF, matchValue, newValue);
               }
             },
-            Cancel: function() {
-              $(this).dialog('close');
+            {
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             }
-          }
+          ]
         });
       }
     }; // doFRCF()

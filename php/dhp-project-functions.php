@@ -2455,6 +2455,15 @@ function add_dhp_project_admin_scripts( $hook )
 
 			$pngs = dhp_get_attached_PNGs($postID);
 			$localized = array(
+				'cancel'				=> __('Cancel', 'dhpress'),
+				'delete'				=> __('Delete', 'dhpress'),
+				'rebuild'				=> __('Rebuild', 'dhpress'),
+				'execute'				=> __('Execute', 'dhpress'),
+				'save'					=> __('Save', 'dhpress'),
+				'clear_all'				=> __('Clear All', 'dhpress'),
+				'random_colors'			=> __('Random Colors', 'dhpress'),
+				'gradient'				=> __('Gradient', 'dhpress'),
+				'name_me'				=> __('name me', 'dhpress'),
 				'choose' 				=> __('- choose -', 'dhpress'),
 				'home_button' 			=> __('<p>If you wish to create a "Home" button, you must supply both a URL and label.</p>', 'dhpress'),
 				'home_address' 			=> __('<p>The Home address does not appear to be a full, well-formed URL.</p>', 'dhpress'),

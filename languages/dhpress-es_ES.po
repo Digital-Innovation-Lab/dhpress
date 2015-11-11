@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-11-11 14:09-0500\n"
-"PO-Revision-Date: 2015-11-11 14:09-0500\n"
+"POT-Creation-Date: 2015-11-11 15:04-0500\n"
+"PO-Revision-Date: 2015-11-11 15:05-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -591,38 +591,88 @@ msgstr ""
 msgid "<p>Data tests now complete.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2458 php/scripts/dhp-html-admin-edit.php:32
+#: php/dhp-project-functions.php:2458 php/scripts/dhp-script-cards-view.php:47
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: php/dhp-project-functions.php:2459 php/scripts/dhp-html-admin-edit.php:141
+#: php/scripts/dhp-html-admin-edit.php:175
+#: php/scripts/dhp-html-admin-edit.php:226
+#: php/scripts/dhp-html-admin-edit.php:236
+#: php/scripts/dhp-html-admin-edit.php:289
+#: php/scripts/dhp-html-admin-edit.php:296
+#: php/scripts/dhp-html-admin-edit.php:303
+#: php/scripts/dhp-html-admin-edit.php:363
+#: php/scripts/dhp-html-admin-edit.php:370
+#: php/scripts/dhp-html-admin-edit.php:468
+#: php/scripts/dhp-html-admin-edit.php:504
+#: php/scripts/dhp-html-admin-edit.php:513
+#: php/scripts/dhp-html-admin-edit.php:520
+#: php/scripts/dhp-html-admin-edit.php:527
+#: php/scripts/dhp-html-admin-edit.php:534
+msgid "Delete"
+msgstr "Eliminar"
+
+#: php/dhp-project-functions.php:2460 php/scripts/dhp-html-admin-edit.php:178
+msgid "Rebuild"
+msgstr "Reconstruir"
+
+#: php/dhp-project-functions.php:2461
+msgid "Execute"
+msgstr "Ejecutar"
+
+#: php/dhp-project-functions.php:2462
+msgid "Save"
+msgstr "Guardar"
+
+#: php/dhp-project-functions.php:2463
+msgid "Clear All"
+msgstr "Limpiar todos"
+
+#: php/dhp-project-functions.php:2464
+msgid "Random Colors"
+msgstr "Colores aleatorios"
+
+#: php/dhp-project-functions.php:2465
+msgid "Gradient"
+msgstr "Degradado"
+
+#: php/dhp-project-functions.php:2466
+msgid "name me"
+msgstr "nombrame"
+
+#: php/dhp-project-functions.php:2467 php/scripts/dhp-html-admin-edit.php:32
 msgid "- choose -"
 msgstr "- elegir -"
 
-#: php/dhp-project-functions.php:2459
+#: php/dhp-project-functions.php:2468
 msgid ""
 "<p>If you wish to create a \"Home\" button, you must supply both a URL and "
 "label.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2460
+#: php/dhp-project-functions.php:2469
 msgid "<p>The Home address does not appear to be a full, well-formed URL.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2461
+#: php/dhp-project-functions.php:2470
 msgid ""
 "<p>Your project will not work until you import Markers which are associated "
 "with this Project (by using this Project ID).</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2462
+#: php/dhp-project-functions.php:2471
 msgid "<p>Your project will not work until you define some motes.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2463
+#: php/dhp-project-functions.php:2472
 #, php-format
 msgid ""
 "<p>Motes of type Pointer require a delimiter character; the Mote named %s "
 "has not yet been assigned a delimiter.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2464
+#: php/dhp-project-functions.php:2473
 #, php-format
 msgid ""
 "<p>You have specified the commas as the delimiter character for the Lat-Lon "
@@ -630,187 +680,187 @@ msgid ""
 "reserved for separating Lat from Lon and cannot be used to form Polygons.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2465
+#: php/dhp-project-functions.php:2474
 msgid ""
 "<p>Your project will not work until you create at least one entry point.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2466
+#: php/dhp-project-functions.php:2475
 #, php-format
 msgid "<p>%1$s (entry point \"%2$s\").</p>"
 msgstr "<p>%1$s (entrada punto “%2$s”).</p>"
 
-#: php/dhp-project-functions.php:2467
+#: php/dhp-project-functions.php:2476
 msgid ""
 "<p>You have an unlabeled entry point. All multiple entry points must be "
 "named.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2468
+#: php/dhp-project-functions.php:2477
 msgid "You have not yet added a legend to the Map"
 msgstr ""
 
-#: php/dhp-project-functions.php:2469
+#: php/dhp-project-functions.php:2478
 msgid "You must specify the mote that will provide the coordinate for the Map"
 msgstr ""
 
-#: php/dhp-project-functions.php:2470
+#: php/dhp-project-functions.php:2479
 msgid ""
 "We recommend specifying a color legend for the Cards visualization, but none "
 "is provided"
 msgstr ""
 
-#: php/dhp-project-functions.php:2471
+#: php/dhp-project-functions.php:2480
 msgid "You haven't yet specified content for the Cards visualization"
 msgstr ""
 
-#: php/dhp-project-functions.php:2472
+#: php/dhp-project-functions.php:2481
 msgid "You must specify a valid display width for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2473
+#: php/dhp-project-functions.php:2482
 msgid "You must specify a valid display height for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2474
+#: php/dhp-project-functions.php:2483
 msgid "You must specify a valid background image width for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2475
+#: php/dhp-project-functions.php:2484
 msgid "You must specify a valid background image height for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2476
+#: php/dhp-project-functions.php:2485
 msgid "You have not yet added a legend to the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2477
+#: php/dhp-project-functions.php:2486
 msgid ""
 "You must specify the mote that will provide the coordinate for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2478
+#: php/dhp-project-functions.php:2487
 msgid "You must specify the head marker for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2479
+#: php/dhp-project-functions.php:2488
 msgid ""
 "You must specify the Pointer mote which indicates descending generations for "
 "the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2480
+#: php/dhp-project-functions.php:2489
 msgid "You must specify a valid font size for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2481
+#: php/dhp-project-functions.php:2490
 msgid "You must specify a valid image width for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2482
+#: php/dhp-project-functions.php:2491
 msgid "You must specify a valid image height for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2483
+#: php/dhp-project-functions.php:2492
 msgid "You must specify the Date mote for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2484
+#: php/dhp-project-functions.php:2493
 msgid "You must specify a color legend for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2485
+#: php/dhp-project-functions.php:2494
 msgid "You must specify a valid band height for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2486
+#: php/dhp-project-functions.php:2495
 msgid "You must specify a valid x axis label width for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2487
+#: php/dhp-project-functions.php:2496
 msgid "You must specify a valid Date for the start frame of the Timeline"
 msgstr ""
 "Debe especificar una fecha válida para el marco del inicio de la línea de "
 "tiempo"
 
-#: php/dhp-project-functions.php:2488
+#: php/dhp-project-functions.php:2497
 msgid "You must specify a valid Date for the end frame of the Timeline"
 msgstr ""
 "Debe especificar una fecha válida para el marco de la final de la línea de "
 "tiempo"
 
-#: php/dhp-project-functions.php:2489
+#: php/dhp-project-functions.php:2498
 msgid "You must specify a valid Date for the start zoom of the Timeline"
 msgstr ""
 "Debe especificar una fecha válida para el zoom del comienzo de la línea de "
 "tiempo"
 
-#: php/dhp-project-functions.php:2490
+#: php/dhp-project-functions.php:2499
 msgid "You must specify a valid Date for the end zoom of the Timeline"
 msgstr ""
 "Debe especificar una fecha válida para el zoom de la final de la línea de "
 "tiempo"
 
-#: php/dhp-project-functions.php:2491
+#: php/dhp-project-functions.php:2500
 msgid ""
 "You must specify a valid background palette width for the Facet Flow view"
 msgstr ""
 
-#: php/dhp-project-functions.php:2492
+#: php/dhp-project-functions.php:2501
 msgid ""
 "You must specify a valid background palette height for the Facet Flow view"
 msgstr ""
 
-#: php/dhp-project-functions.php:2493
+#: php/dhp-project-functions.php:2502
 msgid "You need at least two sets of motes for the Facet Flow"
 msgstr ""
 
-#: php/dhp-project-functions.php:2494
+#: php/dhp-project-functions.php:2503
 msgid "Facet Flow requires unique (not redundant) motes in the list to display"
 msgstr ""
 
-#: php/dhp-project-functions.php:2495
+#: php/dhp-project-functions.php:2504
 msgid "You need at least one mote for the Facet Browser"
 msgstr ""
 
-#: php/dhp-project-functions.php:2496
+#: php/dhp-project-functions.php:2505
 msgid "You have listed redundant motes to display"
 msgstr ""
 
-#: php/dhp-project-functions.php:2497
+#: php/dhp-project-functions.php:2506
 msgid ""
 "<p>Your list of motes for the select modal is empty. We suggest you add at "
 "least one content mote.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2498
+#: php/dhp-project-functions.php:2507
 msgid ""
 "<p>Although you have enabled transcripts on archive pages via the \"Source\" "
 "selection, you have not yet specified other necessary transcript settings.</"
 "p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2499
+#: php/dhp-project-functions.php:2508
 msgid ""
 "<p>Tests are now being conducted on the WordPress server. This checks all "
 "values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This "
 "will only work properly if your project settings have been saved.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2562
+#: php/dhp-project-functions.php:2571
 msgid "Map ID cannot be found"
 msgstr ""
 
-#: php/dhp-project-functions.php:2574
+#: php/dhp-project-functions.php:2583
 #, php-format
 msgid "No dhp_map_typeid metadata for map named %1$s of id %2$s"
 msgstr ""
 
-#: php/dhp-project-functions.php:2789
+#: php/dhp-project-functions.php:2798
 msgid "Reset"
 msgstr "Restablecimiento"
 
-#: php/dhp-project-functions.php:2790 php/scripts/dhp-html-admin-edit.php:600
+#: php/dhp-project-functions.php:2799 php/scripts/dhp-html-admin-edit.php:600
 msgid "Reset All"
 msgstr "Restablecer Todo"
 
@@ -1147,24 +1197,6 @@ msgstr ""
 msgid "Delete this custom field:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:141
-#: php/scripts/dhp-html-admin-edit.php:175
-#: php/scripts/dhp-html-admin-edit.php:226
-#: php/scripts/dhp-html-admin-edit.php:236
-#: php/scripts/dhp-html-admin-edit.php:289
-#: php/scripts/dhp-html-admin-edit.php:296
-#: php/scripts/dhp-html-admin-edit.php:303
-#: php/scripts/dhp-html-admin-edit.php:363
-#: php/scripts/dhp-html-admin-edit.php:370
-#: php/scripts/dhp-html-admin-edit.php:468
-#: php/scripts/dhp-html-admin-edit.php:504
-#: php/scripts/dhp-html-admin-edit.php:513
-#: php/scripts/dhp-html-admin-edit.php:520
-#: php/scripts/dhp-html-admin-edit.php:527
-#: php/scripts/dhp-html-admin-edit.php:534
-msgid "Delete"
-msgstr ""
-
 #: php/scripts/dhp-html-admin-edit.php:144
 msgid "Find/Replace Custom Field Values"
 msgstr ""
@@ -1218,10 +1250,6 @@ msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:177
 msgid "Configure"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:178
-msgid "Rebuild"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:189
@@ -1867,10 +1895,6 @@ msgstr "Borrar filtro"
 #: php/scripts/dhp-script-cards-view.php:46
 #: php/scripts/dhp-script-cards-view.php:74
 msgid "Apply"
-msgstr ""
-
-#: php/scripts/dhp-script-cards-view.php:47
-msgid "Cancel"
 msgstr ""
 
 #: php/scripts/dhp-script-cards-view.php:55
