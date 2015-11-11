@@ -18,7 +18,7 @@
   </li>
   <li class="active"><a id="dhp-filter-set" href="#"><?php _e('Filter Options', 'dhpress'); ?></a></li>
   <li class="divider"></li>
-  <li class="active"><a id="dhp-filter-reset" href="#"><?php _e('No Filter', 'dhpress'); ?></a></li>
+  <li class="active"><a id="dhp-filter-reset" href="#"><?php _e('Clear Filter', 'dhpress'); ?></a></li>
 </script>
 
 <script id="dhp-script-fltrErrorModal">

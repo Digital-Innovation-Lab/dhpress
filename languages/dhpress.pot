@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-11-11 13:49-0500\n"
+"POT-Creation-Date: 2015-11-11 14:08-0500\n"
 "PO-Revision-Date: 2015-09-28 13:22-0400\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1854,7 +1854,7 @@ msgid "Filter Options"
 msgstr ""
 
 #: php/scripts/dhp-script-cards-view.php:21
-msgid "No Filter"
+msgid "Clear Filter"
 msgstr ""
 
 #: php/scripts/dhp-script-cards-view.php:46
