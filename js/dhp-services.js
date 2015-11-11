@@ -169,10 +169,10 @@ var dhpServices = {
 		projectID = theProjID;
 		projSettings = theSettings;
 		markerURL = theMarkerURL;
-		dhpServices.dateNoLater = dhpServices.getText("#dhp-date-nolater");
-		dhpServices.dateAtLeast = dhpServices.getText("#dhp-date-atleast");
-		dhpServices.dateAbout  = dhpServices.getText("#dhp-date-about");
-		dhpServices.dateFromTo  = dhpServices.getText("#dhp-date-from-to");
+		dhpServices.dateNoLater = "#dhp-date-nolater";
+		dhpServices.dateAtLeast = "#dhp-date-atleast";
+		dhpServices.dateAbout  = "#dhp-date-about";
+		dhpServices.dateFromTo  = "#dhp-date-from-to";
 	}, // initialize()
 
 
@@ -890,6 +890,7 @@ var dhpServices = {
 				var dateSegs = mVal.split('/');
 				var start = dateSegs[0].trim();
 				if (dateSegs.length == 1) {
+					
 					var dateStr;
 					if (start.charAt(0) === '~') {
 						dateStr = dhpServices.compileText(dhpServices.dateAbout, { date: start.substr(1) });
@@ -996,7 +997,7 @@ var dhpServices = {
 		_.templateSettings = {
  			 interpolate: /\{\{(.+?)\}\}/g
 		};
-		
+
 		var baseText = scriptName;
 
 		if(typeof baseText == "string"){
