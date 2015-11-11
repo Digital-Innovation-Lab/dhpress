@@ -322,19 +322,33 @@ var dhpTimeline = {
 				}
 				var name = color.substr(1);
 					// Create three variants of each color
-				gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
-				gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
-				gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
-				gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
-				gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
-				gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
-				gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
-				gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
+					gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
+					gradDef.append('stop').attr('offset', '0%').attr('stop-color', '#C0C0C0');
+					gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
+					gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
+					gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '100%').attr('stop-color', '#C0C0C0');
+					gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
+					gradDef.append('stop').attr('offset', '0%').attr('stop-color', '#C0C0C0');
+					gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '100%').attr('stop-color', '#C0C0C0');
+
+				// gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
+				// gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
+				// gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
+				// gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
+				// gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
+				// gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
+				// gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
+				// gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
 			}
 		});
 	}, // createLegendGrads
