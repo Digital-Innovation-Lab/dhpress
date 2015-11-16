@@ -312,6 +312,7 @@ jQuery(document).ready(function($) {
   } // PinLayer()
 
 
+
 //=================================== MAIN OBJECT ===================================
 
     // PURPOSE: "Controller" Object that coordinates between Knockout and business layer
@@ -2507,6 +2508,9 @@ jQuery(document).ready(function($) {
 
     // Initialize jQuery components
   $("#accordion, #subaccordion").accordion({ collapsible: true, heightStyle: 'content' });
+  $("#accordion").click(function(){
+      $('html, body').animate({scrollTop: $("#accordion").offset().top}, 500);
+    });
 
 
     // Add decimal formatting extension (X.X) for observable (opacity)
