@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-11-11 15:04-0500\n"
-"PO-Revision-Date: 2015-11-11 15:05-0500\n"
+"POT-Creation-Date: 2015-11-16 14:15-0500\n"
+"PO-Revision-Date: 2015-11-16 14:15-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -847,20 +847,36 @@ msgid ""
 "will only work properly if your project settings have been saved.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2571
+#: php/dhp-project-functions.php:2509 php/scripts/dhp-html-admin-edit.php:14
+msgid "General Settings"
+msgstr ""
+
+#: php/dhp-project-functions.php:2510 php/scripts/dhp-html-admin-edit.php:23
+msgid "Motes"
+msgstr ""
+
+#: php/dhp-project-functions.php:2511 php/scripts/dhp-html-admin-edit.php:56
+msgid "Entry Points"
+msgstr ""
+
+#: php/dhp-project-functions.php:2512
+msgid "Misc."
+msgstr ""
+
+#: php/dhp-project-functions.php:2575
 msgid "Map ID cannot be found"
 msgstr ""
 
-#: php/dhp-project-functions.php:2583
+#: php/dhp-project-functions.php:2587
 #, php-format
 msgid "No dhp_map_typeid metadata for map named %1$s of id %2$s"
 msgstr ""
 
-#: php/dhp-project-functions.php:2798
+#: php/dhp-project-functions.php:2802
 msgid "Reset"
 msgstr "Restablecimiento"
 
-#: php/dhp-project-functions.php:2799 php/scripts/dhp-html-admin-edit.php:600
+#: php/dhp-project-functions.php:2803 php/scripts/dhp-html-admin-edit.php:600
 msgid "Reset All"
 msgstr "Restablecer Todo"
 
@@ -881,11 +897,7 @@ msgid "Export Settings"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:10
-msgid "Show Settings in Console"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:14
-msgid "General Settings"
+msgid "Test Settings for Errors"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:16
@@ -906,10 +918,6 @@ msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:19
 msgid "Primary Key (unique identifier used only for Pointers):"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:23
-msgid "Motes"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:25
@@ -1005,10 +1013,6 @@ msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:51
 msgid "Currently Defined Motes:"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:56
-msgid "Entry Points"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:59
@@ -1231,7 +1235,7 @@ msgid "Testing and Error-checking"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:161
-msgid "Run tests"
+msgid "Run Tests"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:172

@@ -7,7 +7,7 @@
     <div data-bind="visible: optionsCF.length > 0">
       <button id="btnSaveSettings" data-bind="jqButton, click: saveSettings, style: { color: settingsDirty() ? 'red' : 'green' }"><?php _e('Save Settings', 'dhpress'); ?></button>
       <!-- <button id="exportSaveSettings" data-bind="jqButton, click: exportSettings"><?php _e('Export Settings', 'dhpress'); ?></button> -->
-      <button data-bind ="jqButton, click: showSettings"><?php _e('Show Settings in Console', 'dhpress'); ?></button>
+      <button class="runTests" data-bind ="jqButton, click: runTests"><?php _e('Test Settings for Errors', 'dhpress'); ?></button>
     </div>
 
       <div id="accordion">
@@ -158,7 +158,7 @@
 
       <h3><?php _e('Testing and Error-checking', 'dhpress'); ?></h3>
       <div>
-        <button id="runTests" data-bind="jqButton, click: runTests"><?php _e('Run tests', 'dhpress'); ?></button></br>
+        <button class="runTests" data-bind="jqButton, click: runTests"><?php _e('Run Tests', 'dhpress'); ?></button></br>
         <div id="testResults"></div>
       </div>
 

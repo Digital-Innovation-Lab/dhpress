@@ -2505,7 +2505,11 @@ function add_dhp_project_admin_scripts( $hook )
 				'redundant_motes'		=> __('You have listed redundant motes to display', 'dhpress'),
 				'empty_content_mote'	=> __('<p>Your list of motes for the select modal is empty. We suggest you add at least one content mote.</p>', 'dhpress'),
 				'transcript_settings'	=> __('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>', 'dhpress'),
-				'tests_being_conducted'	=> __('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>', 'dhpress')
+				'tests_being_conducted'	=> __('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>', 'dhpress'),
+				'general_settings'		=> __('General Settings', 'dhpress'),
+				'motes'					=> __('Motes', 'dhpress'),
+				'entry_points'			=> __('Entry Points', 'dhpress'),
+				'misc'					=> __('Misc.', 'dhpress')
 			);
 			wp_localize_script('dhp-project-script', 'dhpDataLib', array(
 				'ajax_url' => $dev_url,
