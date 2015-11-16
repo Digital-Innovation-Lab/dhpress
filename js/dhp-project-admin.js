@@ -340,14 +340,6 @@ jQuery(document).ready(function($) {
       saveSettingsInWP(settingsData);
     };
 
-      // PURPOSE: Allow user to save Project Settings JSON file to local computer
-    self.exportSettings = function() {
-      $('#exportSaveSettings').button('disable');
-      var currentSettings = self.bundleSettings();
-      var settingsData = JSON.stringify(currentSettings);
-      console.log("success self.exportSettings");
-      exportSettingsInWP(settingsData);
-    }
     self.cleanSettings = function() {
       self.settingsDirty(false);
     };
@@ -2709,26 +2701,6 @@ jQuery(document).ready(function($) {
 
 
   //=================================== AJAX FUNCTIONS ==================================
-
-  //   //PURPOSE: Exports project settings data object
-  // function exportSettingsInWP(settingsData){
-  //   jQuery.ajax({
-  //         type: 'POST',
-  //         url: ajax_url,
-  //         data: {
-  //             action: 'dhpExportProjectSettings',
-  //             project: projectID,
-  //             settings: settingsData
-  //         },
-  //         success: function(data, textStatus, XMLHttpRequest) {
-  //           $('#exportSaveSettings').button('enable');
-  //         },
-  //         error: function(XMLHttpRequest, textStatus, erroThrown){
-  //           alert(errorThrown);
-  //           $('#exportSaveSettings').button('enable');
-  //         }
-  //   });
-  // }
 
     // PURPOSE: Saves project settings data object
   function saveSettingsInWP(settingsData) {
