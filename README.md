@@ -64,6 +64,14 @@ Go to DHPress > New Project and create a new project to get started
 
 == Changelog ==
 
+= 2.7 =
+* Translate DH Press into other languages!
+* Entry Points are now sorted by drag-and-drop when editing a project
+* Ability to reset short text mote legend colors to a gradient or random colors
+* Improved project setting testing and error checking
+* Eliminated WordPress theme interference
+* Many user interface improvements and bug fixes
+
 = 2.6 =
 * Map view marker clustering (can be turned on or off)
 * Map views can display Markers as points, lines or polygons
