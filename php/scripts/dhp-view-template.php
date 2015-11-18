@@ -19,7 +19,7 @@
 
 			switch ($ep->type) {
 				case 'map':
-					$page_scripts = array('dhp-jquery-ui', 'leaflet', 'leaflet-maki', 'dhp-maps-cluster', 'dhp-maps-view', 'dhp-map-services');
+					$page_scripts = array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse', 'jquery-ui-position', 'jquery-ui-draggable', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-menu', 'jquery-ui-selectmenu', 'jquery-ui-slider', 'jquery-ui-spinner', 'jquery-ui-tabs', 'leaflet', 'leaflet-maki', 'dhp-maps-cluster', 'dhp-maps-view', 'dhp-map-services');
 					$page_styles = array('dhp-jquery-ui-style', 'dhp-map-css', 'leaflet-css', 'maki-sprite-style', 'dhp-map-cluster-css', 'dhp-map-clusterdef-css');
 					break;
 				case 'cards':
@@ -27,7 +27,7 @@
 					$page_styles = array('dhp-cards-css');
 					break;
 				case 'pinboard':
-					$page_scripts = array('dhp-jquery-ui', 'snap', 'dhp-pinboard-view');
+					$page_scripts = array('jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse', 'jquery-ui-position', 'jquery-ui-draggable', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-menu', 'jquery-ui-selectmenu', 'jquery-ui-slider', 'jquery-ui-spinner', 'jquery-ui-tabs', 'snap', 'dhp-pinboard-view');
 					$page_styles = array('dhp-jquery-ui-style', 'foundation-icons-css', 'dhp-pinboard-css');
 					break;
 				case 'tree':
