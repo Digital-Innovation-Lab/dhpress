@@ -145,7 +145,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'map';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.lat = ko.observable(epSettings.settings.lat);
     self.settings.lon = ko.observable(epSettings.settings.lon);
@@ -169,7 +169,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'cards';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.titleOn = ko.observable(epSettings.settings.titleOn);
     self.settings.color = ko.observable(epSettings.settings.color);
@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'pinboard';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.bckGrd = ko.observable(epSettings.settings.bckGrd);
     self.settings.imageURL = ko.observable(epSettings.settings.imageURL);
@@ -231,7 +231,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'tree';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.form = ko.observable(epSettings.settings.form);
     self.settings.width = ko.observable(epSettings.settings.width);
@@ -250,7 +250,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'time';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.date = ko.observable(epSettings.settings.date);
     self.settings.color = ko.observable(epSettings.settings.color);
@@ -267,7 +267,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'flow';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.width = ko.observable(epSettings.settings.width);
     self.settings.height = ko.observable(epSettings.settings.height);
@@ -283,7 +283,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'browser';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.dateGrp = ko.observable(epSettings.settings.dateGrp);
 
@@ -341,14 +341,6 @@ jQuery(document).ready(function($) {
       saveSettingsInWP(settingsData);
     };
 
-      // PURPOSE: Allow user to save Project Settings JSON file to local computer
-    self.exportSettings = function() {
-      $('#exportSaveSettings').button('disable');
-      var currentSettings = self.bundleSettings();
-      var settingsData = JSON.stringify(currentSettings);
-      console.log("success self.exportSettings");
-      exportSettingsInWP(settingsData);
-    }
     self.cleanSettings = function() {
       self.settingsDirty(false);
     };
@@ -806,25 +798,30 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Delete': function() {
+        buttons: [
+          {
+            text: localized['delete'],
+            click: function() {
+              self.extractMote(theMote);
 
-            self.extractMote(theMote);
+                // Delete Taxonomy/Legend if it exists
+              if (theMote.type == 'Short Text') {
+                deleteHeadTermInWP(moteName);
+              }
 
-              // Delete Taxonomy/Legend if it exists
-            if (theMote.type == 'Short Text') {
-              deleteHeadTermInWP(moteName);
+              self.allMotes.remove(theMote);
+
+              self.settingsDirty(true);
+              $(this).dialog('close');
             }
-
-            self.allMotes.remove(theMote);
-
-            self.settingsDirty(true);
-            $(this).dialog('close');
           },
-          Cancel: function() {
-            $(this).dialog('close');
-          }
-        }
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
+          } 
+        ]
       });
     }; // delMote()
 
@@ -859,13 +856,13 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: [
             {
-              text: 'Cancel',
+              text: localized['cancel'],
               click: function() {
                 $(this).dialog('close');
               }
             },
             {
-              text: 'Save',
+              text: localized['save'],
               click: function() {
                 self.extractMote(theMote);
                 self.allMotes.remove(theMote);
@@ -933,13 +930,13 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: [
             {
-              text: 'Cancel',
+              text: localized['cancel'],
               click: function() {
                 $(this).dialog('close');
               }
             },
             {
-              text: 'Save',
+              text: localized['save'],
               click: function() {
                   // Save reorganized data: only need to gather term_id, parent, term_order, icon_url
                   // Need to convert from nestable's format to flat format used by WP:
@@ -1143,11 +1140,11 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { $(this).dialog('close'); }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                       // Determine selected icon
                     selIcon = $('#mdl-select-icon #select-icon-list .selected');
@@ -1221,7 +1218,7 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { 
                     $(colorBoxDiv).css('background-color', initColor);
                     colorPicker.iris('hide');
@@ -1229,7 +1226,7 @@ jQuery(document).ready(function($) {
                   }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                     colorPicker.iris('hide');
                     newModal.dialog('close');
@@ -1262,11 +1259,11 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { newModal.dialog('close'); }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                       // Determine selected icon
                     var pngTitle = '@'+$('#mdl-select-png #select-png-list .selected').attr('alt');
@@ -1472,19 +1469,19 @@ jQuery(document).ready(function($) {
                 draggable: false,
                 buttons: [
                   {
-                    text: 'Cancel',
+                    text: localized['cancel'],
                     click: function() { newModal.dialog('close'); }
                   },
                   {
-                    text: 'Clear All',
+                    text: localized['clear_all'],
                     click: function() { updateColors(); }
                   },
                   {
-                    text: 'Random Colors',
+                    text: localized['random_colors'],
                     click: function() { updateColors('random'); }
                   },
                   {
-                    text: 'Gradient',
+                    text: localized['gradient'],
                     click: function() { updateColors('gradient'); }
                   }
                 ]
@@ -1530,7 +1527,7 @@ jQuery(document).ready(function($) {
                   draggable: false,
                   buttons: [
                     {
-                      text: 'Cancel',
+                      text: localized['cancel'],
                       click: function() { 
                         $(colorBox).css('background-color', initColor);
                         colorRange.iris('hide');
@@ -1538,7 +1535,7 @@ jQuery(document).ready(function($) {
                       }
                     },
                     {
-                      text: 'Save',
+                      text: localized['save'],
                       click: function() {
                         colorRange.iris('hide');
                         colorModal.dialog('close');
@@ -1594,18 +1591,24 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Rebuild': function() {
-              // Disable button until AJAX call returns
-            $('#btnRebuildMote').button('disable');
-            rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
+        buttons: [
+          {
+            text: localized['rebuild'],
+            click: function() {
+                // Disable button until AJAX call returns
+              $('#btnRebuildMote').button('disable');
+              rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
 
-            $(this).dialog('close');
+              $(this).dialog('close');
+            }
           },
-          Cancel: function() {
-            $(this).dialog('close');
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
           }
-        }
+        ]
       });
     };
 
@@ -1621,7 +1624,7 @@ jQuery(document).ready(function($) {
     self.createMapEP = function() {
       var _blankMapEP = {
         type: 'map',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
             lat: 0, lon: 0, zoom: 10, cluster: false, size: 'm',
             layers: [ { id: 0, name: '', opacity: 1, mapType: '', mapTypeId: '' } ],
@@ -1637,7 +1640,7 @@ jQuery(document).ready(function($) {
     self.createCardsEP = function() {
       var _blankCardsEP = {
         type: 'cards',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           titleOn: true,
           color: 'disable',
@@ -1658,7 +1661,7 @@ jQuery(document).ready(function($) {
     self.createPinEP = function() {
       var _blankPinEP = {
         type: 'pinboard',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           dw: 500,
           dh: 500,
@@ -1684,7 +1687,7 @@ jQuery(document).ready(function($) {
     self.createTreeEP = function() {
       var _blankTreeEP = {
         type: 'tree',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           form: '',
           width: 1000,
@@ -1705,7 +1708,7 @@ jQuery(document).ready(function($) {
     self.createTimeEP = function() {
       var _blankTimeEP = {
         type: 'time',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           date: '',
           color: '',
@@ -1725,7 +1728,7 @@ jQuery(document).ready(function($) {
     self.createFlowEP = function() {
       var _blankFlowEP = {
         type: 'flow',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           width: 500,
           height: 400,
@@ -1740,7 +1743,7 @@ jQuery(document).ready(function($) {
     self.createBrowserEP = function() {
       var _blankBrowserEP = {
         type: 'browser',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           dateGrp: 'year',
           motes: []
@@ -1787,16 +1790,22 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Delete': function() {
-            self.entryPoints.remove(theEP);
-            $(this).dialog('close');
-            self.settingsDirty(true);
+        buttons: [
+          {
+            text: localized['delete'],
+            click: function() {
+              self.entryPoints.remove(theEP);
+              $(this).dialog('close');
+              self.settingsDirty(true);
+            }
           },
-          Cancel: function() {
-            $(this).dialog('close');
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
           }
-        }
+        ]
       });
     }; // delEP()
 
@@ -2163,15 +2172,21 @@ jQuery(document).ready(function($) {
           modal: true,
           dialogClass: 'wp-dialog',
           draggable: false,
-          buttons: {
-            'Delete': function() {
-              $('#btnDelOldCF').button('disable');
-              deleteCustomField(this, cfToDelete);
+          buttons: [
+            {
+              text: localized['delete'],
+              click: function() {
+                $('#btnDelOldCF').button('disable');
+                deleteCustomField(this, cfToDelete);
+              }
             },
-            Cancel: function() {
-              $(this).dialog('close');
+            {
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             }
-          }
+          ]
         });
       }
     }; // delOldCF()
@@ -2257,29 +2272,35 @@ jQuery(document).ready(function($) {
           modal: true,
           dialogClass: 'wp-dialog',
           draggable: false,
-          buttons: {
-            'Execute': function() {
-              $('#btnDoFR').button('disable');
-              $(this).dialog('close');
-                // Which ajax function to call depends on checkboxes checked
-              var filterCF = $('#selFRFilterCF').val();
-              var filterVal = $('#selFRFilterValue').val();
-              var mustMatchVal = $('#getFRMustMatch').prop('checked');
-              var mustFilter = $('#getFRFilterCF').prop('checked');
-              if (mustFilter) {
-                if (mustMatchVal) {
-                  updateCustomFieldFilter(frCF, matchValue, newValue, filterCF, filterVal);
+          buttons: [
+            {
+              text: localized['execute'],
+              click: function() {
+                $('#btnDoFR').button('disable');
+                $(this).dialog('close');
+                  // Which ajax function to call depends on checkboxes checked
+                var filterCF = $('#selFRFilterCF').val();
+                var filterVal = $('#selFRFilterValue').val();
+                var mustMatchVal = $('#getFRMustMatch').prop('checked');
+                var mustFilter = $('#getFRFilterCF').prop('checked');
+                if (mustFilter) {
+                  if (mustMatchVal) {
+                    updateCustomFieldFilter(frCF, matchValue, newValue, filterCF, filterVal);
+                  } else {
+                    replaceCustomFieldFilter(frCF, newValue, filterCF, filterVal);
+                  }
                 } else {
-                  replaceCustomFieldFilter(frCF, newValue, filterCF, filterVal);
+                  findReplaceCustomField(frCF, matchValue, newValue);
                 }
-              } else {
-                findReplaceCustomField(frCF, matchValue, newValue);
               }
             },
-            Cancel: function() {
-              $(this).dialog('close');
+            {
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             }
-          }
+          ]
         });
       }
     }; // doFRCF()
@@ -2290,31 +2311,48 @@ jQuery(document).ready(function($) {
       // PURPOSE: Handle user selection of test button
       // NOTES:   Append all results to testResults DIV
     self.runTests = function() {
-      $('#runTests').button('disable');
+      $('.runTests').button('disable');
       $('#testResults').empty();
 
+      $('#accordion').accordion('option', 'active', 5);
+
+      var isErrors = false;
         // Check global-level settings --------------
+      $('#testResults').append('<strong id="general_settings">'+localized['general_settings']+'</strong>');
+      $('#general_settings').hide();
 
         // Home URL but no label, or vice-versa?
       if ((self.edHomeBtnLbl() && self.edHomeBtnLbl() != '') || (self.edHomeURL() && self.edHomeURL() != '')) {
         if (self.edHomeBtnLbl() == '' || self.edHomeURL() == '') {
           $('#testResults').append(localized['home_button']);
+          isErrors = true;
         }
           // ensure a well-formed URL
         var testURL = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
         if (!testURL.test(self.edHomeURL())) {
           $('#testResults').append(localized['home_address']);
+          isErrors = true;
         }
       }
 
       if (self.optionsCF.length == 0) {
           $('#testResults').append(localized['import_markers']);
+          isErrors = true;
+      }
+
+      if (isErrors) {
+        $('#general_settings').show();
       }
 
         // Check the settings of Mote definitions ---------
 
+      isErrors = false;
+      $('#testResults').append('<strong id="motes">'+localized['motes']+'</strong>');
+      $('#motes').hide();
+
       if (self.allMotes().length == 0) {
           $('#testResults').append(localized['define_motes']);
+          isErrors = true;
       }
 
       ko.utils.arrayForEach(self.allMotes(), function(theMote) {
@@ -2322,132 +2360,171 @@ jQuery(document).ready(function($) {
         case 'Pointer':
           if (theMote.delim == '') {
             $('#testResults').append(sprintf(localized['pointer_delimiter'], theMote.name));
+            isErrors = true;
           }
           break;
         case 'Lat/Lon Coordinates':
           if (theMote.delim == ',') {
             $('#testResults').append(sprintf(localized['comma_delimiter'], theMote.name));
+            isErrors = true;
           }
           break;
         } // switch()
       }); // forEach(motes)
 
+
+      if (isErrors) {
+        $('#motes').show();
+      }
+
         // Check the settings of Entry Points -----------
+      isErrors = false;
+      $('#testResults').append('<strong id="entry_points">'+localized['entry_points']+'</strong>');
+      $('#entry_points').hide();
 
       if (self.entryPoints().length == 0) {
           $('#testResults').append(localized['no_entry_points']);
+          isErrors = true;
       }
 
       ko.utils.arrayForEach(self.entryPoints(), function(theEP) {
           // Report errors with help of this utility function
         function epErrorMessage(errString) {
           $('#testResults').append(sprintf(localized['ep_error'], errString, theEP.label()));
+          isErrors = true;
         }
           // Ensure that all EPs have labels if multiple EPs
         if (theEP.label() == '' && self.entryPoints().length > 1) {
           $('#testResults').append(localized['unlabeled_entry_point']);
+          isErrors = true;
         }
         switch(theEP.type) {
         case 'map':
             // Do maps have at least one legend?
           if (theEP.settings.legends().length == 0) {
             epErrorMessage(localized['map_legend']);
+            isErrors = true;
           }
           if (theEP.settings.coordMote() == '') {
             epErrorMessage(localized['map_coord_mote']);
+            isErrors = true;
           }
           break;
         case 'cards':
           var colorName = theEP.settings.color();
           if (!colorName || colorName === 'disable') {
             epErrorMessage(localized['cards_color_legend']);
+            isErrors = true;
           }
             // Do cards have at least one content mote?
           if (theEP.settings.content().length == 0) {
             epErrorMessage(localized['cards_content']);
+            isErrors = true;
           }
           break;
         case 'pinboard':
           var w;
           if (theEP.settings.dw() == '' || isNaN(w=parseInt(theEP.settings.dw(),10)) || w <= 0) {
             epErrorMessage(localized['pinboard_width']);
+            isErrors = true;
           }
           var h;
           if (theEP.settings.dh() == '' || isNaN(h=parseInt(theEP.settings.dh(),10)) || h <= 0) {
             epErrorMessage(localized['pinboard_height']);
+            isErrors = true;
           }
           if (theEP.settings.iw() == '' || isNaN(w=parseInt(theEP.settings.iw(),10)) || w <= 0) {
             epErrorMessage(localized['pinboard_bg_width']);
+            isErrors = true;
           }
           if (theEP.settings.ih() == '' || isNaN(h=parseInt(theEP.settings.ih(),10)) || h <= 0) {
             epErrorMessage(localized['pinboard_bg_height']);
+            isErrors = true;
           }
             // Do pinboards have at least one legend?
           if (theEP.settings.legends().length == 0) {
             epErrorMessage(localized['pinboard_legend']);
+            isErrors = true;
           }
           if (theEP.settings.coordMote() == '') {
             epErrorMessage(localized['pinboard_coord_mote']);
+            isErrors = true;
           }
           break;
         case 'tree':
           if (theEP.settings.head() == '') {
             epErrorMessage(localized['tree_head']);
+            isErrors = true;
           }
           if (theEP.settings.children() == '') {
             epErrorMessage(localized['tree_pointer']);
+            isErrors = true;
           }
           var i;
           if (theEP.settings.fSize() == '' || isNaN(i=parseInt(theEP.settings.fSize(),10)) || i <= 8) {
             epErrorMessage(localized['tree_font_size']);
+            isErrors = true;
           }
           if (theEP.settings.width() == '' || isNaN(i=parseInt(theEP.settings.width(),10)) || i <= 20) {
             epErrorMessage(localized['tree_image_width']);
+            isErrors = true;
           }
           if (theEP.settings.height() == '' || isNaN(i=parseInt(theEP.settings.height(),10)) || i <= 20) {
             epErrorMessage(localized['tree_image_height']);
+            isErrors = true;
           }
           break;
         case 'time':
           if (theEP.settings.date() == '') {
             epErrorMessage(localized['time_date_mote']);
+            isErrors = true;
           }
           if (theEP.settings.color() == '') {
             epErrorMessage(localized['time_color_legend']);
+            isErrors = true;
           }
           var i;
           if (theEP.settings.bandHt() == '' || isNaN(i=parseInt(theEP.settings.bandHt(),10)) || i <= 8) {
             epErrorMessage(localized['time_band_height']);
+            isErrors = true;
           }
           if (theEP.settings.wAxisLbl() == '' || isNaN(i=parseInt(theEP.settings.wAxisLbl(),10)) || i <= 10) {
             epErrorMessage(localized['time_label_width']);
+            isErrors = true;
           }
             // Check Dates and their formats -- must be a specific date (can't be fuzzy)
           var dateRegEx = /^(open|-?\d+(-(\d)+)?(-(\d)+)?)$/;
           if (!dateRegEx.test(theEP.settings.from())) {
             epErrorMessage(localized['time_date_start_frame']);
+            isErrors = true;
           }
           if (!dateRegEx.test(theEP.settings.to())) {
             epErrorMessage(localized['time_date_end_frame']);
+            isErrors = true;
           }
           if (!dateRegEx.test(theEP.settings.openFrom())) {
             epErrorMessage(localized['time_date_start_zoom']);
+            isErrors = true;
           }
           if (!dateRegEx.test(theEP.settings.openTo())) {
             epErrorMessage(localized['time_date_end_zoom']);
+            isErrors = true;
           }
           break;
         case 'flow':
           var w;
           if (theEP.settings.width() == '' || isNaN(w=parseInt(theEP.settings.width(),10)) || w <= 0) {
             epErrorMessage(localized['facet_bg_width']);
+            isErrors = true;
           }
           var h;
           if (theEP.settings.height() == '' || isNaN(h=parseInt(theEP.settings.height(),10)) || h <= 0) {
             epErrorMessage(localized['facet_bg_height']);
+            isErrors = true;
           }
           if (theEP.settings.motes().length < 2) {
             epErrorMessage(localized['facet_two_motes']);
+            isErrors = true;
           }
             // Ensure that each facet-mote is only used once in list
           var redundFacets=false;
@@ -2460,11 +2537,13 @@ jQuery(document).ready(function($) {
           });
           if (redundFacets) {
             epErrorMessage(localized['facet_unique_motes']);
+            isErrors = true;
           }
           break;
         case 'browser':
           if (theEP.settings.motes().length < 1) {
             epErrorMessage(localized['facet_browser_mote']);
+            isErrors = true;
           }
             // Ensure that each facet-mote is only used once in list
           var redundFacets=false;
@@ -2477,10 +2556,18 @@ jQuery(document).ready(function($) {
           });
           if (redundFacets) {
             epErrorMessage(localized['redundant_motes']);
+            isErrors = true;
           }
           break;          
         } // switch
       });
+
+      if (isErrors) {
+        $('#entry_points').show();
+      }
+  
+
+      $('#testResults').append('<strong>'+localized['misc']+'</strong>');
 
         // Is there at least one mote for select modal content?
       if (self.selMoteList().length < 1) {
@@ -2618,26 +2705,6 @@ jQuery(document).ready(function($) {
 
 
   //=================================== AJAX FUNCTIONS ==================================
-
-  //   //PURPOSE: Exports project settings data object
-  // function exportSettingsInWP(settingsData){
-  //   jQuery.ajax({
-  //         type: 'POST',
-  //         url: ajax_url,
-  //         data: {
-  //             action: 'dhpExportProjectSettings',
-  //             project: projectID,
-  //             settings: settingsData
-  //         },
-  //         success: function(data, textStatus, XMLHttpRequest) {
-  //           $('#exportSaveSettings').button('enable');
-  //         },
-  //         error: function(XMLHttpRequest, textStatus, erroThrown){
-  //           alert(errorThrown);
-  //           $('#exportSaveSettings').button('enable');
-  //         }
-  //   });
-  // }
 
     // PURPOSE: Saves project settings data object
   function saveSettingsInWP(settingsData) {
@@ -2970,11 +3037,11 @@ jQuery(document).ready(function($) {
           },
           success: function(data, textStatus, XMLHttpRequest) {
             $('#testResults').append(data);
-            $('#runTests').button('enable');
+            $('.runTests').button('enable');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
-            $('#runTests').button('enable');
+            $('.runTests').button('enable');
           }
       });
   } // dhpGetFieldValues()

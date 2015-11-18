@@ -1079,24 +1079,6 @@ function dhp_get_marker_tree()
 
 // ====================== AJAX Functions ======================
 
-// add_action( 'wp_ajax_dhpExportProjectSettings', 'dhp_export_project_settings' );
-
-// //PURPOSE: Called by JS code on page to export the settings (constructed by JS) to local computer
-// //ASSUMES: Project ID encoded in string
-
-// function dhp_export_project_settings()
-// {
-// 	$settings = $_POST['settings'];
-// 	$dhp_projectID = $_POST['project'];
-
-// 	$fp = fopen("../project_settings.json", 'w');
-// 	fwrite($fp, $settings);
-// 	fclose($fp);
-
-// 		//Ajax call must terminate with "die"
-// 	die('exporting... ' . $json_settings);
-// } //dhp_export_project_settings()
-
 add_action( 'wp_ajax_dhpSaveProjectSettings', 'dhp_save_project_settings' );
 
 // PURPOSE:	Called by JS code on page to save the settings (constructed by JS) for the Project
@@ -2455,6 +2437,15 @@ function add_dhp_project_admin_scripts( $hook )
 
 			$pngs = dhp_get_attached_PNGs($postID);
 			$localized = array(
+				'cancel'				=> __('Cancel', 'dhpress'),
+				'delete'				=> __('Delete', 'dhpress'),
+				'rebuild'				=> __('Rebuild', 'dhpress'),
+				'execute'				=> __('Execute', 'dhpress'),
+				'save'					=> __('Save', 'dhpress'),
+				'clear_all'				=> __('Clear All', 'dhpress'),
+				'random_colors'			=> __('Random Colors', 'dhpress'),
+				'gradient'				=> __('Gradient', 'dhpress'),
+				'name_me'				=> __('name me', 'dhpress'),
 				'choose' 				=> __('- choose -', 'dhpress'),
 				'home_button' 			=> __('<p>If you wish to create a "Home" button, you must supply both a URL and label.</p>', 'dhpress'),
 				'home_address' 			=> __('<p>The Home address does not appear to be a full, well-formed URL.</p>', 'dhpress'),
@@ -2496,7 +2487,11 @@ function add_dhp_project_admin_scripts( $hook )
 				'redundant_motes'		=> __('You have listed redundant motes to display', 'dhpress'),
 				'empty_content_mote'	=> __('<p>Your list of motes for the select modal is empty. We suggest you add at least one content mote.</p>', 'dhpress'),
 				'transcript_settings'	=> __('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>', 'dhpress'),
-				'tests_being_conducted'	=> __('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>', 'dhpress')
+				'tests_being_conducted'	=> __('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>', 'dhpress'),
+				'general_settings'		=> __('General Settings', 'dhpress'),
+				'motes'					=> __('Motes', 'dhpress'),
+				'entry_points'			=> __('Entry Points', 'dhpress'),
+				'misc'					=> __('Misc.', 'dhpress')
 			);
 			wp_localize_script('dhp-project-script', 'dhpDataLib', array(
 				'ajax_url' => $dev_url,

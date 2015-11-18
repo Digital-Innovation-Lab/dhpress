@@ -82,6 +82,12 @@ ul.wp-submenu {
 }
 
 
+#testResults strong {
+  display: block;
+  padding-top: 10px;
+}
+
+
 /* ========== For show/hide of components ========== */
 
 .hide {
