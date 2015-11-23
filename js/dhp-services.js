@@ -223,7 +223,8 @@ var dhpServices = {
 						hasParentClass = 'hasParent';
 					}
 					if (theTerm.icon_url == null || theTerm.icon_url == undefined) {
-						throw new Error("Legend value "+theTerm.name+" has not been assigned a color or icon");
+						// throw new Error("Legend value "+theTerm.name+" has not been assigned a color or icon");
+						theTerm.icon_url = '#888888';
 					}
 
 					var firstIconChar = theTerm.icon_url.charAt(0);

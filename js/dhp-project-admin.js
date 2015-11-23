@@ -968,7 +968,8 @@ jQuery(document).ready(function($) {
                     }); // arrayForEach
                   } // if treeItem.children
                 }); // arrayForEach
-
+                
+                //console.log(JSON.stringify(flatArray));
                 saveLegendValuesInWP(theMote.name, flatArray);
 
                   // Close modal on assumption that save works
@@ -1031,6 +1032,7 @@ jQuery(document).ready(function($) {
         // NOTE:    domItem is DIV of class viz-div
       function getVizData(domItem) {
           if ($(domItem).hasClass('color-box')) {
+            //console.log('Item: '+$(domItem).closest('.dd3-content').text()+', Color: '+formatColor($(domItem).css('background-color')));
             return formatColor($(domItem).css('background-color'));
           } else if ($(domItem).hasClass('maki-icon')) {
             return getIconClass(domItem);
@@ -1057,6 +1059,7 @@ jQuery(document).ready(function($) {
           // Color patch is default
         if (vizData == null || vizData=='') {
           if (setDefault) { defVizType='colors'; }
+          //console.log('null: ' + vizData);
           return '<div class="viz-div color-box" style="background-color: #888888"></div>';
         }
 
@@ -2315,6 +2318,7 @@ jQuery(document).ready(function($) {
       $('#testResults').empty();
 
       $('#accordion').accordion('option', 'active', 5);
+      $('html, body').animate({scrollTop: $("#accordion").offset().top}, 500);
 
       var isErrors = false;
         // Check global-level settings --------------
@@ -2753,6 +2757,7 @@ jQuery(document).ready(function($) {
           success: function(data, textStatus, XMLHttpRequest) {
                 // data is a JSON object
             var results = JSON.parse(data);
+            //console.log(results);
             funcToCall(results);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -2777,6 +2782,7 @@ jQuery(document).ready(function($) {
               terms: taxTermsList
           },
           success: function(data, textStatus, XMLHttpRequest) {
+            //console.log(data);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
              alert(errorThrown);
