@@ -3,3 +3,7 @@ sftp-config.json
 .DS_Store
 
 lib/.DS_Store
+
+languages/dhpress-es_ES.po
+
+languages/dhpress-es_ES.mo

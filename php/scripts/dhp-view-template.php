@@ -46,6 +46,9 @@
 					$page_scripts = array('d3', 'dhp-browser-view');
 					$page_styles = array('dhp-browser-css');
 					break;
+				default:
+					$page_scripts = array();
+					$page_styles = array();
 			}
 		
 

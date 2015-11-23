@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-11-16 14:15-0500\n"
+"POT-Creation-Date: 2015-11-23 14:14-0500\n"
 "PO-Revision-Date: 2015-09-28 13:22-0400\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgstr ""
 msgid "Edit Map"
 msgstr ""
 
-#: dhpress.php:161 php/scripts/dhp-html-admin-edit.php:60
+#: dhpress.php:161 php/scripts/dhp-html-admin-edit.php:59
 msgid "New Map"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgid ""
 "in URLs on a webpage."
 msgstr ""
 
-#: php/dhp-class-settings.php:157 php/scripts/dhp-view-template.php:168
+#: php/dhp-class-settings.php:157 php/scripts/dhp-view-template.php:171
 msgid "Close"
 msgstr ""
 
@@ -477,203 +477,203 @@ msgstr ""
 msgid "Invalid request"
 msgstr ""
 
-#: php/dhp-project-functions.php:2035
+#: php/dhp-project-functions.php:2017
 msgid ""
 "<p>You have not specified the Timestamp setting for the Transcription "
 "(despite setting Transcript motes).</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2058
+#: php/dhp-project-functions.php:2040
 #, php-format
 msgid "<p>Problem reading file %s </p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2065 php/dhp-project-functions.php:2070
+#: php/dhp-project-functions.php:2047 php/dhp-project-functions.php:2052
 #, php-format
 msgid "<p> Cannot find timestamp %1$s in file %2$s</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2097
+#: php/dhp-project-functions.php:2079
 msgid "<p>Cannot verify unspecified legend.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2106
+#: php/dhp-project-functions.php:2088
 #, php-format
 msgid ""
 "<p>Legend \"%s\" has not yet been created but must be for project to work.</"
 "p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2145
+#: php/dhp-project-functions.php:2127
 #, php-format
 msgid "<p>The value %1$s for legend %2$s has no visual setting.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2153 php/dhp-project-functions.php:2161
-#: php/dhp-project-functions.php:2169
+#: php/dhp-project-functions.php:2135 php/dhp-project-functions.php:2143
+#: php/dhp-project-functions.php:2151
 #, php-format
 msgid "<p>Illegal mixture of color and icon settings in legend %s.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2159
+#: php/dhp-project-functions.php:2141
 #, php-format
 msgid ""
 "<p>The assigned Entry Point cannot use maki-icon setting %1$s for legend "
 "%2$s value %3$s.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2167
+#: php/dhp-project-functions.php:2149
 #, php-format
 msgid ""
 "<p>The assigned Entry Point cannot use PNG image %1$s for legend %2$s value "
 "%3$s.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2173
+#: php/dhp-project-functions.php:2155
 #, php-format
 msgid "<p>Unknown setting %1$s for legend %2$s value %3$s.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2200
+#: php/dhp-project-functions.php:2182
 msgid ""
 "This is a new project and cannot be verified until it is saved and Markers "
 "imported"
 msgstr ""
 
-#: php/dhp-project-functions.php:2275
+#: php/dhp-project-functions.php:2257
 #, php-format
 msgid "<p>Invalid Coordinate %s"
 msgstr ""
 
-#: php/dhp-project-functions.php:2282
+#: php/dhp-project-functions.php:2264
 msgid "<p>Invalid SoundCloud URL"
 msgstr ""
 
-#: php/dhp-project-functions.php:2293
+#: php/dhp-project-functions.php:2275
 msgid "<p>Invalid URL"
 msgstr ""
 
-#: php/dhp-project-functions.php:2300
+#: php/dhp-project-functions.php:2282
 msgid "<p>Invalid textfile URL"
 msgstr ""
 
-#: php/dhp-project-functions.php:2307
+#: php/dhp-project-functions.php:2289
 #, php-format
 msgid "<p>Invalid Timestamp %s"
 msgstr ""
 
-#: php/dhp-project-functions.php:2319
+#: php/dhp-project-functions.php:2301
 msgid "<p>Invalid Date range"
 msgstr ""
 
-#: php/dhp-project-functions.php:2326
+#: php/dhp-project-functions.php:2308
 #, php-format
 msgid "given for mote %1$s (custom field %2$s) in marker %3$s</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2333
+#: php/dhp-project-functions.php:2315
 msgid ""
 "<p>Stopped checking errors in Marker data because more than 20 errors have "
 "been found. Correct these and try again.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2344
+#: php/dhp-project-functions.php:2326
 #, php-format
 msgid ""
 "<p>You have specified the Source mote %s for Transcription fragmentation but "
 "you have not built it yet as a category.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2360
+#: php/dhp-project-functions.php:2342
 msgid "<p>All data on server has been examined and approved.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2362
+#: php/dhp-project-functions.php:2344
 msgid "<p>Data tests now complete.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2458 php/scripts/dhp-script-cards-view.php:47
+#: php/dhp-project-functions.php:2456 php/scripts/dhp-script-cards-view.php:47
 msgid "Cancel"
 msgstr ""
 
-#: php/dhp-project-functions.php:2459 php/scripts/dhp-html-admin-edit.php:141
-#: php/scripts/dhp-html-admin-edit.php:175
-#: php/scripts/dhp-html-admin-edit.php:226
-#: php/scripts/dhp-html-admin-edit.php:236
-#: php/scripts/dhp-html-admin-edit.php:289
-#: php/scripts/dhp-html-admin-edit.php:296
-#: php/scripts/dhp-html-admin-edit.php:303
-#: php/scripts/dhp-html-admin-edit.php:363
-#: php/scripts/dhp-html-admin-edit.php:370
-#: php/scripts/dhp-html-admin-edit.php:468
-#: php/scripts/dhp-html-admin-edit.php:504
-#: php/scripts/dhp-html-admin-edit.php:513
-#: php/scripts/dhp-html-admin-edit.php:520
-#: php/scripts/dhp-html-admin-edit.php:527
-#: php/scripts/dhp-html-admin-edit.php:534
+#: php/dhp-project-functions.php:2457 php/scripts/dhp-html-admin-edit.php:140
+#: php/scripts/dhp-html-admin-edit.php:174
+#: php/scripts/dhp-html-admin-edit.php:225
+#: php/scripts/dhp-html-admin-edit.php:235
+#: php/scripts/dhp-html-admin-edit.php:288
+#: php/scripts/dhp-html-admin-edit.php:295
+#: php/scripts/dhp-html-admin-edit.php:302
+#: php/scripts/dhp-html-admin-edit.php:362
+#: php/scripts/dhp-html-admin-edit.php:369
+#: php/scripts/dhp-html-admin-edit.php:467
+#: php/scripts/dhp-html-admin-edit.php:503
+#: php/scripts/dhp-html-admin-edit.php:512
+#: php/scripts/dhp-html-admin-edit.php:519
+#: php/scripts/dhp-html-admin-edit.php:526
+#: php/scripts/dhp-html-admin-edit.php:533
 msgid "Delete"
 msgstr ""
 
-#: php/dhp-project-functions.php:2460 php/scripts/dhp-html-admin-edit.php:178
+#: php/dhp-project-functions.php:2458 php/scripts/dhp-html-admin-edit.php:177
 msgid "Rebuild"
 msgstr ""
 
-#: php/dhp-project-functions.php:2461
+#: php/dhp-project-functions.php:2459
 msgid "Execute"
 msgstr ""
 
-#: php/dhp-project-functions.php:2462
+#: php/dhp-project-functions.php:2460
 msgid "Save"
 msgstr ""
 
-#: php/dhp-project-functions.php:2463
+#: php/dhp-project-functions.php:2461
 msgid "Clear All"
 msgstr ""
 
-#: php/dhp-project-functions.php:2464
+#: php/dhp-project-functions.php:2462
 msgid "Random Colors"
 msgstr ""
 
-#: php/dhp-project-functions.php:2465
+#: php/dhp-project-functions.php:2463
 msgid "Gradient"
 msgstr ""
 
-#: php/dhp-project-functions.php:2466
+#: php/dhp-project-functions.php:2464
 msgid "name me"
 msgstr ""
 
-#: php/dhp-project-functions.php:2467 php/scripts/dhp-html-admin-edit.php:32
+#: php/dhp-project-functions.php:2465 php/scripts/dhp-html-admin-edit.php:31
 msgid "- choose -"
 msgstr ""
 
-#: php/dhp-project-functions.php:2468
+#: php/dhp-project-functions.php:2466
 msgid ""
 "<p>If you wish to create a \"Home\" button, you must supply both a URL and "
 "label.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2469
+#: php/dhp-project-functions.php:2467
 msgid "<p>The Home address does not appear to be a full, well-formed URL.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2470
+#: php/dhp-project-functions.php:2468
 msgid ""
 "<p>Your project will not work until you import Markers which are associated "
 "with this Project (by using this Project ID).</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2471
+#: php/dhp-project-functions.php:2469
 msgid "<p>Your project will not work until you define some motes.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2472
+#: php/dhp-project-functions.php:2470
 #, php-format
 msgid ""
 "<p>Motes of type Pointer require a delimiter character; the Mote named %s "
 "has not yet been assigned a delimiter.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2473
+#: php/dhp-project-functions.php:2471
 #, php-format
 msgid ""
 "<p>You have specified the commas as the delimiter character for the Lat-Lon "
@@ -681,195 +681,195 @@ msgid ""
 "reserved for separating Lat from Lon and cannot be used to form Polygons.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2474
+#: php/dhp-project-functions.php:2472
 msgid ""
 "<p>Your project will not work until you create at least one entry point.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2475
+#: php/dhp-project-functions.php:2473
 #, php-format
 msgid "<p>%1$s (entry point \"%2$s\").</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2476
+#: php/dhp-project-functions.php:2474
 msgid ""
 "<p>You have an unlabeled entry point. All multiple entry points must be "
 "named.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2477
+#: php/dhp-project-functions.php:2475
 msgid "You have not yet added a legend to the Map"
 msgstr ""
 
-#: php/dhp-project-functions.php:2478
+#: php/dhp-project-functions.php:2476
 msgid "You must specify the mote that will provide the coordinate for the Map"
 msgstr ""
 
-#: php/dhp-project-functions.php:2479
+#: php/dhp-project-functions.php:2477
 msgid ""
 "We recommend specifying a color legend for the Cards visualization, but none "
 "is provided"
 msgstr ""
 
-#: php/dhp-project-functions.php:2480
+#: php/dhp-project-functions.php:2478
 msgid "You haven't yet specified content for the Cards visualization"
 msgstr ""
 
-#: php/dhp-project-functions.php:2481
+#: php/dhp-project-functions.php:2479
 msgid "You must specify a valid display width for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2482
+#: php/dhp-project-functions.php:2480
 msgid "You must specify a valid display height for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2483
+#: php/dhp-project-functions.php:2481
 msgid "You must specify a valid background image width for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2484
+#: php/dhp-project-functions.php:2482
 msgid "You must specify a valid background image height for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2485
+#: php/dhp-project-functions.php:2483
 msgid "You have not yet added a legend to the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2486
+#: php/dhp-project-functions.php:2484
 msgid ""
 "You must specify the mote that will provide the coordinate for the Pinboard"
 msgstr ""
 
-#: php/dhp-project-functions.php:2487
+#: php/dhp-project-functions.php:2485
 msgid "You must specify the head marker for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2488
+#: php/dhp-project-functions.php:2486
 msgid ""
 "You must specify the Pointer mote which indicates descending generations for "
 "the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2489
+#: php/dhp-project-functions.php:2487
 msgid "You must specify a valid font size for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2490
+#: php/dhp-project-functions.php:2488
 msgid "You must specify a valid image width for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2491
+#: php/dhp-project-functions.php:2489
 msgid "You must specify a valid image height for the Tree"
 msgstr ""
 
-#: php/dhp-project-functions.php:2492
+#: php/dhp-project-functions.php:2490
 msgid "You must specify the Date mote for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2493
+#: php/dhp-project-functions.php:2491
 msgid "You must specify a color legend for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2494
+#: php/dhp-project-functions.php:2492
 msgid "You must specify a valid band height for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2495
+#: php/dhp-project-functions.php:2493
 msgid "You must specify a valid x axis label width for the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2496
+#: php/dhp-project-functions.php:2494
 msgid "You must specify a valid Date for the start frame of the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2497
+#: php/dhp-project-functions.php:2495
 msgid "You must specify a valid Date for the end frame of the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2498
+#: php/dhp-project-functions.php:2496
 msgid "You must specify a valid Date for the start zoom of the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2499
+#: php/dhp-project-functions.php:2497
 msgid "You must specify a valid Date for the end zoom of the Timeline"
 msgstr ""
 
-#: php/dhp-project-functions.php:2500
+#: php/dhp-project-functions.php:2498
 msgid ""
 "You must specify a valid background palette width for the Facet Flow view"
 msgstr ""
 
-#: php/dhp-project-functions.php:2501
+#: php/dhp-project-functions.php:2499
 msgid ""
 "You must specify a valid background palette height for the Facet Flow view"
 msgstr ""
 
-#: php/dhp-project-functions.php:2502
+#: php/dhp-project-functions.php:2500
 msgid "You need at least two sets of motes for the Facet Flow"
 msgstr ""
 
-#: php/dhp-project-functions.php:2503
+#: php/dhp-project-functions.php:2501
 msgid "Facet Flow requires unique (not redundant) motes in the list to display"
 msgstr ""
 
-#: php/dhp-project-functions.php:2504
+#: php/dhp-project-functions.php:2502
 msgid "You need at least one mote for the Facet Browser"
 msgstr ""
 
-#: php/dhp-project-functions.php:2505
+#: php/dhp-project-functions.php:2503
 msgid "You have listed redundant motes to display"
 msgstr ""
 
-#: php/dhp-project-functions.php:2506
+#: php/dhp-project-functions.php:2504
 msgid ""
 "<p>Your list of motes for the select modal is empty. We suggest you add at "
 "least one content mote.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2507
+#: php/dhp-project-functions.php:2505
 msgid ""
 "<p>Although you have enabled transcripts on archive pages via the \"Source\" "
 "selection, you have not yet specified other necessary transcript settings.</"
 "p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2508
+#: php/dhp-project-functions.php:2506
 msgid ""
 "<p>Tests are now being conducted on the WordPress server. This checks all "
 "values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This "
 "will only work properly if your project settings have been saved.</p>"
 msgstr ""
 
-#: php/dhp-project-functions.php:2509 php/scripts/dhp-html-admin-edit.php:14
+#: php/dhp-project-functions.php:2507 php/scripts/dhp-html-admin-edit.php:13
 msgid "General Settings"
 msgstr ""
 
-#: php/dhp-project-functions.php:2510 php/scripts/dhp-html-admin-edit.php:23
+#: php/dhp-project-functions.php:2508 php/scripts/dhp-html-admin-edit.php:22
 msgid "Motes"
 msgstr ""
 
-#: php/dhp-project-functions.php:2511 php/scripts/dhp-html-admin-edit.php:56
+#: php/dhp-project-functions.php:2509 php/scripts/dhp-html-admin-edit.php:55
 msgid "Entry Points"
 msgstr ""
 
-#: php/dhp-project-functions.php:2512
+#: php/dhp-project-functions.php:2510
 msgid "Misc."
 msgstr ""
 
-#: php/dhp-project-functions.php:2575
+#: php/dhp-project-functions.php:2573
 msgid "Map ID cannot be found"
 msgstr ""
 
-#: php/dhp-project-functions.php:2587
+#: php/dhp-project-functions.php:2585
 #, php-format
 msgid "No dhp_map_typeid metadata for map named %1$s of id %2$s"
 msgstr ""
 
-#: php/dhp-project-functions.php:2802
+#: php/dhp-project-functions.php:2832
 msgid "Reset"
 msgstr ""
 
-#: php/dhp-project-functions.php:2803 php/scripts/dhp-html-admin-edit.php:600
+#: php/dhp-project-functions.php:2833 php/scripts/dhp-html-admin-edit.php:599
 msgid "Reset All"
 msgstr ""
 
@@ -886,990 +886,986 @@ msgid "Save Settings"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:9
-msgid "Export Settings"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:10
 msgid "Test Settings for Errors"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:16
+#: php/scripts/dhp-html-admin-edit.php:15
 msgid "Label for Home Button:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:16
+#: php/scripts/dhp-html-admin-edit.php:15
 msgid "Home"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:17
+#: php/scripts/dhp-html-admin-edit.php:16
 msgid "Home URL:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:18
+#: php/scripts/dhp-html-admin-edit.php:17
 msgid "Marker Labels:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:19
+#: php/scripts/dhp-html-admin-edit.php:18
 msgid "Primary Key (unique identifier used only for Pointers):"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:25
+#: php/scripts/dhp-html-admin-edit.php:24
 msgid "Create relational containers for data in WP custom fields"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:27
+#: php/scripts/dhp-html-admin-edit.php:26
 msgid "Mote Name:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:28
-#: php/scripts/dhp-html-admin-edit.php:580
+#: php/scripts/dhp-html-admin-edit.php:27
+#: php/scripts/dhp-html-admin-edit.php:579
 msgid "Custom Field:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:30
-#: php/scripts/dhp-html-admin-edit.php:565
+#: php/scripts/dhp-html-admin-edit.php:29
+#: php/scripts/dhp-html-admin-edit.php:564
 msgid "Mote Type:"
+msgstr ""
+
+#: php/scripts/dhp-html-admin-edit.php:32
+#: php/scripts/dhp-html-admin-edit.php:566
+msgid "Short Text"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:33
 #: php/scripts/dhp-html-admin-edit.php:567
-msgid "Short Text"
+msgid "Long Text"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:34
 #: php/scripts/dhp-html-admin-edit.php:568
-msgid "Long Text"
+msgid "Lat/Lon Coordinates"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:35
 #: php/scripts/dhp-html-admin-edit.php:569
-msgid "Lat/Lon Coordinates"
+msgid "X-Y Coordinates"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:36
 #: php/scripts/dhp-html-admin-edit.php:570
-msgid "X-Y Coordinates"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:37
-#: php/scripts/dhp-html-admin-edit.php:571
 #: php/scripts/dhp-script-cards-view.php:65
 #: php/scripts/dhp-script-cards-view.php:69
 msgid "Date"
 msgstr ""
 
+#: php/scripts/dhp-html-admin-edit.php:37
+#: php/scripts/dhp-html-admin-edit.php:571
+msgid "Pointer"
+msgstr ""
+
 #: php/scripts/dhp-html-admin-edit.php:38
 #: php/scripts/dhp-html-admin-edit.php:572
-msgid "Pointer"
+msgid "Image"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:39
 #: php/scripts/dhp-html-admin-edit.php:573
-msgid "Image"
+msgid "Link To"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:40
+#: php/scripts/dhp-html-admin-edit.php:89
 #: php/scripts/dhp-html-admin-edit.php:574
-msgid "Link To"
+msgid "SoundCloud"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:41
 #: php/scripts/dhp-html-admin-edit.php:90
 #: php/scripts/dhp-html-admin-edit.php:575
-msgid "SoundCloud"
+msgid "YouTube"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:42
-#: php/scripts/dhp-html-admin-edit.php:91
 #: php/scripts/dhp-html-admin-edit.php:576
-msgid "YouTube"
+msgid "Transcript"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:43
 #: php/scripts/dhp-html-admin-edit.php:577
-msgid "Transcript"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:44
-#: php/scripts/dhp-html-admin-edit.php:578
 msgid "Timestamp"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:47
-#: php/scripts/dhp-html-admin-edit.php:581
+#: php/scripts/dhp-html-admin-edit.php:46
+#: php/scripts/dhp-html-admin-edit.php:580
 msgid "Value delimiter:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:49
+#: php/scripts/dhp-html-admin-edit.php:48
 msgid "Create New"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:51
+#: php/scripts/dhp-html-admin-edit.php:50
 msgid "Currently Defined Motes:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:59
+#: php/scripts/dhp-html-admin-edit.php:58
 msgid "New Browser"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:61
+#: php/scripts/dhp-html-admin-edit.php:60
 msgid "New Cards"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:62
+#: php/scripts/dhp-html-admin-edit.php:61
 msgid "New Pinboard"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:63
+#: php/scripts/dhp-html-admin-edit.php:62
 msgid "New Tree"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:64
+#: php/scripts/dhp-html-admin-edit.php:63
 msgid "New Timeline"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:65
+#: php/scripts/dhp-html-admin-edit.php:64
 msgid "New Facet Flow"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:71
+#: php/scripts/dhp-html-admin-edit.php:70
 msgid "Views"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:74
+#: php/scripts/dhp-html-admin-edit.php:73
 msgid "Select Modal windows (item selected from visualization)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:76
+#: php/scripts/dhp-html-admin-edit.php:75
 msgid "Modal size:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:78
+#: php/scripts/dhp-html-admin-edit.php:77
 msgid "Tiny"
+msgstr ""
+
+#: php/scripts/dhp-html-admin-edit.php:78
+#: php/scripts/dhp-html-admin-edit.php:202
+#: php/scripts/dhp-html-admin-edit.php:333
+msgid "Small"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:79
 #: php/scripts/dhp-html-admin-edit.php:203
+#: php/scripts/dhp-html-admin-edit.php:257
+#: php/scripts/dhp-html-admin-edit.php:263
 #: php/scripts/dhp-html-admin-edit.php:334
-msgid "Small"
+msgid "Medium"
 msgstr ""
 
 #: php/scripts/dhp-html-admin-edit.php:80
 #: php/scripts/dhp-html-admin-edit.php:204
-#: php/scripts/dhp-html-admin-edit.php:258
-#: php/scripts/dhp-html-admin-edit.php:264
 #: php/scripts/dhp-html-admin-edit.php:335
-msgid "Medium"
-msgstr ""
-
-#: php/scripts/dhp-html-admin-edit.php:81
-#: php/scripts/dhp-html-admin-edit.php:205
-#: php/scripts/dhp-html-admin-edit.php:336
 msgid "Large"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:82
+#: php/scripts/dhp-html-admin-edit.php:81
 msgid "X-Large"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:86
+#: php/scripts/dhp-html-admin-edit.php:85
 msgid "Link 1:"
 msgstr ""
 
+#: php/scripts/dhp-html-admin-edit.php:85
 #: php/scripts/dhp-html-admin-edit.php:86
-#: php/scripts/dhp-html-admin-edit.php:87
 msgid "Label:"
 msgstr ""
 
+#: php/scripts/dhp-html-admin-edit.php:85
 #: php/scripts/dhp-html-admin-edit.php:86
-#: php/scripts/dhp-html-admin-edit.php:87
 msgid "Open new tab:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:87
+#: php/scripts/dhp-html-admin-edit.php:86
 msgid "Link 2:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:88
+#: php/scripts/dhp-html-admin-edit.php:87
 msgid "Widgets to show:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:88
+#: php/scripts/dhp-html-admin-edit.php:87
 msgid "Add"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:88
+#: php/scripts/dhp-html-admin-edit.php:87
 msgid "this widget:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:96
+#: php/scripts/dhp-html-admin-edit.php:95
 msgid "Add Content Mote to Select Modal"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:99
+#: php/scripts/dhp-html-admin-edit.php:98
 msgid "Post view (Marker pages)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:101
+#: php/scripts/dhp-html-admin-edit.php:100
 msgid "Page title:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:104
+#: php/scripts/dhp-html-admin-edit.php:103
 msgid "Add Content Mote to Post Pages"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:107
+#: php/scripts/dhp-html-admin-edit.php:106
 msgid "Taxonomy/Archive/Category view"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:110
+#: php/scripts/dhp-html-admin-edit.php:109
 msgid "Add Content Mote to Tax/Archive Pages"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:113
+#: php/scripts/dhp-html-admin-edit.php:112
 msgid "Playback Widgets"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:115
+#: php/scripts/dhp-html-admin-edit.php:114
 msgid "Audio Source:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:116
+#: php/scripts/dhp-html-admin-edit.php:115
 msgid "Video Source:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:117
+#: php/scripts/dhp-html-admin-edit.php:116
 msgid "Transcript:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:118
+#: php/scripts/dhp-html-admin-edit.php:117
 msgid "Transcript 2:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:119
+#: php/scripts/dhp-html-admin-edit.php:118
 msgid "Timecode:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:120
+#: php/scripts/dhp-html-admin-edit.php:119
 msgid "Source:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:126
+#: php/scripts/dhp-html-admin-edit.php:125
 msgid "Custom Field Utilities"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:128
+#: php/scripts/dhp-html-admin-edit.php:127
 msgid ""
 "WARNING: These functions modify your data irrevocably and should be used "
 "with extreme caution. If you make changes to custom fields that correspond "
 "to Legends (Short Text motes), you will have to Rebuild them."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:130
+#: php/scripts/dhp-html-admin-edit.php:129
 msgid "New Custom Field"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:132
+#: php/scripts/dhp-html-admin-edit.php:131
 msgid "Create new custom field named"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:133
+#: php/scripts/dhp-html-admin-edit.php:132
 msgid "Default value"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:134
+#: php/scripts/dhp-html-admin-edit.php:133
 msgid "Create Custom Field"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:137
+#: php/scripts/dhp-html-admin-edit.php:136
 msgid "Delete Custom Field"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:139
-#: php/scripts/dhp-html-admin-edit.php:146
+#: php/scripts/dhp-html-admin-edit.php:138
+#: php/scripts/dhp-html-admin-edit.php:145
 msgid "Get Custom Fields"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:140
+#: php/scripts/dhp-html-admin-edit.php:139
 msgid "Delete this custom field:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:144
+#: php/scripts/dhp-html-admin-edit.php:143
 msgid "Find/Replace Custom Field Values"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:147
+#: php/scripts/dhp-html-admin-edit.php:146
 msgid "Replace values in the field"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:148
+#: php/scripts/dhp-html-admin-edit.php:147
 msgid "For matches of the value"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:149
+#: php/scripts/dhp-html-admin-edit.php:148
 msgid "(always applied if no filter)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:150
+#: php/scripts/dhp-html-admin-edit.php:149
 msgid "With this value"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:151
+#: php/scripts/dhp-html-admin-edit.php:150
 #, php-format
 msgid "Only when the value in the field %1$s is %2$s"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:152
+#: php/scripts/dhp-html-admin-edit.php:151
 msgid "Do Find/Replace"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:159
+#: php/scripts/dhp-html-admin-edit.php:158
 msgid "Testing and Error-checking"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:161
+#: php/scripts/dhp-html-admin-edit.php:160
 msgid "Run Tests"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:172
+#: php/scripts/dhp-html-admin-edit.php:171
 #, php-format
 msgid "%1$s of type %2$s from"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:173
+#: php/scripts/dhp-html-admin-edit.php:172
 #, php-format
 msgid "%1$s, delimiter [ %2$s ]"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:174
+#: php/scripts/dhp-html-admin-edit.php:173
 msgid "Edit"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:177
+#: php/scripts/dhp-html-admin-edit.php:176
 msgid "Configure"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:189
+#: php/scripts/dhp-html-admin-edit.php:188
 msgid "Map Entry Point"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:191
+#: php/scripts/dhp-html-admin-edit.php:190
 msgid "Delete Map"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:195
+#: php/scripts/dhp-html-admin-edit.php:194
 msgid "Map short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:196
+#: php/scripts/dhp-html-admin-edit.php:195
 msgid "Map Center (Lat)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:198
+#: php/scripts/dhp-html-admin-edit.php:197
 msgctxt "map longitude"
 msgid "(Long)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:199
+#: php/scripts/dhp-html-admin-edit.php:198
 msgid "Initial Zoom"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:200
+#: php/scripts/dhp-html-admin-edit.php:199
 msgid "Cluster Markers"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:202
+#: php/scripts/dhp-html-admin-edit.php:201
 msgid "Marker Radius"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:207
+#: php/scripts/dhp-html-admin-edit.php:206
 msgid "Marker Mote (for Lat/Lon)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:210
+#: php/scripts/dhp-html-admin-edit.php:209
 msgid "Add Layer"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:212
-#: php/scripts/dhp-html-admin-edit.php:353
+#: php/scripts/dhp-html-admin-edit.php:211
+#: php/scripts/dhp-html-admin-edit.php:352
 msgid "Add Legend"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:220
+#: php/scripts/dhp-html-admin-edit.php:219
 msgid "Base Layer"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:224
+#: php/scripts/dhp-html-admin-edit.php:223
 msgid "Overlay Layer"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:228
+#: php/scripts/dhp-html-admin-edit.php:227
 msgid "Opacity"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:235
+#: php/scripts/dhp-html-admin-edit.php:234
 msgid "Legend"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:247
+#: php/scripts/dhp-html-admin-edit.php:246
 msgid "Cards Entry Point"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:249
+#: php/scripts/dhp-html-admin-edit.php:248
 msgid "Delete Cards"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:253
+#: php/scripts/dhp-html-admin-edit.php:252
 msgid "Card short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:255
+#: php/scripts/dhp-html-admin-edit.php:254
 msgid "Width"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:256
-#: php/scripts/dhp-html-admin-edit.php:262
+#: php/scripts/dhp-html-admin-edit.php:255
+#: php/scripts/dhp-html-admin-edit.php:261
 msgid "Automatic"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:257
+#: php/scripts/dhp-html-admin-edit.php:256
 msgid "Thin"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:259
+#: php/scripts/dhp-html-admin-edit.php:258
 msgid "Wide"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:261
+#: php/scripts/dhp-html-admin-edit.php:260
 msgid "Height"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:263
+#: php/scripts/dhp-html-admin-edit.php:262
 msgid "Short"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:265
+#: php/scripts/dhp-html-admin-edit.php:264
 msgid "Tall"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:267
+#: php/scripts/dhp-html-admin-edit.php:266
 msgid "Show marker title at top of card"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:270
+#: php/scripts/dhp-html-admin-edit.php:269
 msgid "Card Color (must be configured for colors)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:271
+#: php/scripts/dhp-html-admin-edit.php:270
 msgid "Default Color"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:273
-#: php/scripts/dhp-html-admin-edit.php:325
+#: php/scripts/dhp-html-admin-edit.php:272
+#: php/scripts/dhp-html-admin-edit.php:324
 msgid "Background Color"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:273
-#: php/scripts/dhp-html-admin-edit.php:325
+#: php/scripts/dhp-html-admin-edit.php:272
+#: php/scripts/dhp-html-admin-edit.php:324
 msgid "(CSS color name, #hexvalue, or blank for default)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:275
+#: php/scripts/dhp-html-admin-edit.php:274
 msgid "Add Content Mote"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:278
+#: php/scripts/dhp-html-admin-edit.php:277
 msgid "Add Filter Mote"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:281
+#: php/scripts/dhp-html-admin-edit.php:280
 msgid "Add Sort Mote"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:288
+#: php/scripts/dhp-html-admin-edit.php:287
 msgid "<b>Content mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:295
+#: php/scripts/dhp-html-admin-edit.php:294
 msgid "<b>Filter mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:302
+#: php/scripts/dhp-html-admin-edit.php:301
 msgid "<b>Sort mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:314
+#: php/scripts/dhp-html-admin-edit.php:313
 msgid "<b>Pinboard Entry Point</b>"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:316
+#: php/scripts/dhp-html-admin-edit.php:315
 msgid "Delete Pinboard"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:320
+#: php/scripts/dhp-html-admin-edit.php:319
 msgid "Pinboard short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:321
+#: php/scripts/dhp-html-admin-edit.php:320
 msgid "Display Frame Size: Width (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:323
-#: php/scripts/dhp-html-admin-edit.php:331
-#: php/scripts/dhp-html-admin-edit.php:390
-#: php/scripts/dhp-html-admin-edit.php:456
+#: php/scripts/dhp-html-admin-edit.php:322
+#: php/scripts/dhp-html-admin-edit.php:330
+#: php/scripts/dhp-html-admin-edit.php:389
+#: php/scripts/dhp-html-admin-edit.php:455
 msgid "Height (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:326
+#: php/scripts/dhp-html-admin-edit.php:325
 msgid "Background Image URL"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:329
+#: php/scripts/dhp-html-admin-edit.php:328
 msgid "Background Image Size: Width (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:333
+#: php/scripts/dhp-html-admin-edit.php:332
 msgid "Pin marker: Size (circle and diamond only)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:338
+#: php/scripts/dhp-html-admin-edit.php:337
 msgid "Shape"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:339
+#: php/scripts/dhp-html-admin-edit.php:338
 msgid "Circle"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:340
+#: php/scripts/dhp-html-admin-edit.php:339
 msgid "Diamond"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:341
+#: php/scripts/dhp-html-admin-edit.php:340
 msgid "Ballon"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:342
+#: php/scripts/dhp-html-admin-edit.php:341
 msgid "Tack"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:343
+#: php/scripts/dhp-html-admin-edit.php:342
 msgid "Magnifying Glass"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:345
+#: php/scripts/dhp-html-admin-edit.php:344
 msgid "Mote (for X-Y)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:347
+#: php/scripts/dhp-html-admin-edit.php:346
 msgid "Animation Script URL"
 msgstr ""
 
+#: php/scripts/dhp-html-admin-edit.php:346
 #: php/scripts/dhp-html-admin-edit.php:347
-#: php/scripts/dhp-html-admin-edit.php:348
 msgid "Leave blank for none"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:348
+#: php/scripts/dhp-html-admin-edit.php:347
 msgid "Animation SVG URL"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:349
+#: php/scripts/dhp-html-admin-edit.php:348
 msgid "Animation YouTube"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:349
+#: php/scripts/dhp-html-admin-edit.php:348
 msgid "YT code only - Leave blank for none"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:351
+#: php/scripts/dhp-html-admin-edit.php:350
 msgid "Add SVG Layer File"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:360
+#: php/scripts/dhp-html-admin-edit.php:359
 msgid "<b>SVG Layer File</b>"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:361
+#: php/scripts/dhp-html-admin-edit.php:360
 msgid "Label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:362
+#: php/scripts/dhp-html-admin-edit.php:361
 msgid "File URL"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:369
-#: php/scripts/dhp-html-admin-edit.php:467
+#: php/scripts/dhp-html-admin-edit.php:368
+#: php/scripts/dhp-html-admin-edit.php:466
 msgid "<b>Legend</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:381
+#: php/scripts/dhp-html-admin-edit.php:380
 msgid "<b>Tree Entry Point</b>"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:383
+#: php/scripts/dhp-html-admin-edit.php:382
 msgid "Delete Tree"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:387
+#: php/scripts/dhp-html-admin-edit.php:386
 msgid "Tree short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:388
+#: php/scripts/dhp-html-admin-edit.php:387
 msgid "Tree Panel Size: Width (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:392
+#: php/scripts/dhp-html-admin-edit.php:391
 msgid "Type of Tree"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:393
+#: php/scripts/dhp-html-admin-edit.php:392
 msgid "Flat Tree"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:394
+#: php/scripts/dhp-html-admin-edit.php:393
 msgid "Radial Tree"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:395
+#: php/scripts/dhp-html-admin-edit.php:394
 msgid "Segmented Wheel"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:397
+#: php/scripts/dhp-html-admin-edit.php:396
 msgid "Padding (meaning depends on tree type)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:399
+#: php/scripts/dhp-html-admin-edit.php:398
 msgid "Head/Top Marker of Tree"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:400
+#: php/scripts/dhp-html-admin-edit.php:399
 msgid "Children stored in"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:402
+#: php/scripts/dhp-html-admin-edit.php:401
 msgid "Font size (pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:403
+#: php/scripts/dhp-html-admin-edit.php:402
 msgid "Marker radius (pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:405
-#: php/scripts/dhp-html-admin-edit.php:425
+#: php/scripts/dhp-html-admin-edit.php:404
+#: php/scripts/dhp-html-admin-edit.php:424
 msgid "Marker Color"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:405
-#: php/scripts/dhp-html-admin-edit.php:425
+#: php/scripts/dhp-html-admin-edit.php:404
+#: php/scripts/dhp-html-admin-edit.php:424
 msgid "(Must be configured for colors)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:417
+#: php/scripts/dhp-html-admin-edit.php:416
 msgid "<b>Timeline Entry Point</b>"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:419
+#: php/scripts/dhp-html-admin-edit.php:418
 msgid "Delete Timeline"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:423
+#: php/scripts/dhp-html-admin-edit.php:422
 msgid "Timeline short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:424
+#: php/scripts/dhp-html-admin-edit.php:423
 msgid "Date range"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:427
+#: php/scripts/dhp-html-admin-edit.php:426
 msgid "Height of each band (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:428
+#: php/scripts/dhp-html-admin-edit.php:427
 msgid "Width of start/end axis labels (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:430
+#: php/scripts/dhp-html-admin-edit.php:429
 msgid "Timeline start date"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:431
-#: php/scripts/dhp-html-admin-edit.php:434
+#: php/scripts/dhp-html-admin-edit.php:430
+#: php/scripts/dhp-html-admin-edit.php:433
 msgid "to end date"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:433
+#: php/scripts/dhp-html-admin-edit.php:432
 msgid "Zoom window start date"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:447
+#: php/scripts/dhp-html-admin-edit.php:446
 msgid "<b>Facet Flow Entry Point</b>"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:449
+#: php/scripts/dhp-html-admin-edit.php:448
 msgid "Delete Facet Flow"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:453
+#: php/scripts/dhp-html-admin-edit.php:452
 msgid "Facet Flow short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:454
+#: php/scripts/dhp-html-admin-edit.php:453
 msgid "Flow Panel Size: Width (in pixels)"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:458
+#: php/scripts/dhp-html-admin-edit.php:457
 msgid "Facet Flow views require at least 2 Short Text mote Legends to work"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:460
+#: php/scripts/dhp-html-admin-edit.php:459
 msgid "Add Mote to Flow"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:479
+#: php/scripts/dhp-html-admin-edit.php:478
 msgid "<b>Facet Browser Entry Point</b>"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:481
+#: php/scripts/dhp-html-admin-edit.php:480
 msgid "Delete Browser"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:485
+#: php/scripts/dhp-html-admin-edit.php:484
 msgid "Browser short label"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:486
+#: php/scripts/dhp-html-admin-edit.php:485
 msgid "Group Date mote values by"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:487
+#: php/scripts/dhp-html-admin-edit.php:486
 msgid "Keep exact dates"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:488
+#: php/scripts/dhp-html-admin-edit.php:487
 msgid "Same month"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:489
+#: php/scripts/dhp-html-admin-edit.php:488
 msgid "Same year"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:490
+#: php/scripts/dhp-html-admin-edit.php:489
 msgid "Same decade"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:491
+#: php/scripts/dhp-html-admin-edit.php:490
 msgid "Same century"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:494
+#: php/scripts/dhp-html-admin-edit.php:493
 msgid "Browser views require at least 1 mote to work"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:496
+#: php/scripts/dhp-html-admin-edit.php:495
 msgid "Add Mote to Browser"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:503
+#: php/scripts/dhp-html-admin-edit.php:502
 msgid "<b>Mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:512
+#: php/scripts/dhp-html-admin-edit.php:511
 msgid "<b>Widget</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:519
+#: php/scripts/dhp-html-admin-edit.php:518
 msgid "<b>Modal content mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:526
+#: php/scripts/dhp-html-admin-edit.php:525
 msgid "<b>Post content mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:533
+#: php/scripts/dhp-html-admin-edit.php:532
 msgid "<b>Taxonomy/Archive content mote</b>:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:542
+#: php/scripts/dhp-html-admin-edit.php:541
 msgid "Server Error"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:543
+#: php/scripts/dhp-html-admin-edit.php:542
 msgid ""
 "There was an error on the server and your operation could not complete. "
 "Please try again."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:546
+#: php/scripts/dhp-html-admin-edit.php:545
 msgid "Delete mote?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:547
+#: php/scripts/dhp-html-admin-edit.php:546
 msgid ""
 "Are you sure you wish to delete the mote definition and all references to it?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:550
+#: php/scripts/dhp-html-admin-edit.php:549
 msgid "Select Mote Parameters"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:551
+#: php/scripts/dhp-html-admin-edit.php:550
 msgid ""
 "You must select a valid Custom Field and Mote Type before you can create a "
 "mote."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:554
+#: php/scripts/dhp-html-admin-edit.php:553
 msgid "No Custom Fields"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:555
+#: php/scripts/dhp-html-admin-edit.php:554
 msgid ""
 "You have not imported any Markers associated with this Project and therefore "
 "cannot define motes."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:558
+#: php/scripts/dhp-html-admin-edit.php:557
 msgid "Illegal Characters"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:559
+#: php/scripts/dhp-html-admin-edit.php:558
 msgid ""
 "This mote cannot be created with the name you have given. You can only use "
 "alphanumeric characters, spaces, underscores and hyphens in mote names."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:562
+#: php/scripts/dhp-html-admin-edit.php:561
 msgid "Edit Mote"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:564
+#: php/scripts/dhp-html-admin-edit.php:563
 msgid "Name:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:582
+#: php/scripts/dhp-html-admin-edit.php:581
 msgid ""
 "WARNING: Editing the mote definition will reset it in the rest of the "
 "settings."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:582
+#: php/scripts/dhp-html-admin-edit.php:581
 msgid ""
 "Delete this mote and recreate it if you have already created the "
 "corresponding legend and need to specify a different delimiter or custom "
 "field."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:585
+#: php/scripts/dhp-html-admin-edit.php:584
 msgid "Delete entry point?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:586
+#: php/scripts/dhp-html-admin-edit.php:585
 msgid "Are you sure you wish to delete this entry point?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:589
+#: php/scripts/dhp-html-admin-edit.php:588
 msgid "Rebuild Legend?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:590
+#: php/scripts/dhp-html-admin-edit.php:589
 msgid "Are you sure you wish to rebuild this Legend from scratch?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:594
+#: php/scripts/dhp-html-admin-edit.php:593
 msgid "Configure Legend"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:597
+#: php/scripts/dhp-html-admin-edit.php:596
 msgid "Use Colors"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:598
+#: php/scripts/dhp-html-admin-edit.php:597
 msgid "Use Icons"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:599
+#: php/scripts/dhp-html-admin-edit.php:598
 msgid "Use PNG images"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:603
+#: php/scripts/dhp-html-admin-edit.php:602
 msgid "Add Term"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:604
+#: php/scripts/dhp-html-admin-edit.php:603
 msgid "Please wait while the category/legend data is loaded."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:612
+#: php/scripts/dhp-html-admin-edit.php:611
 msgid "Delete custom field?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:613
+#: php/scripts/dhp-html-admin-edit.php:612
 msgid ""
 "Are you sure you wish to delete this custom field entirely? This cannot be "
 "undone."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:616
+#: php/scripts/dhp-html-admin-edit.php:615
 msgid "Find/Replace custom field?"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:617
+#: php/scripts/dhp-html-admin-edit.php:616
 msgid ""
 "Are you sure you wish to execute this find/replace operation on the custom "
 "field? This cannot be undone."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:620
+#: php/scripts/dhp-html-admin-edit.php:619
 msgid "Error"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:621
+#: php/scripts/dhp-html-admin-edit.php:620
 msgid ""
 "The name of your mote is too long: a mote name cannot be longer than 32 "
 "characters."
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:624
+#: php/scripts/dhp-html-admin-edit.php:623
 msgid "Select Color"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:625
+#: php/scripts/dhp-html-admin-edit.php:624
 msgid "Select a color:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:628
+#: php/scripts/dhp-html-admin-edit.php:627
 msgid "Reset Colors"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:630
+#: php/scripts/dhp-html-admin-edit.php:629
 msgid "<strong>Clear All:</strong> Resets all colors to default gray value"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:631
+#: php/scripts/dhp-html-admin-edit.php:630
 msgid ""
 "<strong>Random Colors:</strong> Assigns a random color value to each term"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:632
+#: php/scripts/dhp-html-admin-edit.php:631
 msgid ""
 "<strong>Gradient:</strong> Assigns a color value to each term within a range "
 "of colors:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:637
+#: php/scripts/dhp-html-admin-edit.php:636
 msgid "Start Color:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:638
+#: php/scripts/dhp-html-admin-edit.php:637
 msgid "End Color:"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:642
+#: php/scripts/dhp-html-admin-edit.php:641
 msgid "Select PNG image"
 msgstr ""
 
-#: php/scripts/dhp-html-admin-edit.php:648
+#: php/scripts/dhp-html-admin-edit.php:647
 msgid "Select Icon"
 msgstr ""
 
@@ -2072,7 +2068,7 @@ msgstr ""
 msgid "Look at Transcript file"
 msgstr ""
 
-#: php/scripts/dhp-script-tax-trans.php:5 php/scripts/dhp-view-template.php:215
+#: php/scripts/dhp-script-tax-trans.php:5 php/scripts/dhp-view-template.php:218
 msgid "Scroll transcript to follow playback"
 msgstr ""
 
@@ -2085,26 +2081,26 @@ msgctxt "D3 Localization. See https://github.com/mbostock/d3/wiki/Localization"
 msgid "default"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:80
+#: php/scripts/dhp-view-template.php:83
 msgid "My Site"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:82
+#: php/scripts/dhp-view-template.php:85
 msgid "Menu"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:177
+#: php/scripts/dhp-view-template.php:180
 msgid "Loading Project"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:186
+#: php/scripts/dhp-view-template.php:189
 msgid "Change View"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:202
+#: php/scripts/dhp-view-template.php:205
 msgid "Hide/Show All"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:209
+#: php/scripts/dhp-view-template.php:212
 msgid "Tips"
 msgstr ""
