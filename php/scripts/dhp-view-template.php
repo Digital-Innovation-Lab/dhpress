@@ -183,7 +183,7 @@
 </div>
 
 
-<script id="dhp-script-epviz-menu">
+<script id="dhp-script-epviz-menu" type="text/html">
   <li class="divider"></li>
   <li class="has-dropdown">
       <a href="#"><?php _e('Change View', 'dhpress'); ?></a>
@@ -194,12 +194,12 @@
 </script>
 
 
-<script id="dhp-script-legend-head">
+<script id="dhp-script-legend-head" type="text/html">
   <div id="legends" class="" style=""><div class="legend-row"></div></div>
 </script>
 
 
-<script id="dhp-script-legend-hideshow">
+<script id="dhp-script-legend-hideshow" type="text/html">
   <div class="row check-all"> 
     <div class="small-2 large-2 columns"><input type="checkbox" checked="checked"></div>
     <div class="small-10 large-10 columns"><a class="value" data-id="all"><b><?php _e('Hide/Show All', 'dhpress'); ?></b></a></div>
@@ -207,13 +207,13 @@
 </script>
 
 
-<script id="dhp-script-tip-div">
+<script id="dhp-script-tip-div" type="text/html">
 	<li>
 		<a href="#" class="tips" data-reveal-id="tipModal" data-reveal><i class="fi-info"></i><?php _e('Tips', 'dhpress'); ?></a>
 	</li>
 </script>
 
-<script id="dhp-script-transc-scroll">
+<script id="dhp-script-transc-scroll" type="text/html">
 	<div style="padding-top:5px">
 		<input type="checkbox" id="transcSyncOn" name="transcSyncOn" checked> <?php _e('Scroll transcript to follow playback', 'dhpress'); ?>
 	</div>
