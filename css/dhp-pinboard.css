@@ -64,7 +64,7 @@ svg {
 #dhp-pin-controls .pin-fndn-icon button {
     background-color: white !important;
     font-size: 28px;
-    padding: 8px 6px 6px 6px;
+    padding: 6px 4px 4px;
 }
     /*gives user feedback of hovering over control*/
 #dhp-pin-controls .pin-fndn-icon button:hover {
