@@ -29,45 +29,6 @@ $dhp_map_custom_fields = array( 'dhp_map_id', 'dhp_map_sname', 'dhp_map_url', 'd
 
 // ============================== Init Functions ============================
 
-add_action( 'init', 'dhp_mapset_init' );
-
-    // PURPOSE: Add new taxonomy for mapsets
-function dhp_mapset_init()
-{
-  $labels = array(
-    'name' => _x( 'Maps', 'taxonomy general name' ),
-    'singular_name' => _x( 'Map', 'taxonomy singular name' ),
-    'add_new' => __('Add New', 'dhp-maps'),
-    'add_new_item' => __('Add New Map'),
-    'edit_item' => __('Edit Map'),
-    'new_item' => __('New Map'),
-    'all_items' => __('Map Library'),
-    'view_item' => __('View Map'),
-     'search_items' => __('Search Maps'),
-    'not_found' =>  __('No maps found'),
-    'not_found_in_trash' => __('No maps found in Trash'), 
-    'parent_item_colon' => '',
-    'menu_name' => __('Map Library')
-  ); 
-
-  $args = array(
-    'labels' => $labels,
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true, 
-    'show_in_menu' => 'dhp-top-level-handle', 
-    'query_var' => true,
-    'rewrite' => false,
-    'capability_type' => 'post',
-    'has_archive' => true, 
-    'hierarchical' => false,
-    'menu_position' => null,
-    'supports' => array( 'title', 'author', 'excerpt', 'comments', 'revisions','custom-fields' )
-//'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions','custom-fields' )
-  );
-  register_post_type('dhp-maps',$args);
-}
-
 
 add_action( 'admin_enqueue_scripts', 'add_dhp_map_library_scripts', 10, 1 );
 
@@ -122,7 +83,7 @@ function add_dhp_map_settings_box()
 {
     add_meta_box(
         'dhp_map_settings_meta_box',       // $id
-        'Map Attributes',                  // title
+        __('Map Attributes', 'dhpress'),   // title
         'show_dhp_map_settings_box',       // callback function name
         'dhp-maps',                        // post-type
         'normal',                          // $context
@@ -143,22 +104,22 @@ function show_dhp_map_settings_box()
     $mapAttributes = dhp_get_map_custom_fields($post->ID, $dhp_map_custom_fields);
 
     echo '<table>';
-    echo '<tr><td colspan=2><label>Please enter the map information below:</label></td></tr>';
-    echo '<tr><td align=right>*Map ID:</td><td><input name="dhp_map_id" id="dhp_map_id" type="text" size="60" value="'.$mapAttributes['dhp_map_id'].'"/></td></tr>';
-    echo '<tr><td align=right>*Short title:</td><td><input name="dhp_map_sname" id="dhp_map_sname" type="text" size="60" value="'.$mapAttributes['dhp_map_sname'].'"/></td></tr>';
-    echo '<tr><td align=right>*URL:</td><td><input name="dhp_map_url" id="dhp_map_url" type="text" size="30" value="'.$mapAttributes['dhp_map_url'].'"/></td></tr>';
-    echo '<tr><td align=right>Subdomains:</td><td><input name="dhp_map_subdomains" id="dhp_map_subdomains" type="text" size="30" value="'.$mapAttributes['dhp_map_subdomains'].'"/></td></tr>';
+    echo '<tr><td colspan=2><label>'.__('Please enter the map information below:', 'dhpress').'</label></td></tr>';
+    echo '<tr><td align=right>*'.__('Map ID', 'dhpress').':</td><td><input name="dhp_map_id" id="dhp_map_id" type="text" size="60" value="'.$mapAttributes['dhp_map_id'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('Short title', 'dhpress').':</td><td><input name="dhp_map_sname" id="dhp_map_sname" type="text" size="60" value="'.$mapAttributes['dhp_map_sname'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('URL', 'dhpress').':</td><td><input name="dhp_map_url" id="dhp_map_url" type="text" size="30" value="'.$mapAttributes['dhp_map_url'].'"/></td></tr>';
+    echo '<tr><td align=right>'.__('Subdomains', 'dhpress').':</td><td><input name="dhp_map_subdomains" id="dhp_map_subdomains" type="text" size="30" value="'.$mapAttributes['dhp_map_subdomains'].'"/></td></tr>';
 
-    echo '<tr><td align=right>*North bounds:</td><td><input name="dhp_map_n_bounds" id="dhp_map_n_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_n_bounds'].'"/></td></tr>';
-    echo '<tr><td align=right>*South bounds:</td><td><input name="dhp_map_s_bounds" id="dhp_map_s_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_s_bounds'].'"/></td></tr>';
-    echo '<tr><td align=right>*East bounds:</td><td><input name="dhp_map_e_bounds" id="dhp_map_e_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_e_bounds'].'"/></td></tr>';
-    echo '<tr><td align=right>*West bounds:</td><td><input name="dhp_map_w_bounds" id="dhp_map_w_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_w_bounds'].'"/></td></tr>';
-    echo '<tr><td align=right>*Minimum Zoom:</td><td><input name="dhp_map_min_zoom" id="dhp_map_min_zoom" type="text" size="2" value="'.$mapAttributes['dhp_map_min_zoom'].'"/></td></tr>';
-    echo '<tr><td align=right>*Maximum Zoom:</td><td><input name="dhp_map_max_zoom" id="dhp_map_max_zoom" type="text" size="2" value="'.$mapAttributes['dhp_map_max_zoom'].'"/></td></tr>';
-    echo '<tr><td align=right>*Inverse Y-axis:</td><td><input name="dhp_map_inverse_y" id="dhp_map_inverse_y" type="text" size="6" value="'.$mapAttributes['dhp_map_inverse_y'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('North bounds', 'dhpress').':</td><td><input name="dhp_map_n_bounds" id="dhp_map_n_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_n_bounds'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('South bounds', 'dhpress').':</td><td><input name="dhp_map_s_bounds" id="dhp_map_s_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_s_bounds'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('East bounds', 'dhpress').':</td><td><input name="dhp_map_e_bounds" id="dhp_map_e_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_e_bounds'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('West bounds', 'dhpress').':</td><td><input name="dhp_map_w_bounds" id="dhp_map_w_bounds" type="text" size="10" value="'.$mapAttributes['dhp_map_w_bounds'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('Minimum Zoom', 'dhpress').':</td><td><input name="dhp_map_min_zoom" id="dhp_map_min_zoom" type="text" size="2" value="'.$mapAttributes['dhp_map_min_zoom'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('Maximum Zoom', 'dhpress').':</td><td><input name="dhp_map_max_zoom" id="dhp_map_max_zoom" type="text" size="2" value="'.$mapAttributes['dhp_map_max_zoom'].'"/></td></tr>';
+    echo '<tr><td align=right>*'.__('Inverse Y-axis', 'dhpress').':</td><td><input name="dhp_map_inverse_y" id="dhp_map_inverse_y" type="text" size="6" value="'.$mapAttributes['dhp_map_inverse_y'].'"/></td></tr>';
 
-    echo '<tr><td align=right>Description:</td><td><input name="dhp_map_desc" id="dhp_map_desc" type="text" size="60" value="'.$mapAttributes['dhp_map_desc'].'"/></td></tr>';
-    echo '<tr><td align=right>Credits:</td><td><input name="dhp_map_credits" id="dhp_map_credits" type="text" size="30" value="'.$mapAttributes['dhp_map_credits'].'"/></td></tr>';
+    echo '<tr><td align=right>'.__('Description', 'dhpress').':</td><td><input name="dhp_map_desc" id="dhp_map_desc" type="text" size="60" value="'.$mapAttributes['dhp_map_desc'].'"/></td></tr>';
+    echo '<tr><td align=right>'.__('Credits', 'dhpress').':</td><td><input name="dhp_map_credits" id="dhp_map_credits" type="text" size="30" value="'.$mapAttributes['dhp_map_credits'].'"/></td></tr>';
     echo '</table>';
 } // show_dhp_map_settings_box()
 

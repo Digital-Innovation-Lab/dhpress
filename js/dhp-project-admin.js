@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
           },
           post: {
             title: '',
-            content: [],
+            content: []
           },
           transcript: {
             audio: 'disable',
@@ -51,6 +51,7 @@ jQuery(document).ready(function($) {
   var ajax_url     = dhpDataLib.ajax_url;
   var projectID    = dhpDataLib.projectID;
   var pngImages    = dhpDataLib.pngImages;
+  var localized    = $.parseJSON(dhpDataLib.localized);
 
 
     // Parameters passed via HTML elements
@@ -80,6 +81,14 @@ jQuery(document).ready(function($) {
     savedSettings = JSON.parse(savedSettings);
     if (savedSettings == undefined || savedSettings.general == undefined) {
       savedSettings = _blankSettings;
+    }
+  }
+
+    // Prevents users from exiting page if there are unsaved changes
+  window.beforeunload = window.onbeforeunload = function (e) {
+    if (projObj.settingsDirty()) {
+      e.returnValue = 'You have unsaved changes. If you leave the page, these changes will be lost.';
+      return 'You have unsaved changes. If you leave the page, these changes will be lost.';
     }
   }
 
@@ -136,7 +145,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'map';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.lat = ko.observable(epSettings.settings.lat);
     self.settings.lon = ko.observable(epSettings.settings.lon);
@@ -160,7 +169,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'cards';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.titleOn = ko.observable(epSettings.settings.titleOn);
     self.settings.color = ko.observable(epSettings.settings.color);
@@ -191,8 +200,9 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'pinboard';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
+    self.settings.bckGrd = ko.observable(epSettings.settings.bckGrd);
     self.settings.imageURL = ko.observable(epSettings.settings.imageURL);
     self.settings.dw = ko.observable(epSettings.settings.dw);
     self.settings.dh = ko.observable(epSettings.settings.dh);
@@ -221,7 +231,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'tree';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.form = ko.observable(epSettings.settings.form);
     self.settings.width = ko.observable(epSettings.settings.width);
@@ -240,7 +250,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'time';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.date = ko.observable(epSettings.settings.date);
     self.settings.color = ko.observable(epSettings.settings.color);
@@ -257,7 +267,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'flow';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.width = ko.observable(epSettings.settings.width);
     self.settings.height = ko.observable(epSettings.settings.height);
@@ -273,7 +283,7 @@ jQuery(document).ready(function($) {
     var self = this;
 
     self.type = 'browser';
-    self.label= ko.observable(epSettings.label || 'name me');
+    self.label= ko.observable(epSettings.label || localized['name_me']);
     self.settings = { };
     self.settings.dateGrp = ko.observable(epSettings.settings.dateGrp);
 
@@ -302,6 +312,7 @@ jQuery(document).ready(function($) {
   } // PinLayer()
 
 
+
 //=================================== MAIN OBJECT ===================================
 
     // PURPOSE: "Controller" Object that coordinates between Knockout and business layer
@@ -327,7 +338,6 @@ jQuery(document).ready(function($) {
 
         // Must save them in custom metabox in case user hits "Update" button in WP!
       $('#project_settings').val(settingsData);
-
       saveSettingsInWP(settingsData);
     };
 
@@ -417,6 +427,7 @@ jQuery(document).ready(function($) {
         case 'pinboard':
           savedEP.settings.dw = theEP.settings.dw();
           savedEP.settings.dh = theEP.settings.dh();
+          savedEP.settings.bckGrd = theEP.settings.bckGrd();
           savedEP.settings.imageURL = theEP.settings.imageURL();
           savedEP.settings.iw = theEP.settings.iw();
           savedEP.settings.ih = theEP.settings.ih();
@@ -575,13 +586,13 @@ jQuery(document).ready(function($) {
 
 
       // User-editable values
-    self.edMoteType = ko.observable('- choose -');
+    self.edMoteType = ko.observable(localized['choose']);
     self.edMoteName = ko.observable('');
-    self.edMoteCF = ko.observable('- choose -');
+    self.edMoteCF = ko.observable(localized['choose']);
     self.edMoteDelim = ko.observable('');
 
       // Insert empty custom field to front of list
-    self.optionsCF = ['- choose -'].concat(allCustomFields);
+    self.optionsCF = [localized['choose']].concat(allCustomFields);
 
       // Configurable data
     self.allMotes = ko.observableArray([]);
@@ -645,7 +656,7 @@ jQuery(document).ready(function($) {
       // PURPOSE: Create new mote definition via user interface
     self.createMote = function() {
         // Make sure valid CF and mote type chosen
-      if (self.edMoteType() === '- choose -' || self.edMoteCF()  === '- choose -') {
+      if (self.edMoteType() === localized['choose'] || self.edMoteCF()  === localized['choose']) {
         $("#mdl-def-mote").dialog({
           modal: true,
           buttons: {
@@ -707,8 +718,8 @@ jQuery(document).ready(function($) {
             self.allMotes.push(new Mote(newName, self.edMoteType(), self.edMoteCF(), self.edMoteDelim()));
               // reset GUI default values
             self.edMoteName('');
-            self.edMoteType('- choose -');
-            self.edMoteCF('- choose -');
+            self.edMoteType(localized['choose']);
+            self.edMoteCF(localized['choose']);
             self.edMoteDelim('');
 
             self.settingsDirty(true);
@@ -787,25 +798,30 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Delete': function() {
+        buttons: [
+          {
+            text: localized['delete'],
+            click: function() {
+              self.extractMote(theMote);
 
-            self.extractMote(theMote);
+                // Delete Taxonomy/Legend if it exists
+              if (theMote.type == 'Short Text') {
+                deleteHeadTermInWP(moteName);
+              }
 
-              // Delete Taxonomy/Legend if it exists
-            if (theMote.type == 'Short Text') {
-              deleteHeadTermInWP(moteName);
+              self.allMotes.remove(theMote);
+
+              self.settingsDirty(true);
+              $(this).dialog('close');
             }
-
-            self.allMotes.remove(theMote);
-
-            self.settingsDirty(true);
-            $(this).dialog('close');
           },
-          Cancel: function() {
-            $(this).dialog('close');
-          }
-        }
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
+          } 
+        ]
       });
     }; // delMote()
 
@@ -840,13 +856,13 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: [
             {
-              text: 'Cancel',
+              text: localized['cancel'],
               click: function() {
                 $(this).dialog('close');
               }
             },
             {
-              text: 'Save',
+              text: localized['save'],
               click: function() {
                 self.extractMote(theMote);
                 self.allMotes.remove(theMote);
@@ -914,11 +930,13 @@ jQuery(document).ready(function($) {
           draggable: false,
           buttons: [
             {
-              text: 'Cancel',
-              click: function() { $(this).dialog('close'); }
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             },
             {
-              text: 'Save',
+              text: localized['save'],
               click: function() {
                   // Save reorganized data: only need to gather term_id, parent, term_order, icon_url
                   // Need to convert from nestable's format to flat format used by WP:
@@ -950,8 +968,10 @@ jQuery(document).ready(function($) {
                     }); // arrayForEach
                   } // if treeItem.children
                 }); // arrayForEach
-
+                
+                //console.log(JSON.stringify(flatArray));
                 saveLegendValuesInWP(theMote.name, flatArray);
+
                   // Close modal on assumption that save works
                 $(this).dialog('close');
               }
@@ -978,13 +998,21 @@ jQuery(document).ready(function($) {
           digits = /rgb\((\d+), (\d+), (\d+)\)/.exec(colorStr);
         }
 
-        var red = parseInt(digits[1]);
-        var green = parseInt(digits[2]);
-        var blue = parseInt(digits[3]);
+        var red = componentToHex(digits[1]);
+        var green = componentToHex(digits[2]);
+        var blue = componentToHex(digits[3]);
 
-        var rgb = blue | (green << 8) | (red << 16);
-        return '#' + rgb.toString(16);
+        return '#' + red + green + blue;
       } // formatColor()
+
+        // PURPOSE: Converts r/g/b component to hex value
+        // NOTES:   Adapted from example by Tim Down (http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb)
+        //          Fixes missing zero bug
+        // RETURNS  Hex value of color component
+      function componentToHex (c) {
+        var hex = parseInt(c).toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
 
         // PURPOSE: Given a DOM element, parse its maki-icon class
         // RETURN:  Maki-icon class prefixed by '.'
@@ -1004,6 +1032,7 @@ jQuery(document).ready(function($) {
         // NOTE:    domItem is DIV of class viz-div
       function getVizData(domItem) {
           if ($(domItem).hasClass('color-box')) {
+            //console.log('Item: '+$(domItem).closest('.dd3-content').text()+', Color: '+formatColor($(domItem).css('background-color')));
             return formatColor($(domItem).css('background-color'));
           } else if ($(domItem).hasClass('maki-icon')) {
             return getIconClass(domItem);
@@ -1030,6 +1059,7 @@ jQuery(document).ready(function($) {
           // Color patch is default
         if (vizData == null || vizData=='') {
           if (setDefault) { defVizType='colors'; }
+          //console.log('null: ' + vizData);
           return '<div class="viz-div color-box" style="background-color: #888888"></div>';
         }
 
@@ -1113,11 +1143,11 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
+                  text: localized['cancel'],
                   click: function() { $(this).dialog('close'); }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                       // Determine selected icon
                     selIcon = $('#mdl-select-icon #select-icon-list .selected');
@@ -1166,23 +1196,49 @@ jQuery(document).ready(function($) {
           }
           var initColor = $(colorBoxDiv).css('background-color');
 
-            // Initialize modal
-            // NOTE: A number of options cause bizarre behavior if used: modal, colorFormat ...
-          var colorPickModal = $('#color-picker').colorpicker({
-            inline: false,
-            title: 'Choose color for '+moteName,
-            // color: initColor,  // not working properly
-            select: function(event, color) {
-              $(colorBoxDiv).css('background-color', '#'+color.formatted);
+          // Initialize Iris color picker
+          // NOTE: Requires Wordpress 3.5+ (uses built-in Iris library)
+        var colorPicker = $('#color-picker');
+        colorPicker.iris({
+            change: function(event, ui) {
+              $(colorBoxDiv).css('background-color', ui.color.toString());
             },
-              // We need to catch close events and destroy widget so we can create again later
-            close: function(event, color) {
-              colorPickModal.colorpicker('destroy');
-            }
-          });
+            hide: false,
+            width: 350,
+            palettes: true,
+            target: '#mdl-select-color'
+        });
+        colorPicker.iris('color', initColor);
+        colorPicker.iris('show');
 
-          colorPickModal.colorpicker('setColor', initColor);
-          colorPickModal.colorpicker('open');
+        var newModal = $('#mdl-select-color');
+          newModal.dialog({
+              width: 400,
+              height: 480,
+              modal : true,
+              autoOpen: false,
+              dialogClass: 'wp-dialog',
+              draggable: false,
+              buttons: [
+                {
+                  text: localized['cancel'],
+                  click: function() { 
+                    $(colorBoxDiv).css('background-color', initColor);
+                    colorPicker.iris('hide');
+                    newModal.dialog('close');
+                  }
+                },
+                {
+                  text: localized['save'],
+                  click: function() {
+                    colorPicker.iris('hide');
+                    newModal.dialog('close');
+                  }
+                }
+              ]
+          });
+          newModal.dialog('open');
+
           break;
 
         case 'pngs':
@@ -1206,18 +1262,18 @@ jQuery(document).ready(function($) {
               draggable: false,
               buttons: [
                 {
-                  text: 'Cancel',
-                  click: function() { $(this).dialog('close'); }
+                  text: localized['cancel'],
+                  click: function() { newModal.dialog('close'); }
                 },
                 {
-                  text: 'Save',
+                  text: localized['save'],
                   click: function() {
                       // Determine selected icon
                     var pngTitle = '@'+$('#mdl-select-png #select-png-list .selected').attr('alt');
                       // Create new HTML indicating selection and replace old
                     $('.viz-div:first', liElement).remove();
                     $('.select-legend:first', liElement).append(getVizHTML(pngTitle, false));
-                    $(this).dialog('close');
+                    newModal.dialog('close');
                   }
                 }
               ]
@@ -1364,14 +1420,147 @@ jQuery(document).ready(function($) {
           // Bind code to reset viz data
         $('#viz-type-reset').off('click');
         $('#viz-type-reset').click(function() {
-            // construct new default visualization data
-          var defaultViz = getDefaultViz();
 
-          $('#category-tree .dd3-item').each( function() {
-              // Remove and replace all viz-div elements (don't alter child nodes!)
-            $('.viz-div:first', this).remove();
-            $('.select-legend:first', this).append(defaultViz.html);
-          });
+            // Display random/gradient color reset options if type is set to colors
+          if ($('input:radio[value="colors"]').prop('checked')) {
+              // construct new default visualization data
+            var defaultViz = getDefaultViz();
+
+              // Defines initial gradient color range using random colors
+            var gradientRange = [randomColor(), randomColor()];
+
+              // Loops through each legend item and updates color according to type (clear, random, or gradient)
+            function updateColors (type) {
+              if (type == 'gradient') {
+                var rainbow = new Rainbow();
+                rainbow.setSpectrum(gradientRange[0], gradientRange[1]);
+
+                var gradientSize = $('#category-tree .dd3-item').length - 1;
+                rainbow.setNumberRange(0, gradientSize);
+              }
+              
+              $('#category-tree .dd3-item').each( function(index) {
+                  // Remove and replace all viz-div elements (don't alter child nodes!)
+                $('.viz-div:first', this).remove();
+                $('.select-legend:first', this).append(defaultViz.html);
+
+                switch (type) {
+                  case 'random' :
+                    var color = randomColor();
+                    break;
+                  case 'gradient' :
+                    var color = '#' + rainbow.colourAt(index);
+                    break;
+                  default :
+                    var color = defaultViz.data;
+                    break;
+                }
+
+                $('.dd3-content .select-legend .color-box', this).css('background-color', color);
+              });
+                      
+              newModal.dialog('close');
+            }
+
+            var newModal = $('#mdl-reset-color-options');
+            newModal.dialog({
+                width: 450,
+                height: 210,
+                modal : true,
+                autoOpen: false,
+                dialogClass: 'wp-dialog',
+                draggable: false,
+                buttons: [
+                  {
+                    text: localized['cancel'],
+                    click: function() { newModal.dialog('close'); }
+                  },
+                  {
+                    text: localized['clear_all'],
+                    click: function() { updateColors(); }
+                  },
+                  {
+                    text: localized['random_colors'],
+                    click: function() { updateColors('random'); }
+                  },
+                  {
+                    text: localized['gradient'],
+                    click: function() { updateColors('gradient'); }
+                  }
+                ]
+            });
+            newModal.dialog('open');
+
+
+            var colorBoxes = $('#mdl-reset-color-options #gradient-colors .color-box');
+
+              // Sets initial colors for each color box
+            colorBoxes.each(function(index) {
+              $(this).css('background-color', gradientRange[index]);
+            });
+
+            colorBoxes.click(function () {
+              var colorBox = this;
+              var initColor = $(this).css('background-color');
+
+                // Finds index of selected color box to correspond with gradientRange array
+              var boxIndex = colorBoxes.index(this);
+
+              var colorRange = $('#color-range');
+              colorRange.iris({
+                change: function(event, ui) {
+                  $(colorBox).css('background-color', ui.color.toString());
+                  gradientRange[boxIndex] = ui.color.toString();
+                },
+                hide: false,
+                width: 350,
+                palettes: true,
+                target: '#mdl-select-color'
+              });
+              colorRange.iris('color', initColor);
+              colorRange.iris('show');
+
+              var colorModal = $('#mdl-select-color');
+              colorModal.dialog({
+                  width: 400,
+                  height: 480,
+                  modal : true,
+                  autoOpen: false,
+                  dialogClass: 'wp-dialog',
+                  draggable: false,
+                  buttons: [
+                    {
+                      text: localized['cancel'],
+                      click: function() { 
+                        $(colorBox).css('background-color', initColor);
+                        colorRange.iris('hide');
+                        colorModal.dialog('close');
+                      }
+                    },
+                    {
+                      text: localized['save'],
+                      click: function() {
+                        colorRange.iris('hide');
+                        colorModal.dialog('close');
+                      }
+                    }
+                  ]
+              });
+              colorModal.dialog('open');
+            });
+
+          }
+            // Otherwise, simply reset values
+          else {
+              // construct new default visualization data
+            var defaultViz = getDefaultViz();
+  
+            $('#category-tree .dd3-item').each( function() {
+                // Remove and replace all viz-div elements (don't alter child nodes!)
+              $('.viz-div:first', this).remove();
+              $('.select-legend:first', this).append(defaultViz.html);
+            });
+          }
         }); // click()
 
           // After all material inserted, activate nestable-sortable GUI
@@ -1405,18 +1594,24 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Rebuild': function() {
-              // Disable button until AJAX call returns
-            $('#btnRebuildMote').button('disable');
-            rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
+        buttons: [
+          {
+            text: localized['rebuild'],
+            click: function() {
+                // Disable button until AJAX call returns
+              $('#btnRebuildMote').button('disable');
+              rebuildLegendValuesInWP(theMote.name, theMote.cf, theMote.delim);
 
-            $(this).dialog('close');
+              $(this).dialog('close');
+            }
           },
-          Cancel: function() {
-            $(this).dialog('close');
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
           }
-        }
+        ]
       });
     };
 
@@ -1432,7 +1627,7 @@ jQuery(document).ready(function($) {
     self.createMapEP = function() {
       var _blankMapEP = {
         type: 'map',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
             lat: 0, lon: 0, zoom: 10, cluster: false, size: 'm',
             layers: [ { id: 0, name: '', opacity: 1, mapType: '', mapTypeId: '' } ],
@@ -1448,7 +1643,7 @@ jQuery(document).ready(function($) {
     self.createCardsEP = function() {
       var _blankCardsEP = {
         type: 'cards',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           titleOn: true,
           color: 'disable',
@@ -1469,10 +1664,11 @@ jQuery(document).ready(function($) {
     self.createPinEP = function() {
       var _blankPinEP = {
         type: 'pinboard',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           dw: 500,
           dh: 500,
+          bckGrd: '',
           imageURL: '',
           iw: 500,
           ih: 500,
@@ -1494,7 +1690,7 @@ jQuery(document).ready(function($) {
     self.createTreeEP = function() {
       var _blankTreeEP = {
         type: 'tree',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           form: '',
           width: 1000,
@@ -1515,7 +1711,7 @@ jQuery(document).ready(function($) {
     self.createTimeEP = function() {
       var _blankTimeEP = {
         type: 'time',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           date: '',
           color: '',
@@ -1535,7 +1731,7 @@ jQuery(document).ready(function($) {
     self.createFlowEP = function() {
       var _blankFlowEP = {
         type: 'flow',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           width: 500,
           height: 400,
@@ -1550,7 +1746,7 @@ jQuery(document).ready(function($) {
     self.createBrowserEP = function() {
       var _blankBrowserEP = {
         type: 'browser',
-        label: 'name me',
+        label: localized['name_me'],
         settings: {
           dateGrp: 'year',
           motes: []
@@ -1597,16 +1793,22 @@ jQuery(document).ready(function($) {
         modal: true,
         dialogClass: 'wp-dialog',
         draggable: false,
-        buttons: {
-          'Delete': function() {
-            self.entryPoints.remove(theEP);
-            $(this).dialog('close');
-            self.settingsDirty(true);
+        buttons: [
+          {
+            text: localized['delete'],
+            click: function() {
+              self.entryPoints.remove(theEP);
+              $(this).dialog('close');
+              self.settingsDirty(true);
+            }
           },
-          Cancel: function() {
-            $(this).dialog('close');
+          {
+            text: localized['cancel'],
+            click: function() {
+              $(this).dialog('close');
+            }
           }
-        }
+        ]
       });
     }; // delEP()
 
@@ -1630,26 +1832,7 @@ jQuery(document).ready(function($) {
       }
     }; // calcEPTemplate()
 
-      // PURPOSE: Move this entry point to the top of the list
-    self.topEP = function(theEP, index) {
-        // Only if not at top already
-      if (index > 0 && index < self.entryPoints().length) {
-        var savedEP = self.entryPoints.splice(index, 1);
-        self.entryPoints.unshift(savedEP[0]);
-        self.settingsDirty(true);
-      }
-    }; // topEP()
-
-      // PURPOSE: Move this entry point to the bottom of the list
-    self.bottomEP = function(theEP, index) {
-        // Only if not at bottom already
-      if (index < (self.entryPoints().length-1)) {
-        var savedEP = self.entryPoints.splice(index, 1);
-        self.entryPoints.push(savedEP[0]);
-        self.settingsDirty(true);
-      }
-    }; // bottomEP()
-
+      // No longer used?
     self.maxEPindex = function() {
       return self.entryPoints().length - 1;
     };
@@ -1992,15 +2175,21 @@ jQuery(document).ready(function($) {
           modal: true,
           dialogClass: 'wp-dialog',
           draggable: false,
-          buttons: {
-            'Delete': function() {
-              $('#btnDelOldCF').button('disable');
-              deleteCustomField(this, cfToDelete);
+          buttons: [
+            {
+              text: localized['delete'],
+              click: function() {
+                $('#btnDelOldCF').button('disable');
+                deleteCustomField(this, cfToDelete);
+              }
             },
-            Cancel: function() {
-              $(this).dialog('close');
+            {
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             }
-          }
+          ]
         });
       }
     }; // delOldCF()
@@ -2086,29 +2275,35 @@ jQuery(document).ready(function($) {
           modal: true,
           dialogClass: 'wp-dialog',
           draggable: false,
-          buttons: {
-            'Execute': function() {
-              $('#btnDoFR').button('disable');
-              $(this).dialog('close');
-                // Which ajax function to call depends on checkboxes checked
-              var filterCF = $('#selFRFilterCF').val();
-              var filterVal = $('#selFRFilterValue').val();
-              var mustMatchVal = $('#getFRMustMatch').prop('checked');
-              var mustFilter = $('#getFRFilterCF').prop('checked');
-              if (mustFilter) {
-                if (mustMatchVal) {
-                  updateCustomFieldFilter(frCF, matchValue, newValue, filterCF, filterVal);
+          buttons: [
+            {
+              text: localized['execute'],
+              click: function() {
+                $('#btnDoFR').button('disable');
+                $(this).dialog('close');
+                  // Which ajax function to call depends on checkboxes checked
+                var filterCF = $('#selFRFilterCF').val();
+                var filterVal = $('#selFRFilterValue').val();
+                var mustMatchVal = $('#getFRMustMatch').prop('checked');
+                var mustFilter = $('#getFRFilterCF').prop('checked');
+                if (mustFilter) {
+                  if (mustMatchVal) {
+                    updateCustomFieldFilter(frCF, matchValue, newValue, filterCF, filterVal);
+                  } else {
+                    replaceCustomFieldFilter(frCF, newValue, filterCF, filterVal);
+                  }
                 } else {
-                  replaceCustomFieldFilter(frCF, newValue, filterCF, filterVal);
+                  findReplaceCustomField(frCF, matchValue, newValue);
                 }
-              } else {
-                findReplaceCustomField(frCF, matchValue, newValue);
               }
             },
-            Cancel: function() {
-              $(this).dialog('close');
+            {
+              text: localized['cancel'],
+              click: function() {
+                $(this).dialog('close');
+              }
             }
-          }
+          ]
         });
       }
     }; // doFRCF()
@@ -2119,166 +2314,221 @@ jQuery(document).ready(function($) {
       // PURPOSE: Handle user selection of test button
       // NOTES:   Append all results to testResults DIV
     self.runTests = function() {
-      $('#runTests').button('disable');
+      $('.runTests').button('disable');
       $('#testResults').empty();
 
+      $('#accordion').accordion('option', 'active', 5);
+      $('html, body').animate({scrollTop: $("#accordion").offset().top}, 500);
+
+      var isErrors = false;
         // Check global-level settings --------------
+      $('#testResults').append('<strong id="general_settings">'+localized['general_settings']+'</strong>');
+      $('#general_settings').hide();
 
         // Home URL but no label, or vice-versa?
       if ((self.edHomeBtnLbl() && self.edHomeBtnLbl() != '') || (self.edHomeURL() && self.edHomeURL() != '')) {
         if (self.edHomeBtnLbl() == '' || self.edHomeURL() == '') {
-          $('#testResults').append('<p>If you wish to create a "Home" button, you must supply both a URL and label.</p>');
+          $('#testResults').append(localized['home_button']);
+          isErrors = true;
         }
           // ensure a well-formed URL
         var testURL = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
         if (!testURL.test(self.edHomeURL())) {
-          $('#testResults').append('<p>The Home address does not appear to be a full, well-formed URL.</p>');
+          $('#testResults').append(localized['home_address']);
+          isErrors = true;
         }
       }
 
       if (self.optionsCF.length == 0) {
-          $('#testResults').append('<p>Your project will not work until you import Markers which are associated with this Project (by using this Project ID).</p>');
+          $('#testResults').append(localized['import_markers']);
+          isErrors = true;
+      }
+
+      if (isErrors) {
+        $('#general_settings').show();
       }
 
         // Check the settings of Mote definitions ---------
 
+      isErrors = false;
+      $('#testResults').append('<strong id="motes">'+localized['motes']+'</strong>');
+      $('#motes').hide();
+
       if (self.allMotes().length == 0) {
-          $('#testResults').append('<p>Your project will not work until you define some motes.</p>');
+          $('#testResults').append(localized['define_motes']);
+          isErrors = true;
       }
 
       ko.utils.arrayForEach(self.allMotes(), function(theMote) {
         switch(theMote.type) {
         case 'Pointer':
           if (theMote.delim == '') {
-            $('#testResults').append('<p>Motes of type Pointer require a delimiter character; the Mote named '+
-                                  theMote.name+' has not yet been assigned a delimiter.</p>');
+            $('#testResults').append(sprintf(localized['pointer_delimiter'], theMote.name));
+            isErrors = true;
           }
           break;
         case 'Lat/Lon Coordinates':
           if (theMote.delim == ',') {
-            $('#testResults').append('<p>You have specified the commas as the delimiter character for the Lat-Lon Coordinate Mote named '+
-                                  theMote.name+'; you cannot use it as a delimiter, as it is reserved for separating Lat from Lon and cannot be used to form Polygons.</p>');
+            $('#testResults').append(sprintf(localized['comma_delimiter'], theMote.name));
+            isErrors = true;
           }
           break;
         } // switch()
       }); // forEach(motes)
 
+
+      if (isErrors) {
+        $('#motes').show();
+      }
+
         // Check the settings of Entry Points -----------
+      isErrors = false;
+      $('#testResults').append('<strong id="entry_points">'+localized['entry_points']+'</strong>');
+      $('#entry_points').hide();
 
       if (self.entryPoints().length == 0) {
-          $('#testResults').append('<p>Your project will not work until you create at least one entry point.</p>');
+          $('#testResults').append(localized['no_entry_points']);
+          isErrors = true;
       }
 
       ko.utils.arrayForEach(self.entryPoints(), function(theEP) {
           // Report errors with help of this utility function
         function epErrorMessage(errString) {
-          $('#testResults').append('<p>'+errString+' (entry point "'+theEP.label()+'").</p>');
+          $('#testResults').append(sprintf(localized['ep_error'], errString, theEP.label()));
+          isErrors = true;
         }
           // Ensure that all EPs have labels if multiple EPs
         if (theEP.label() == '' && self.entryPoints().length > 1) {
-          $('#testResults').append('<p>You have an unlabeled entry point. All multiple entry points must be named.</p>');
+          $('#testResults').append(localized['unlabeled_entry_point']);
+          isErrors = true;
         }
         switch(theEP.type) {
         case 'map':
             // Do maps have at least one legend?
           if (theEP.settings.legends().length == 0) {
-            epErrorMessage('You have not yet added a legend to the Map');
+            epErrorMessage(localized['map_legend']);
+            isErrors = true;
           }
           if (theEP.settings.coordMote() == '') {
-            epErrorMessage('You must specify the mote that will provide the coordinate for the Map');
+            epErrorMessage(localized['map_coord_mote']);
+            isErrors = true;
           }
           break;
         case 'cards':
           var colorName = theEP.settings.color();
           if (!colorName || colorName === 'disable') {
-            epErrorMessage('We recommend specifying a color legend for the Cards visualization, but none is provided');
+            epErrorMessage(localized['cards_color_legend']);
+            isErrors = true;
           }
             // Do cards have at least one content mote?
           if (theEP.settings.content().length == 0) {
-            epErrorMessage('You haven\'t yet specified content for the Cards visualization');
+            epErrorMessage(localized['cards_content']);
+            isErrors = true;
           }
           break;
         case 'pinboard':
           var w;
           if (theEP.settings.dw() == '' || isNaN(w=parseInt(theEP.settings.dw(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid display width for the Pinboard');
+            epErrorMessage(localized['pinboard_width']);
+            isErrors = true;
           }
           var h;
           if (theEP.settings.dh() == '' || isNaN(h=parseInt(theEP.settings.dh(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid display height for the Pinboard');
+            epErrorMessage(localized['pinboard_height']);
+            isErrors = true;
           }
           if (theEP.settings.iw() == '' || isNaN(w=parseInt(theEP.settings.iw(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid background image width for the Pinboard');
+            epErrorMessage(localized['pinboard_bg_width']);
+            isErrors = true;
           }
           if (theEP.settings.ih() == '' || isNaN(h=parseInt(theEP.settings.ih(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid background image height for the Pinboard');
+            epErrorMessage(localized['pinboard_bg_height']);
+            isErrors = true;
           }
             // Do pinboards have at least one legend?
           if (theEP.settings.legends().length == 0) {
-            epErrorMessage('You have not yet added a legend to the Pinboard');
+            epErrorMessage(localized['pinboard_legend']);
+            isErrors = true;
           }
           if (theEP.settings.coordMote() == '') {
-            epErrorMessage('You must specify the mote that will provide the coordinate for the Pinboard');
+            epErrorMessage(localized['pinboard_coord_mote']);
+            isErrors = true;
           }
           break;
         case 'tree':
           if (theEP.settings.head() == '') {
-            epErrorMessage('You must specify the head marker for the Tree');
+            epErrorMessage(localized['tree_head']);
+            isErrors = true;
           }
           if (theEP.settings.children() == '') {
-            epErrorMessage('You must specify the Pointer mote which indicates descending generations for the Tree');
+            epErrorMessage(localized['tree_pointer']);
+            isErrors = true;
           }
           var i;
           if (theEP.settings.fSize() == '' || isNaN(i=parseInt(theEP.settings.fSize(),10)) || i <= 8) {
-            epErrorMessage('You must specify a valid font size for the Tree');
+            epErrorMessage(localized['tree_font_size']);
+            isErrors = true;
           }
           if (theEP.settings.width() == '' || isNaN(i=parseInt(theEP.settings.width(),10)) || i <= 20) {
-            epErrorMessage('You must specify a valid image width for the Tree');
+            epErrorMessage(localized['tree_image_width']);
+            isErrors = true;
           }
           if (theEP.settings.height() == '' || isNaN(i=parseInt(theEP.settings.height(),10)) || i <= 20) {
-            epErrorMessage('You must specify a valid image height for the Tree');
+            epErrorMessage(localized['tree_image_height']);
+            isErrors = true;
           }
           break;
         case 'time':
           if (theEP.settings.date() == '') {
-            epErrorMessage('You must specify the Date mote for the Timeline');
+            epErrorMessage(localized['time_date_mote']);
+            isErrors = true;
           }
           if (theEP.settings.color() == '') {
-            epErrorMessage('You must specify a color legend for the Timeline');
+            epErrorMessage(localized['time_color_legend']);
+            isErrors = true;
           }
           var i;
           if (theEP.settings.bandHt() == '' || isNaN(i=parseInt(theEP.settings.bandHt(),10)) || i <= 8) {
-            epErrorMessage('You must specify a valid band height for the Timeline');
+            epErrorMessage(localized['time_band_height']);
+            isErrors = true;
           }
           if (theEP.settings.wAxisLbl() == '' || isNaN(i=parseInt(theEP.settings.wAxisLbl(),10)) || i <= 10) {
-            epErrorMessage('You must specify a valid x axis label width for the Timeline');
+            epErrorMessage(localized['time_label_width']);
+            isErrors = true;
           }
             // Check Dates and their formats -- must be a specific date (can't be fuzzy)
           var dateRegEx = /^(open|-?\d+(-(\d)+)?(-(\d)+)?)$/;
           if (!dateRegEx.test(theEP.settings.from())) {
-            epErrorMessage('You must specify a valid Date for the start frame of the Timeline');
+            epErrorMessage(localized['time_date_start_frame']);
+            isErrors = true;
           }
           if (!dateRegEx.test(theEP.settings.to())) {
-            epErrorMessage('You must specify a valid Date for the end frame of the Timeline');
+            epErrorMessage(localized['time_date_end_frame']);
+            isErrors = true;
           }
           if (!dateRegEx.test(theEP.settings.openFrom())) {
-            epErrorMessage('You must specify a valid Date for the start zoom of the Timeline');
+            epErrorMessage(localized['time_date_start_zoom']);
+            isErrors = true;
           }
           if (!dateRegEx.test(theEP.settings.openTo())) {
-            epErrorMessage('You must specify a valid Date for the end zoom of the Timeline');
+            epErrorMessage(localized['time_date_end_zoom']);
+            isErrors = true;
           }
           break;
         case 'flow':
           var w;
           if (theEP.settings.width() == '' || isNaN(w=parseInt(theEP.settings.width(),10)) || w <= 0) {
-            epErrorMessage('You must specify a valid background palette width for the Facet Flow view');
+            epErrorMessage(localized['facet_bg_width']);
+            isErrors = true;
           }
           var h;
           if (theEP.settings.height() == '' || isNaN(h=parseInt(theEP.settings.height(),10)) || h <= 0) {
-            epErrorMessage('You must specify a valid background palette height for the Facet Flow view');
+            epErrorMessage(localized['facet_bg_height']);
+            isErrors = true;
           }
           if (theEP.settings.motes().length < 2) {
-            epErrorMessage('You need at least two sets of motes for the Facet Flow');
+            epErrorMessage(localized['facet_two_motes']);
+            isErrors = true;
           }
             // Ensure that each facet-mote is only used once in list
           var redundFacets=false;
@@ -2290,12 +2540,14 @@ jQuery(document).ready(function($) {
             if (matchCnt > 1) { redundFacets=true; }
           });
           if (redundFacets) {
-            epErrorMessage('Facet Flow requires unique (not redundant) motes in the list to display');
+            epErrorMessage(localized['facet_unique_motes']);
+            isErrors = true;
           }
           break;
         case 'browser':
           if (theEP.settings.motes().length < 1) {
-            epErrorMessage('You need at least one mote for the Facet Browser');
+            epErrorMessage(localized['facet_browser_mote']);
+            isErrors = true;
           }
             // Ensure that each facet-mote is only used once in list
           var redundFacets=false;
@@ -2307,15 +2559,23 @@ jQuery(document).ready(function($) {
             if (matchCnt > 1) { redundFacets=true; }
           });
           if (redundFacets) {
-            epErrorMessage('You have listed redundant motes to display');
+            epErrorMessage(localized['redundant_motes']);
+            isErrors = true;
           }
           break;          
         } // switch
       });
 
+      if (isErrors) {
+        $('#entry_points').show();
+      }
+  
+
+      $('#testResults').append('<strong>'+localized['misc']+'</strong>');
+
         // Is there at least one mote for select modal content?
       if (self.selMoteList().length < 1) {
-          $('#testResults').append('<p>Your list of motes for the select modal is empty. We suggest you add at least one content mote.</p>');
+          $('#testResults').append(localized['empty_content_mote']);
       }
 
         // Anamoly: If no selection possible, edTrnsTime() == undefined; added '' for extra protection
@@ -2323,13 +2583,12 @@ jQuery(document).ready(function($) {
         // If Transcript Source mote selected, ensure other settings are as well
       if (self.edTrnsSrc() !== 'disable') {
         if ((self.edTrnsAudio() === 'disable' && self.edTrnsVideo() === 'disable') || self.edTrnsTransc() === 'disable') {
-          $('#testResults').append('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>');
+          $('#testResults').append(localized['transcript_settings']);
         }
       }
 
         // Call PHP functions to test any transcript texts
-      $('#testResults').append('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p>'+
-          '<p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>');
+      $('#testResults').append(localized['tests_being_conducted']);
       dhpPerformTests();
     }; // runTests
 
@@ -2340,6 +2599,9 @@ jQuery(document).ready(function($) {
 
     // Initialize jQuery components
   $("#accordion, #subaccordion").accordion({ collapsible: true, heightStyle: 'content' });
+  $("#accordion").click(function(){
+      $('html, body').animate({scrollTop: $("#accordion").offset().top}, 500);
+    });
 
 
     // Add decimal formatting extension (X.X) for observable (opacity)
@@ -2385,6 +2647,32 @@ jQuery(document).ready(function($) {
     projObj.setEP(theEP);
   });
   projObj.setViews(savedSettings.views);
+
+
+    // Allows entry points to be sorted and updates knockout respectively
+    // Adapted from http://stackoverflow.com/questions/9703647/knockout-custom-binding-for-jquery-ui-sortable-strange-behavior
+  ko.bindingHandlers.sortableList = {
+    init: function (element, valueAccessor) {
+      var theEPs = valueAccessor();
+      $('#entryPoints').sortable({ 
+        containment: 'parent',
+        tolerance: 'pointer',
+        update: function(event, ui) {
+          projObj.settingsDirty(true);
+          
+          var item = ko.dataFor(ui.item[0]),
+          newIndex = ui.item.index();
+
+          if (newIndex >= theEPs().length) newIndex = theEPs().length - 1;
+          if (newIndex < 0) newIndex = 0;
+
+          ui.item.remove();
+          theEPs.remove(item);
+          theEPs.splice(newIndex, 0, item);
+        } 
+      });
+    }
+  };
 
 
     // Add new functionality for jQueryUI slider
@@ -2469,6 +2757,7 @@ jQuery(document).ready(function($) {
           success: function(data, textStatus, XMLHttpRequest) {
                 // data is a JSON object
             var results = JSON.parse(data);
+            //console.log(results);
             funcToCall(results);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -2493,6 +2782,7 @@ jQuery(document).ready(function($) {
               terms: taxTermsList
           },
           success: function(data, textStatus, XMLHttpRequest) {
+            //console.log(data);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
              alert(errorThrown);
@@ -2753,11 +3043,11 @@ jQuery(document).ready(function($) {
           },
           success: function(data, textStatus, XMLHttpRequest) {
             $('#testResults').append(data);
-            $('#runTests').button('enable');
+            $('.runTests').button('enable');
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
-            $('#runTests').button('enable');
+            $('.runTests').button('enable');
           }
       });
   } // dhpGetFieldValues()

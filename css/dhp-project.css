@@ -260,7 +260,10 @@ spinner:after {
 	font-family: "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
 
 	position:absolute;
-	overflow: auto;
+	
+		/*For dynamic resizing height*/
+	overflow: hidden;
+	height: auto;
 
 	opacity: 0.9;
 
@@ -272,9 +275,10 @@ spinner:after {
 			Only the min-height setting is used; max-height is ignored.
 		 */
 	min-height: 300px;
+	
 /*	min-height: 220px; */
 /*	max-height: 90% !important; */
-	max-height: 700px !important;
+	max-height: 530px !important;
 
 	top: 6px;
 	left: 6px;
@@ -325,13 +329,16 @@ spinner:after {
 .legend-div .terms {
 	font-size: 14px !important;
 
-	position: absolute;
+		/*For dynamic resizing height*/
+	/*position: absolute;*/
+	max-height: 500px;
+	overflow-y: auto;
 
 	top:38px;
 	bottom: 0;
 	width: 100%;
 	z-index: 19;
-	overflow: auto;
+	
 	margin-top: 1px;
 }
 

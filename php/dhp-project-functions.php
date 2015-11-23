@@ -11,83 +11,12 @@
 
 // ================== Global Constants and Variables ===================
 
-define('DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.txt');
-define('DHP_SCRIPT_SERVICES',  'dhp-script-services.txt');
+define('DHP_HTML_ADMIN_EDIT',  'dhp-html-admin-edit.php');
+define('DHP_SCRIPT_SERVICES',  'dhp-script-services.php');
+define('DHP_SCRIPT_TAX',  	'dhp-script-tax-trans.php');
 
 
 // ================== Initialize Plug-in ==================
-
-// PURPOSE: To create custom post type for Projects in WP
-// NOTES:   Called by both dhp_project_init() and dhp_project_activate()
-
-function dhp_register_project_cpt()
-{
-  $labels = array(
-	'name' => _x('Projects', 'post type general name'),
-	'singular_name' => _x('Project', 'post type singular name'),
-	'add_new' => _x('Add New', 'project'),
-	'add_new_item' => __('Add New Project'),
-	'edit_item' => __('Edit Project'),
-	'new_item' => __('New Project'),
-	'all_items' => __('Projects'),
-	'view_item' => __('View Project'),
-	'search_items' => __('Search Projects'),
-	'not_found' =>  __('No projects found'),
-	'not_found_in_trash' => __('No projects found in Trash'), 
-	'parent_item_colon' => '',
-	'menu_name' => __('Projects'),
-	'menu_icon' => plugins_url( 'dhpress/images/dhpress-plugin-icon.png' )  // Icon Path
-  );
-  $args = array(
-	'labels' => $labels,
-	'public' => true,
-	'publicly_queryable' => true,
-	'show_ui' => true, 
-	'show_in_menu' => 'dhp-top-level-handle', 
-	'query_var' => true,
-	'rewrite' => array('slug' => 'dhp-projects','with_front' => FALSE),
-	'capability_type' => 'page',
-	'has_archive' => true,
-	/* if we want to subclass project types in future (i.e., Entry Points), will need to set 'hierarchical' => true */
-	'hierarchical' => false,
-	'menu_position' => null,
-	/* if hierarchical, then may want to add 'page-attributes' to supports */
-	'supports' => array( 'title', 'thumbnail', 'revisions', 'custom-fields' )
-  ); 
-  register_post_type('dhp-project',$args);
-} // dhp_register_project_cpt()
-
-
-// init action called to initialize a plug-in
-add_action( 'init', 'dhp_project_init' );
-
-// NOTES:   This is called by dhp_project_activate(), which only expects it to register CPT
-function dhp_project_init()
-{
-	dhp_register_project_cpt();
-
-		// Are there any 'project' custom post types from 2.5.4 or earlier -- if so, change CPT
-
-		// If no version # in DB, definitely old version of DH Press whose data needs checking
-	if (get_option('dhp_plugin_version') === false) {
-		$args = array('post_type' => 'project', 'posts_per_page' => -1);
-		$loop = new WP_Query( $args );
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$proj_id = get_the_ID();
-
-				// Only does this change if CPT has associated metadata
-			$proj_set = get_post_meta($proj_id, 'project_settings', true);
-			if(!empty($proj_set)) {
-				$update_params = array( 'ID' => $proj_id, 'post_type' => 'dhp-project');
-				wp_update_post($update_params);
-			}
-		endwhile;
-		wp_reset_query();
-	}
-		// store version # in options
-	update_option('dhp_plugin_version', DHP_PLUGIN_VERSION);
-} // dhp_project_init
-
 
 	// Hook into delete of posts so that all data associated with Project gets deleted
 add_action('admin_init', 'dhp_admin_init');
@@ -120,10 +49,12 @@ function dhp_delete_all_project_markers($postID)
 
 		// Go through all of the Project's Markers and gather data
 	$loop = $projObj->setAllMarkerLoop();
-	while ($loop->have_posts()) : $loop->the_post();
-		$markerID = get_the_ID();
-		wp_delete_post($markerID, false);
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$markerID = $markerPost->ID;
+			wp_delete_post($markerID, false);
+		}
+	}
 } // dhp_delete_all_project_markers()
 
 
@@ -161,17 +92,6 @@ if (function_exists('add_theme_support')) {
 		// default Post Thumbnail dimensions
 	set_post_thumbnail_size(32, 37);
 }
-
-
-register_activation_hook( __FILE__, 'dhp_project_activate');
-
-// PURPOSE: Ensure that custom post types have been registered before we flush rewrite rules
-//			See http://solislab.com/blog/plugin-activation-checklist/#flush-rewrite-rules
-function dhp_project_activate()
-{
-	dhp_register_project_cpt();
-	flush_rewrite_rules();
-} // dhp_project_activate()
 
 
 // PURPOSE: Ensure that txt and png files are able to be added to the Media Library
@@ -248,12 +168,14 @@ function dhp_get_map_layer_list()
 
 	$args = array('post_type' => 'dhp-maps', 'posts_per_page' => -1);
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$layer_id = get_the_ID();
 
-		$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
-		array_push($layers, $mapMetaData);
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $layerPost){
+			$layer_id = $layerPost -> ID;
+			$mapMetaData = dhp_get_map_metadata($layer_id, $theMetaSet, false);
+			array_push($layers, $mapMetaData);
+		}
+	}
 	wp_reset_query();
 
 		// Sort array according to map IDs
@@ -282,13 +204,13 @@ function dhp_project_updated_messages( $messages )
 	3 => __('Custom field deleted.'),
 	4 => __('Project updated.'),
 	/* translators: %s: date and time of the revision */
-	5 => isset($_GET['revision']) ? sprintf( __('Project restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	5 => isset($_GET['revision']) ? sprintf( _x('Project restored to revision from %s', 'translators: %s: date and time of the revision'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 	6 => sprintf( __('Project published. <a href="%s">View project</a>'), esc_url( get_permalink($post_ID) ) ),
 	7 => __('Project saved.'),
 	8 => sprintf( __('Project submitted. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
 	9 => sprintf( __('Project scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview project</a>'),
 	  // translators: Publish box date format, see http://php.net/date
-	  date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	  date_i18n( _x( 'M j, Y @ G:i', 'translators: Publish box date format, see http://php.net/date' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
 	10 => sprintf( __('Project draft updated. <a target="_blank" href="%s">Preview project</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
   );
 
@@ -410,6 +332,9 @@ function add_dhp_project_admin_edit()
 		'dhp-project',					// name of custom post type
 		'normal',						// part of page to add box
 		'high'); 						// priority
+
+		// Hide Custom Fields meta box
+	remove_meta_box('postcustom', 'dhp-project', 'normal');
 } // add_dhp_project_settings_box()
 
 
@@ -433,23 +358,22 @@ function show_dhp_project_admin_edit()
 	} else {
 		$project_settings = json_encode($project_settings);
 	}
-
+	
 		// Info about DH Press and this project
-	echo '<p><b>DH Press version '.DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;Project ID '.$post->ID.'</p>';
-	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >Category Manager</a></p>';
+	echo '<p><b>'.__('DH Press version ', 'dhpress').DHP_PLUGIN_VERSION.'</b>&nbsp;&nbsp;'.__('Project ID ', 'dhpress').$post->ID.'</p>';
+	echo '<p><a href="'.get_bloginfo('wpurl').'/wp-admin/edit-tags.php?taxonomy='.$projObj->getRootTaxName().'" >'.__('Category Manager', 'dhpress').'</a></p>';
 
 		// Insert Edit Panel's HTML
-	$projscript = dhp_get_script_text(DHP_HTML_ADMIN_EDIT);
-	echo $projscript;
+	dhp_include_script(DHP_HTML_ADMIN_EDIT);
 
 		// Use nonce for verification
 	echo '<input type="hidden" name="dhp_nonce" id="dhp_nonce" value="'.wp_create_nonce('dhp_nonce'.$post->ID).'" />';
 
 		// Insert HTML for special Project Settings
 	echo '<table class="project-form-table">';
-	echo '<tr><th><label for="project_settings">Project Settings</label></th>';
+	echo '<tr><th><label for="project_settings">'.__('Project Settings', 'dhpress').'</label></th>';
 	echo '<td><textarea name="project_settings" id="project_settings" cols="60" rows="4">'.$project_settings.'</textarea>
-		<br /><span class="description">Stores the project_settings as JSON object</span>';
+		<br /><span class="description">'.__('Stores the project_settings as JSON object', 'dhpress').'</span>';
 	echo '</td></tr>';
 		// Icons not currently used
 	// echo '<input type="hidden" name="project_icons" id="project_icons" value="'.get_post_meta($post->ID, 'project_icons', true).'" />';
@@ -529,12 +453,12 @@ add_action( 'admin_action_dhp_export_as_csv', 'dhp_export_as_csv' );
 function dhp_export_as_csv()
 {
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'rd_duplicate_post_as_draft' == $_REQUEST['action'] ) ) ) {
-		wp_die('No post to export has been supplied!');
+		wp_die(__('No post to export has been supplied!', 'dhpress'));
 	}
 
 		// ensure that this URL has not been faked by non-admin user
 	if (!current_user_can('edit_posts')) {
-		wp_die('Invalid request');
+		wp_die(__('Invalid request', 'dhpress'));
 	}
  
 		// Get post ID and associated Project Data
@@ -888,58 +812,57 @@ function dhp_get_markers()
 
 		// Run query to return all marker posts belonging to this Project
 	$loop = $projObj->setAllMarkerLoop();
-	while ( $loop->have_posts() ) : $loop->the_post();
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$markerID = $markerPost->ID;
+				// Feature will hold properties and some other values for each marker
+			$thisFeature = array();
 
-		$markerID = get_the_ID();
-
-			// Feature will hold properties and some other values for each marker
-		$thisFeature = array();
-
-			// Only add property if necessary
-		if ($addFeature) {
-			$thisFeature['type']    = 'Feature';
-		}
-
-			// Most data goes into properties field
-		$thisFeaturesProperties = $mQuery->getMarkerProperties($markerID);
-
-			// First set up fields required by visualizations, abandon marker if missing
-
-			// Map visualization features?
-			// Skip marker if missing necessary LatLong data or not valid numbers
-		if ($mapCF != null) {
-			$latlon = get_post_meta($markerID, $mapCF, true);
-			if (empty($latlon)) {
-				continue;
+				// Only add property if necessary
+			if ($addFeature) {
+				$thisFeature['type']    = 'Feature';
 			}
-				// Create Polygons? Only if delim given
-				// NOTE: Since no longer passing GeoJSON, coord order is: LatLon
-			if ($mapDelim) {
-				$split = explode($mapDelim, $latlon);
-					// Just treat as Point if only one data item
-				if (count($split) == 1) {
-					$split = explode(',', $latlon);
-					$thisFeature['geometry'] = array("type" => 1,
-													"coordinates"=> array((float)$split[0], (float)$split[1]));
 
-				} else {
-					$poly = array();
-					foreach ($split as $thisPt) {
-						$pts = explode(',', $thisPt);
-						array_push($poly, array((float)$pts[0], (float)$pts[1]));
-					}
-					if (count($poly) == 2) {
-						$thisFeature['geometry'] = array("type" => 2, "coordinates" => $poly);
+				// Most data goes into properties field
+			$thisFeaturesProperties = $mQuery->getMarkerProperties($markerID);
+
+				// First set up fields required by visualizations, abandon marker if missing
+
+				// Map visualization features?
+				// Skip marker if missing necessary LatLong data or not valid numbers
+			if ($mapCF != null) {
+				$latlon = get_post_meta($markerID, $mapCF, true);
+				if (empty($latlon)) {
+					continue;
+				}
+					// Create Polygons? Only if delim given
+					// NOTE: Since no longer passing GeoJSON, coord order is: LatLon
+				if ($mapDelim) {
+					$split = explode($mapDelim, $latlon);
+						// Just treat as Point if only one data item
+					if (count($split) == 1) {
+						$split = explode(',', $latlon);
+						$thisFeature['geometry'] = array("type" => 1,
+														"coordinates"=> array((float)$split[0], (float)$split[1]));
 
 					} else {
-						$thisFeature['geometry'] = array("type" => 3, "coordinates" => $poly);
+						$poly = array();
+						foreach ($split as $thisPt) {
+							$pts = explode(',', $thisPt);
+							array_push($poly, array((float)$pts[0], (float)$pts[1]));
+						}
+						if (count($poly) == 2) {
+							$thisFeature['geometry'] = array("type" => 2, "coordinates" => $poly);
+
+						} else {
+							$thisFeature['geometry'] = array("type" => 3, "coordinates" => $poly);
+						}
 					}
+				} else {
+					$split = explode(',', $latlon);
+					$thisFeature['geometry'] = array("type" => 1,
+													"coordinates"=> array((float)$split[0],(float)$split[1]));
 				}
-			} else {
-				$split = explode(',', $latlon);
-				$thisFeature['geometry'] = array("type" => 1,
-												"coordinates"=> array((float)$split[0],(float)$split[1]));
-			}
 		}
 
 			// Pinboard visualization features
@@ -975,7 +898,8 @@ function dhp_get_markers()
 		$thisFeature['properties'] = $thisFeaturesProperties;
 			// Save this marker
 		array_push($feature_array, $thisFeature);
-	endwhile;
+		}
+	}
 
 	$feature_collection['features'] = $feature_array;
 	array_push($json_Object, $feature_collection);
@@ -1210,33 +1134,36 @@ function dhp_bind_tax_to_markers($projObj, $custom_field, $parent_id, $rootTaxNa
 {
 		// Now (re)create all subterms
 	$loop = $projObj->setAllMarkerLoop();
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$marker_id = get_the_ID();
-		$tempMoteValue = get_post_meta($marker_id, $custom_field, true);
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			$tempMoteValue = get_post_meta($marker_id, $custom_field, true);
 
-			// ignore empty or null values
-		if (!is_null($tempMoteValue) && $tempMoteValue != '') {
-			$tempMoteArray = array();
-			if ($mote_delim) {
-				$tempMoteArray = explode($mote_delim, $tempMoteValue );
-			} else {
-				$tempMoteArray = array($tempMoteValue);
-			}
-			$theseTerms = array();
-			foreach ($tempMoteArray as $value) {
-					// Make sure spaces are removed
-				$value = trim($value);
-					// Since we are specifying $parent_id, term_exists() will return 0/NULL or hash
-				$term = term_exists($value, $rootTaxName, $parent_id);
-				if ($term !== 0 && $term !== null) {
-					array_push($theseTerms, intval($term['term_id']));
+				// ignore empty or null values
+			if (!is_null($tempMoteValue) && $tempMoteValue != '') {
+				$tempMoteArray = array();
+				if ($mote_delim) {
+					$tempMoteArray = explode($mote_delim, $tempMoteValue );
+				} else {
+					$tempMoteArray = array($tempMoteValue);
 				}
-			}
-				// Ensure that marker is tagged with category terms for this mote
-			wp_set_object_terms($marker_id, $theseTerms, $rootTaxName, true);
-			// wp_set_post_terms($marker_id, $theseTerms, $rootTaxName, true);
+				$theseTerms = array();
+				foreach ($tempMoteArray as $value) {
+						// Make sure spaces are removed
+					$value = trim($value);
+						// Since we are specifying $parent_id, term_exists() will return 0/NULL or hash
+					$term = term_exists($value, $rootTaxName, $parent_id);
+					if ($term !== 0 && $term !== null) {
+						array_push($theseTerms, intval($term['term_id']));
+					}
+				}
+					// Ensure that marker is tagged with category terms for this mote
+				wp_set_object_terms($marker_id, $theseTerms, $rootTaxName, true);
+				// wp_set_post_terms($marker_id, $theseTerms, $rootTaxName, true);
+			} 
 		}
-	endwhile;
+	}
+	
 	delete_option("{$rootTaxName}_children");
 } // dhp_bind_tax_to_markers()
 
@@ -1764,13 +1691,13 @@ function dhp_add_custom_field()
 
 	$args = array( 'post_type' => 'dhp-markers', 'meta_key' => 'project_id','meta_value'=>$dhp_project, 'posts_per_page' => -1 );
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
+		}
+	}
 
-		$marker_id = get_the_ID();
-		add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
-
-	endwhile;
-	
 	die();
 } // dhp_add_custom_field()
 
@@ -1810,12 +1737,12 @@ function dhp_create_custom_field_filter()
 	);
 
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-
-		$marker_id = get_the_ID();
-		add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
-				
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			add_post_meta($marker_id, $dhp_custom_field_name, $dhp_custom_field_value, true);
+		}
+	}
 	
 	die();
 } // dhp_create_custom_field_filter()
@@ -1859,27 +1786,28 @@ function dhp_update_custom_field_filter()
 	);
 	$dhp_count=0;
 	$loop = new WP_Query( $args );
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$dhp_count++;
-		$marker_id = get_the_ID();
-		if($dhp_custom_field_name=='the_content') {
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$dhp_count++;
+			$marker_id = $markerPost->ID;
+			if($dhp_custom_field_name=='the_content') {
 
-			$tempPostContent = get_the_content();
-			$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $tempPostContent);
-			
-			$new_post = array();
-			$new_post['ID'] = $marker_id;
-			$new_post['post_content'] = $new_value;
-			wp_update_post( $new_post );
+				$tempPostContent = get_the_content();
+				$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $tempPostContent);
+				
+				$new_post = array();
+				$new_post['ID'] = $marker_id;
+				$new_post['post_content'] = $new_value;
+				wp_update_post( $new_post );
+			}
+			else {
+				$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
+				//replaces string within the value not the whole value
+				$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $temp_value);
+				update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
+			}
 		}
-		else {
-			$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
-			//replaces string within the value not the whole value
-			$new_value = str_replace($dhp_custom_current_value, $dhp_custom_new_value, $temp_value);
-			update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
-		}
-	endwhile;
-	
+	}
 	die(json_encode($dhp_count));
 } // dhp_update_custom_field_filter()
 
@@ -1981,26 +1909,27 @@ function dhp_find_replace_custom_field()
 
 	$loop = $projObj->setAllMarkerLoop();
 	$dhp_count=0;
-	while ( $loop->have_posts() ) : $loop->the_post();
-		$dhp_count++;
-		$marker_id = get_the_ID();
-		if($dhp_custom_field_name=='the_content') {
-			$tempPostContent = get_the_content();
-			$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $tempPostContent);
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$dhp_count++;
+			$marker_id = $markerPost->ID;
+			if($dhp_custom_field_name=='the_content') {
+				$tempPostContent = get_the_content();
+				$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $tempPostContent);
 
-			$new_post = array();
-			$new_post['ID'] = $marker_id;
-			$new_post['post_content'] = $new_value;
-			wp_update_post( $new_post );
+				$new_post = array();
+				$new_post['ID'] = $marker_id;
+				$new_post['post_content'] = $new_value;
+				wp_update_post( $new_post );
+			}
+			else {
+				$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
+				//replaces string within the value not the whole value
+				$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $temp_value);
+				update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
+			}
 		}
-		else {
-			$temp_value = get_post_meta( $marker_id, $dhp_custom_field_name, true );
-			//replaces string within the value not the whole value
-			$new_value = str_replace($dhp_custom_find_value, $dhp_custom_replace_value, $temp_value);
-			update_post_meta($marker_id, $dhp_custom_field_name, $new_value);
-		}
-
-	endwhile;
+	}
 	
 	die(json_encode($dhp_count));
 } // dhp_find_replace_custom_field()
@@ -2019,12 +1948,12 @@ function dhp_delete_custom_field()
 	$projObj = new DHPressProject($projectID);
 	
 	$loop = $projObj->setAllMarkerLoop();
-	while ( $loop->have_posts() ) : $loop->the_post();
-
-		$marker_id = get_the_ID();
-		delete_post_meta($marker_id, $dhp_custom_field_name);
-
-	endwhile;
+	if($loop->have_posts()){
+		foreach($loop->posts as $markerPost){
+			$marker_id = $markerPost->ID;
+			delete_post_meta($marker_id, $dhp_custom_field_name);
+		}
+	}
 	
 	die();
 } // dhp_delete_custom_field()
@@ -2085,7 +2014,7 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 
 		// Problem if timecode not defined
 	if ($tcMote == null || $tcMote == '' || $tcMote == 'disable') {
-		$result = '<p>You have not specified the Timestamp setting for the Transcription (despite setting Transcript motes).</p>';
+		$result = __('<p>You have not specified the Timestamp setting for the Transcription (despite setting Transcript motes).</p>', 'dhpress');
 	} else {
 		$numErrors = 0;
 
@@ -2093,43 +2022,44 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 		$transMoteDef = $projObj->getMoteByName($transcMoteName);
 
 		$loop = $projObj->setAllMarkerLoop();
+		if($loop->have_posts()){
+			foreach($loop->posts as $markerPost){
+				$error = false;
+				$marker_id = $markerPost->ID;
 
-		while ($loop->have_posts()) : $loop->the_post();
-			$error = false;
-			$marker_id = get_the_ID();
+					// Get this marker's values for 
+				$timecode = get_post_meta($marker_id, $tcMoteDef->cf, true);
+				$transFile= get_post_meta($marker_id, $transMoteDef->cf, true);
 
-				// Get this marker's values for 
-			$timecode = get_post_meta($marker_id, $tcMoteDef->cf, true);
-			$transFile= get_post_meta($marker_id, $transMoteDef->cf, true);
-
-				// Skip check if either one missing
-			if ($timecode != null && $timecode != '' && $transFile != null && $transFile != '' && $transFile !== 'none') {
-					// Don't check invalid timestamps -- they should have already been reported
-				if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 1) {
-					$content = @file_get_contents($transFile);
-					if ($content == false) {
-						$result .= '<p>Problem reading file '.$transFile.' </p>';
-						$error = true;
-					} else {
-						$content  = utf8_encode($content);
-						$stamps	  = explode("-", $timecode);
-						$clipStart= mb_strpos($content, $stamps[0]);
-						if ($clipStart == false) {
-							$result .= '<p> Cannot find timestamp '.$stamps[0].' in file '.$transFile.'</p>';
+					// Skip check if either one missing
+				if ($timecode != null && $timecode != '' && $transFile != null && $transFile != '' && $transFile !== 'none') {
+						// Don't check invalid timestamps -- they should have already been reported
+					if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 1) {
+						$content = @file_get_contents($transFile);
+						if ($content == false) {
+							$result .= sprintf(__('<p>Problem reading file %s </p>', 'dhpress'), $transFile);
 							$error = true;
-						}
-						$clipEnd  = mb_strpos($content, $stamps[1]);
-						if ($clipEnd == false) {
-							$result .= '<p> Cannot find timestamp '.$stamps[1].' in file '.$transFile.'</p>';
-							$error = true;
-						}
-					} // file contents
-				} // if valid timestamp
-			} // if timecode and file values
-			if ($error && ++$numErrors >= 20) {
-				break;
+						} else {
+							$content  = utf8_encode($content);
+							$stamps	  = explode("-", $timecode);
+							$clipStart= mb_strpos($content, $stamps[0]);
+							if ($clipStart == false) {
+								$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[0], $transFile);
+								$error = true;
+							}
+							$clipEnd  = mb_strpos($content, $stamps[1]);
+							if ($clipEnd == false) {
+								$result .= sprintf(__('<p> Cannot find timestamp %1$s in file %2$s</p>', 'dhpress'), $stamps[1], $transFile);
+								$error = true;
+							}
+						} // file contents
+					} // if valid timestamp
+				} // if timecode and file values
+				if ($error && ++$numErrors >= 20) {
+					break;
+				}
 			}
-		endwhile;
+		}
 	}
 
 	return $result;
@@ -2146,7 +2076,7 @@ function dhp_verify_transcription($projObj, $projSettings, $transcMoteName)
 function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 {
 	if ($theLegend === null || $theLegend === '' || $theLegend === 'disable') {
-		return '<p>Cannot verify unspecified legend.</p>';
+		return __('<p>Cannot verify unspecified legend.</p>', 'dhpress');
 	}
 
 	$moteDef = $projObj->getMoteByName($theLegend);
@@ -2155,7 +2085,7 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 
 		// Has Legend not been created yet?
 	if (!term_exists($moteDef->name, $rootTaxName)) {
-		return '<p>Legend "'.$theLegend.'" has not yet been created but must be for project to work.</p>';
+		return sprintf(__('<p>Legend "%s" has not yet been created but must be for project to work.</p>', 'dhpress'), $theLegend);
 	}
 
 	$results    = '';
@@ -2194,7 +2124,7 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 		if ($t_count > 0) {
 			foreach ($terms_loaded as $term) {
 				if ($term->description == null || $term->description == '') {
-					$results .= '<p>The value '.$term->name.' for legend '.$theLegend.' has no visual setting.</p>';
+					$results .= sprintf(__('<p>The value %1$s for legend %2$s has no visual setting.</p>', 'dhpress'), $term->name, $theLegend);
 				} else {
 					$isColor = preg_match("/^#[:xdigit:]{6}$/", $term->description);
 					$isMaki = preg_match("/^.maki\-\S/", $term->description);
@@ -2202,27 +2132,27 @@ function dhp_verify_legend($projObj, $theLegend, $checkValues, $makiOK, $pngOK)
 					if ($isColor) {
 						$usedColor = true;
 						if (!$mixFlagged && ($usedMaki || $usedPNG)) {
-							$results .= '<p>Illegal mixture of color and icon settings in legend '.$theLegend.'.</p>';
+							$results .= sprintf(__('<p>Illegal mixture of color and icon settings in legend %s.</p>', 'dhpress'), $theLegend);
 							$mixFlagged = true;
 						}
 					} elseif ($isMaki) {
 						$usedMaki = true;
 						if (!$makiOK) {
-							$results .= '<p>The assigned Entry Point cannot use maki-icon setting '.$term->description.' for legend '.$theLegend.' value '.$term->name.'.</p>';
+							$results .= sprintf(__('<p>The assigned Entry Point cannot use maki-icon setting %1$s for legend %2$s value %3$s.</p>', 'dhpress'), $term->description, $theLegend, $term->name);
 						} elseif ($usedColor && !$mixFlagged) {
-							$results .= '<p>Illegal mixture of color and icon settings in legend '.$theLegend.'.</p>';
+							$results .= sprintf(__('<p>Illegal mixture of color and icon settings in legend %s.</p>', 'dhpress'), $theLegend);
 							$mixFlagged = true;
 						}
 					} elseif ($isPNG) {
 						$usedPNG = true;
 						if (!$pngOK) {
-							$results .= '<p>The assigned Entry Point cannot use PNG image '.$term->description.' for legend '.$theLegend.' value '.$term->name.'.</p>';
+							$results .= sprintf(__('<p>The assigned Entry Point cannot use PNG image %1$s for legend %2$s value %3$s.</p>', 'dhpress'), $term->description, $theLegend, $term->name);
 						} elseif ($usedColor && !$mixFlagged) {
-							$results .= '<p>Illegal mixture of color and icon settings in legend '.$theLegend.'.</p>';
+							$results .= sprintf(__('<p>Illegal mixture of color and icon settings in legend %s.</p>', 'dhpress'), $theLegend);
 							$mixFlagged = true;
 						}
 					} else {
-						$results .= '<p>Unknown setting '.$term->description.' for legend '.$theLegend.' value '.$term->name.'.</p>';
+						$results .= sprintf(__('<p>Unknown setting %1$s for legend %2$s value %3$s.</p>', 'dhpress'), $term->description, $theLegend, $term->name);
 					}
 				}
 			}
@@ -2249,7 +2179,7 @@ function dhp_perform_tests()
 
 		// There will be no project settings for New project
 	if (empty($projSettings)) {
-		$results = 'This is a new project and cannot be verified until it is saved and Markers imported';
+		$results = __('This is a new project and cannot be verified until it is saved and Markers imported', 'dhpress');
 
 	} else {
 			// Ensure any legends used by visualizations have been configured
@@ -2311,88 +2241,89 @@ function dhp_perform_tests()
 		$numErrors = 0;
 		$error = false;
 		$transcErrors = false;
-		while ( $loop->have_posts() ) : $loop->the_post();
-			$marker_id = get_the_ID();
+		if($loop->have_posts()){
+			foreach($loop->posts as $markerPost){
+				$marker_id = $markerPost->ID;
 
-			foreach ($projSettings->motes as $mote) {
-				$moteValue = get_post_meta($marker_id, $mote->cf, true);
-					// ignore empty or null values
-				if (!is_null($moteValue) && $moteValue != '') {
-					$error = false;
-					switch ($mote->type) {
-					case 'Lat/Lon Coordinates':
-					case 'X-Y Coordinates':
-						if (preg_match("/(-?\d+(\.?\d?)?),(\s?-?\d+(\.?\d?)?)/", $moteValue) === 0) {
-							$results .= '<p>Invalid Coordinate '.$moteValue;
-							$error = true;
+				foreach ($projSettings->motes as $mote) {
+					$moteValue = get_post_meta($marker_id, $mote->cf, true);
+						// ignore empty or null values
+					if (!is_null($moteValue) && $moteValue != '') {
+						$error = false;
+						switch ($mote->type) {
+						case 'Lat/Lon Coordinates':
+						case 'X-Y Coordinates':
+							if (preg_match("/(-?\d+(\.?\d?)?),(\s?-?\d+(\.?\d?)?)/", $moteValue) === 0) {
+								$results .= sprintf(__('<p>Invalid Coordinate %s', 'dhpress'), $moteValue);
+								$error = true;
+							}
+							break;
+						case 'SoundCloud':
+								// Just look at the beginning of the URL
+							if (preg_match("!https://soundcloud\.com/\w!i", $moteValue) === 0) {
+								$results .= __('<p>Invalid SoundCloud URL', 'dhpress');
+								$error = true;
+							}
+							break;
+						case 'YouTube':
+								// Cannot verify because it is just a raw code
+							break;
+						case 'Link To':
+						case 'Image':
+								// Just look at beginning and end of URL
+							if (preg_match("!^(https?|ftp)://[^\s]*!i", $moteValue) === 0) {
+								$results .= __('<p>Invalid URL', 'dhpress');
+								$error = true;
+							}
+							break;
+						case 'Transcript':
+								// Just look at beginning and end of URL
+							if ($moteValue !== 'none' && (preg_match("!(https?|ftp)://!i", $moteValue) === 0 || preg_match("!\.txt$!i", $moteValue) === 0)) {
+								$results .= __('<p>Invalid textfile URL', 'dhpress');
+								$error = true;
+								$transcErrors = true;
+							}
+							break;
+						case 'Timestamp':
+							if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 0) {
+								$results .= sprintf(__('<p>Invalid Timestamp %s', 'dhpress'), $moteValue);
+								$error = true;
+								$transcErrors = true;
+							}
+							break;
+						case 'Pointer':
+								// Only way to check would be to explode string and check existence of each
+								// marker, but this would likely break the WP Query loop -- so ignore for now
+							break;
+						case 'Date':
+								// Single Date or Range, inc. fuzzy
+							if (preg_match("/^(open|~?-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|~?-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
+								$results .= __('<p>Invalid Date range', 'dhpress');
+								$error = true;
+							}
+							break;
+						} // switch
+							// Add rest of error information
+						if ($error) {
+							$results .=  ' ' . sprintf(__('given for mote %1$s (custom field %2$s) in marker %3$s</p>', 'dhpress'), $mote->name, $mote->cf, get_the_title());
+							$numErrors++;
 						}
-						break;
-					case 'SoundCloud':
-							// Just look at the beginning of the URL
-						if (preg_match("!https://soundcloud\.com/\w!i", $moteValue) === 0) {
-							$results .= '<p>Invalid SoundCloud URL';
-							$error = true;
-						}
-						break;
-					case 'YouTube':
-							// Cannot verify because it is just a raw code
-						break;
-					case 'Link To':
-					case 'Image':
-							// Just look at beginning and end of URL
-						if (preg_match("!^(https?|ftp)://[^\s]*!i", $moteValue) === 0) {
-							$results .= '<p>Invalid URL';
-							$error = true;
-						}
-						break;
-					case 'Transcript':
-							// Just look at beginning and end of URL
-						if ($moteValue !== 'none' && (preg_match("!(https?|ftp)://!i", $moteValue) === 0 || preg_match("!\.txt$!i", $moteValue) === 0)) {
-							$results .= '<p>Invalid textfile URL';
-							$error = true;
-							$transcErrors = true;
-						}
-						break;
-					case 'Timestamp':
-						if (preg_match("/\d\d\:\d\d\:\d\d\.\d\d?-\d\d\:\d\d\:\d\d\.\d\d?/", $moteValue) === 0) {
-							$results .= '<p>Invalid Timestamp '.$moteValue;
-							$error = true;
-							$transcErrors = true;
-						}
-						break;
-					case 'Pointer':
-							// Only way to check would be to explode string and check existence of each
-							// marker, but this would likely break the WP Query loop -- so ignore for now
-						break;
-					case 'Date':
-							// Single Date or Range, inc. fuzzy
-						if (preg_match("/^(open|~?-?\d+(-(\d)+)?(-(\d)+)?)(\/(open|~?-?\d+(-(\d)+)?(-(\d)+)?))?$/", $moteValue) === 0) {
-							$results .= '<p>Invalid Date range';
-							$error = true;
-						}
-						break;
-					} // switch
-						// Add rest of error information
-					if ($error) {
-						$results .=  ' given for mote '.$mote->name.' (custom field '.$mote->cf.') in marker '.get_the_title().'</p>';
-						$numErrors++;
-					}
-				} // if (!is_null)
-			} // foreach
-				// don't continue if excessive errors found
-			if ($numErrors >= 20) {
-				$results .= '<p>Stopped checking errors in Marker data because more than 20 errors have been found. Correct these and try again.</p>';
-				break;
+					} // if (!is_null)
+				} // foreach
+					// don't continue if excessive errors found
+				if ($numErrors >= 20) {
+					$results .= __('<p>Stopped checking errors in Marker data because more than 20 errors have been found. Correct these and try again.</p>', 'dhpress');
+					break;
+				}
 			}
-		endwhile;
+		}
 
 			// If transcript (fragmentation) source is set, ensure the category has been created
 		$source = $projSettings->views->transcript->source;
 		if ($source && $source !== '' && $source !== 'disable') {
 			$transSrcCheck = dhp_verify_legend($projObj, $source, false, false, false);
 			if ($transSrcCheck != '') {
-				$results .= '<p>You have specified the Source mote '.$source.
-							' for Transcription fragmentation but you have not built it yet as a category.</p>';
+				$results .= sprintf(__('<p>You have specified the Source mote %s for Transcription fragmentation but you have not built it yet as a category.</p>', 'dhpress'), $source);
 			}
 		}
 
@@ -2408,9 +2339,9 @@ function dhp_perform_tests()
 
 			// Are the results all clear?
 		if ($results === '') {
-			$results = '<p>All data on server has been examined and approved.</p>';
+			$results = __('<p>All data on server has been examined and approved.</p>', 'dhpress');
 		} else {
-			$results .= '<p>Data tests now complete.</p>';
+			$results .= __('<p>Data tests now complete.</p>', 'dhpress');
 		}
 	} // if projSettings
 
@@ -2464,8 +2395,6 @@ function add_dhp_project_admin_scripts( $hook )
 				// Library styles
 			wp_enqueue_style('jquery-ui-style', plugins_url('/lib/jquery-ui/jquery-ui.min.css', dirname(__FILE__)) );
 
-			wp_enqueue_style('jquery-colorpicker-style', plugins_url('/lib/colorpicker/jquery.colorpicker.css',  dirname(__FILE__)),
-					array('jquery-ui-style') );
 			// wp_enqueue_style('wp-jquery-ui-dialog' );
 			wp_enqueue_style('maki-sprite-style', plugins_url('/lib/maki/maki-sprite.css',  dirname(__FILE__)) );
 				// Lastly, our plug-in specific styles
@@ -2477,32 +2406,114 @@ function add_dhp_project_admin_scripts( $hook )
 			wp_enqueue_script('underscore');
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
-			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery' );
+			//wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery' );
+			wp_enqueue_script('jquery-ui-core');
+			wp_enqueue_script('jquery-ui-widget');
+			wp_enqueue_script('jquery-ui-mouse');
+			wp_enqueue_script('jquery-ui-position');
+			wp_enqueue_script('jquery-ui-draggable');
+			wp_enqueue_script('jquery-ui-resizable');
+			wp_enqueue_script('jquery-ui-selectable');
+			wp_enqueue_script('jquery-ui-sortable');
+			wp_enqueue_script('jquery-ui-accordion');
+			wp_enqueue_script('jquery-ui-button');
+			wp_enqueue_script('jquery-ui-dialog');
+			wp_enqueue_script('jquery-ui-menu');
+			wp_enqueue_script('jquery-ui-selectmenu');
+			wp_enqueue_script('jquery-ui-slider');
+			wp_enqueue_script('jquery-ui-spinner');
+			wp_enqueue_script('jquery-ui-tabs');
 
 				// JS libraries specific to DH Press
 			wp_enqueue_script('jquery-nestable', plugins_url('/lib/jquery.nestable.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('jquery-colorpicker', plugins_url('/lib/colorpicker/jquery.colorpicker.js', dirname(__FILE__)), 'jquery' );
-			wp_enqueue_script('jquery-colorpicker-en', plugins_url('/lib/colorpicker/i18n/jquery.ui.colorpicker-en.js', dirname(__FILE__)),
-				array('jquery', 'jquery-colorpicker') );
+
+				// WP color picker
+			wp_enqueue_style('wp-color-picker');
+			wp_enqueue_script('wp-color-picker');
+
+				// Random/gradient color libraries
+			wp_enqueue_script('randomColor', plugins_url('/lib/randomColor.js', dirname(__FILE__)));
+			wp_enqueue_script('rainbowvis', plugins_url('/lib/rainbowvis.js', dirname(__FILE__)));
 
 				// For touch-screen mechanisms
 			wp_enqueue_script('dhp-touch-punch', plugins_url('/lib/jquery.ui.touch-punch.js', dirname(__FILE__)),
-				array('jquery', 'dhp-jquery-ui') );
+				array('jquery', 'jquery-ui-core', 'jquery-ui-mouse') );
+
+				// Javascript sprintf implementation
+			wp_enqueue_script('sprintf', plugins_url('/lib/sprintf.min.js', dirname(__FILE__)));
 
 			wp_enqueue_script('knockout', plugins_url('/lib/knockout-3.1.0.js', dirname(__FILE__)) );
 
 			wp_enqueue_script('dhp-map-services', plugins_url('/js/dhp-map-services.js', dirname(__FILE__)) );
 
 				// Custom JavaScript for Admin Edit Panel
-			$allDepends = array('jquery', 'underscore', 'dhp-jquery-ui', 'jquery-nestable', 'jquery-colorpicker',
-								'knockout', 'dhp-map-services');
+			$allDepends = array('jquery', 'underscore', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse', 'jquery-ui-position', 'jquery-ui-draggable', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-menu', 'jquery-ui-selectmenu', 'jquery-ui-slider', 'jquery-ui-spinner', 'jquery-ui-tabs', 'jquery-nestable', 'wp-color-picker',
+								'randomColor', 'rainbowvis', 'sprintf', 'knockout', 'dhp-map-services');
 			wp_enqueue_script('dhp-project-script', plugins_url('/js/dhp-project-admin.js', dirname(__FILE__)), $allDepends );
 
 			$pngs = dhp_get_attached_PNGs($postID);
+			$localized = array(
+				'cancel'				=> __('Cancel', 'dhpress'),
+				'delete'				=> __('Delete', 'dhpress'),
+				'rebuild'				=> __('Rebuild', 'dhpress'),
+				'execute'				=> __('Execute', 'dhpress'),
+				'save'					=> __('Save', 'dhpress'),
+				'clear_all'				=> __('Clear All', 'dhpress'),
+				'random_colors'			=> __('Random Colors', 'dhpress'),
+				'gradient'				=> __('Gradient', 'dhpress'),
+				'name_me'				=> __('name me', 'dhpress'),
+				'choose' 				=> __('- choose -', 'dhpress'),
+				'home_button' 			=> __('<p>If you wish to create a "Home" button, you must supply both a URL and label.</p>', 'dhpress'),
+				'home_address' 			=> __('<p>The Home address does not appear to be a full, well-formed URL.</p>', 'dhpress'),
+				'import_markers' 		=> __('<p>Your project will not work until you import Markers which are associated with this Project (by using this Project ID).</p>', 'dhpress'),
+				'define_motes' 			=> __('<p>Your project will not work until you define some motes.</p>', 'dhpress'),
+				'pointer_delimiter' 	=> __('<p>Motes of type Pointer require a delimiter character; the Mote named %s has not yet been assigned a delimiter.</p>', 'dhpress'),
+				'comma_delimiter' 		=> __('<p>You have specified the commas as the delimiter character for the Lat-Lon Coordinate Mote named %s; you cannot use it as a delimiter, as it is reserved for separating Lat from Lon and cannot be used to form Polygons.</p>', 'dhpress'),
+				'no_entry_points' 		=> __('<p>Your project will not work until you create at least one entry point.</p>', 'dhpress'),
+				'ep_error'				=> __('<p>%1$s (entry point "%2$s").</p>', 'dhpress'),
+				'unlabeled_entry_point' => __('<p>You have an unlabeled entry point. All multiple entry points must be named.</p>', 'dhpress'),
+				'map_legend'			=> __('You have not yet added a legend to the Map', 'dhpress'),
+				'map_coord_mote'		=> __('You must specify the mote that will provide the coordinate for the Map', 'dhpress'),
+				'cards_color_legend'	=> __('We recommend specifying a color legend for the Cards visualization, but none is provided', 'dhpress'),
+				'cards_content'			=> __("You haven't yet specified content for the Cards visualization", 'dhpress'),
+				'pinboard_width'		=> __('You must specify a valid display width for the Pinboard', 'dhpress'),
+				'pinboard_height'		=> __('You must specify a valid display height for the Pinboard', 'dhpress'),
+				'pinboard_bg_width'		=> __('You must specify a valid background image width for the Pinboard', 'dhpress'),
+				'pinboard_bg_height'	=> __('You must specify a valid background image height for the Pinboard', 'dhpress'),
+				'pinboard_legend'		=> __('You have not yet added a legend to the Pinboard', 'dhpress'),
+				'pinboard_coord_mote'	=> __('You must specify the mote that will provide the coordinate for the Pinboard', 'dhpress'),
+				'tree_head'				=> __('You must specify the head marker for the Tree', 'dhpress'),
+				'tree_pointer'			=> __('You must specify the Pointer mote which indicates descending generations for the Tree', 'dhpress'),
+				'tree_font_size'		=> __('You must specify a valid font size for the Tree', 'dhpress'),
+				'tree_image_width'		=> __('You must specify a valid image width for the Tree', 'dhpress'),
+				'tree_image_height'		=> __('You must specify a valid image height for the Tree', 'dhpress'),
+				'time_date_mote'		=> __('You must specify the Date mote for the Timeline', 'dhpress'),
+				'time_color_legend'		=> __('You must specify a color legend for the Timeline', 'dhpress'),
+				'time_band_height'		=> __('You must specify a valid band height for the Timeline', 'dhpress'),
+				'time_label_width'		=> __('You must specify a valid x axis label width for the Timeline', 'dhpress'),
+				'time_date_start_frame'	=> __('You must specify a valid Date for the start frame of the Timeline', 'dhpress'),
+				'time_date_end_frame'	=> __('You must specify a valid Date for the end frame of the Timeline', 'dhpress'),
+				'time_date_start_zoom'	=> __('You must specify a valid Date for the start zoom of the Timeline', 'dhpress'),
+				'time_date_end_zoom'	=> __('You must specify a valid Date for the end zoom of the Timeline', 'dhpress'),
+				'facet_bg_width'		=> __('You must specify a valid background palette width for the Facet Flow view', 'dhpress'),
+				'facet_bg_height'		=> __('You must specify a valid background palette height for the Facet Flow view', 'dhpress'),
+				'facet_two_motes'		=> __('You need at least two sets of motes for the Facet Flow', 'dhpress'),
+				'facet_unique_motes'	=> __('Facet Flow requires unique (not redundant) motes in the list to display', 'dhpress'),
+				'facet_browser_mote'	=> __('You need at least one mote for the Facet Browser', 'dhpress'),
+				'redundant_motes'		=> __('You have listed redundant motes to display', 'dhpress'),
+				'empty_content_mote'	=> __('<p>Your list of motes for the select modal is empty. We suggest you add at least one content mote.</p>', 'dhpress'),
+				'transcript_settings'	=> __('<p>Although you have enabled transcripts on archive pages via the "Source" selection, you have not yet specified other necessary transcript settings.</p>', 'dhpress'),
+				'tests_being_conducted'	=> __('<p>Tests are now being conducted on the WordPress server. This checks all values for all markers and could take a while.</p><p><b>IMPORTANT</b>: This will only work properly if your project settings have been saved.</p>', 'dhpress'),
+				'general_settings'		=> __('General Settings', 'dhpress'),
+				'motes'					=> __('Motes', 'dhpress'),
+				'entry_points'			=> __('Entry Points', 'dhpress'),
+				'misc'					=> __('Misc.', 'dhpress')
+			);
 			wp_localize_script('dhp-project-script', 'dhpDataLib', array(
 				'ajax_url' => $dev_url,
 				'projectID' => $postID,
-				'pngImages' => $pngs
+				'pngImages' => $pngs,
+				'localized' => json_encode($localized)
 			) );
 
 		} else if ( $post->post_type == 'dhp-markers' ) {
@@ -2559,7 +2570,7 @@ function dhp_get_map_layer_data($mapLayers)
 			$loop = new WP_Query($args);
 				// We can only abort if not found
 			if (!$loop->have_posts()) {
-				trigger_error("Map ID cannot be found");
+				trigger_error(__('Map ID cannot be found', 'dhpress'));
 				return null;
 			}
 
@@ -2571,7 +2582,7 @@ function dhp_get_map_layer_data($mapLayers)
 
 				// Do basic error checking to ensure necessary fields exist
 			if ($mapData['id'] == '') {
-				trigger_error('No dhp_map_typeid metadata for map named '.$layer->name.' of id '.$layer->id);
+				trigger_error(sprintf(__('No dhp_map_typeid metadata for map named %1$s of id %2$s', 'dhpress'), $layer->name, $layer->id));
 			}
 			array_push($mapArray, $mapData);
 		}
@@ -2583,21 +2594,14 @@ function dhp_get_map_layer_data($mapLayers)
 } // dhp_get_map_layer_data()
 
 
-// PURPOSE: Called to retrieve file content to insert into HTML for a particular DH Press page
-// INPUT:   $scriptname = base name of script file (not pathname)
-// RETURNS: Contents of file as string
+// PURPOSE: Includes file with internationalized HTML corresponding to a particular DH Press page
+// INPUT: $scriptName = base name of script file (not pathname)
 
-function dhp_get_script_text($scriptname)
+function dhp_include_script($scriptName)
 {
-	$scriptpath = plugin_dir_path( __FILE__ ).'scripts/'.$scriptname;
-	if (!file_exists($scriptpath)) {
-		trigger_error("Script file ".$scriptpath." not found");
-	}
-	$scripthandle = fopen($scriptpath, "r");
-	$scripttext = file_get_contents($scriptpath);
-	fclose($scripthandle);
-	return $scripttext;
-} // dhp_get_script_text()
+	$scriptsPath = plugin_dir_path( __FILE__ ).'scripts/';
+	include($scriptsPath.$scriptName);
+} // dhp_include_script()
 
 
 add_filter('the_content', 'dhp_mod_page_content');
@@ -2606,11 +2610,15 @@ add_filter('the_content', 'dhp_mod_page_content');
 // INPUT:	$content = material to show on page
 // RETURNS:	$content with ID of this post and DH Press hooks for marker text and visualization
 
-function dhp_mod_page_content($content) {
+function dhp_mod_page_content($content)
+{
 	global $post;
 
-		// NOTE: This is not called in case of Viewing Projects
-	return $content.'<div class="dhp-post" id="'.$post->ID.'"><div class="dhp-entrytext"></div></div>';
+	if ($post && $post->post_type == 'dhp-markers') {
+
+			// NOTE: This is not called in case of Viewing Projects
+		return $content.'<div class="dhp-post" id="'.$post->ID.'"><div class="dhp-entrytext"></div></div>';
+	}
 } // dhp_mod_page_content()
 
 
@@ -2679,19 +2687,36 @@ function dhp_page_template( $page_template )
 		$vizParams['menu'] = $vizMenu;
 
 			// Visualization specific -- only 1st Entry Point currently supported
+			// NOTE: When enqueueing new scripts and styles, ensure that you add them to the appropriate script and style arrays in dhp-view-template.php or they will be dequeued and not load
 		$thisEP = $projObj->getEntryPointByIndex($vizIndex);
 		switch ($thisEP->type) {
 		case 'map':
 			wp_enqueue_style('dhp-jquery-ui-style', plugins_url('/lib/jquery-ui/jquery-ui.min.css', dirname(__FILE__)));
 
 			wp_enqueue_style('dhp-map-css', plugins_url('/css/dhp-map.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
-			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.3/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
+			wp_enqueue_style('leaflet-css', plugins_url('/lib/leaflet-0.7.7/leaflet.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			wp_enqueue_style('maki-sprite-style', plugins_url('/lib/maki/maki-sprite.css',  dirname(__FILE__)) );
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
-			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
+			//wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
+			wp_enqueue_script('jquery-ui-core');
+			wp_enqueue_script('jquery-ui-widget');
+			wp_enqueue_script('jquery-ui-mouse');
+			wp_enqueue_script('jquery-ui-position');
+			wp_enqueue_script('jquery-ui-draggable');
+			wp_enqueue_script('jquery-ui-resizable');
+			wp_enqueue_script('jquery-ui-selectable');
+			wp_enqueue_script('jquery-ui-sortable');
+			wp_enqueue_script('jquery-ui-accordion');
+			wp_enqueue_script('jquery-ui-button');
+			wp_enqueue_script('jquery-ui-dialog');
+			wp_enqueue_script('jquery-ui-menu');
+			wp_enqueue_script('jquery-ui-selectmenu');
+			wp_enqueue_script('jquery-ui-slider');
+			wp_enqueue_script('jquery-ui-spinner');
+			wp_enqueue_script('jquery-ui-tabs');
 
-			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.3/leaflet.js', dirname(__FILE__)));
+			wp_enqueue_script('leaflet', plugins_url('/lib/leaflet-0.7.7/leaflet.js', dirname(__FILE__)));
 			wp_enqueue_script('leaflet-maki', plugins_url('/lib/Leaflet.MakiMarkers.js', dirname(__FILE__)), 'leaflet');
 
 				// Has user specified to use Marker Clustering?
@@ -2713,7 +2738,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-			array_push($dependencies, 'leaflet', 'dhp-maps-view', 'dhp-map-services', 'dhp-jquery-ui');
+			array_push($dependencies, 'leaflet', 'dhp-maps-view', 'dhp-map-services', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse', 'jquery-ui-position', 'jquery-ui-draggable', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-menu', 'jquery-ui-selectmenu', 'jquery-ui-slider', 'jquery-ui-spinner', 'jquery-ui-tabs');
 			break;
 
 		case 'cards':
@@ -2733,7 +2758,23 @@ function dhp_page_template( $page_template )
 			wp_enqueue_style('dhp-pinboard-css', plugins_url('/css/dhp-pinboard.css',  dirname(__FILE__)) );
 
 				// Will call our own versions of jquery-ui to minimize compatibility problems
-			wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
+			//wp_enqueue_script('dhp-jquery-ui', plugins_url('/lib/jquery-ui/jquery-ui.min.js', dirname(__FILE__)), 'jquery');
+			wp_enqueue_script('jquery-ui-core');
+			wp_enqueue_script('jquery-ui-widget');
+			wp_enqueue_script('jquery-ui-mouse');
+			wp_enqueue_script('jquery-ui-position');
+			wp_enqueue_script('jquery-ui-draggable');
+			wp_enqueue_script('jquery-ui-resizable');
+			wp_enqueue_script('jquery-ui-selectable');
+			wp_enqueue_script('jquery-ui-sortable');
+			wp_enqueue_script('jquery-ui-accordion');
+			wp_enqueue_script('jquery-ui-button');
+			wp_enqueue_script('jquery-ui-dialog');
+			wp_enqueue_script('jquery-ui-menu');
+			wp_enqueue_script('jquery-ui-selectmenu');
+			wp_enqueue_script('jquery-ui-slider');
+			wp_enqueue_script('jquery-ui-spinner');
+			wp_enqueue_script('jquery-ui-tabs');
 
 			wp_enqueue_script('snap', plugins_url('/lib/snap.svg-min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-pinboard-view', plugins_url('/js/dhp-pinboard-view.js', dirname(__FILE__)), 
@@ -2750,7 +2791,7 @@ function dhp_page_template( $page_template )
 				// Get any PNG image icons
 			$vizParams['pngs'] = dhp_get_attached_PNGs($post->ID);
 
-			array_push($dependencies, 'snap', 'dhp-jquery-ui', 'dhp-pinboard-view');
+			array_push($dependencies, 'snap', 'jquery-ui-core', 'jquery-ui-widget', 'jquery-ui-mouse', 'jquery-ui-position', 'jquery-ui-draggable', 'jquery-ui-resizable', 'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-menu', 'jquery-ui-selectmenu', 'jquery-ui-slider', 'jquery-ui-spinner', 'jquery-ui-tabs', 'dhp-pinboard-view');
 			break;
 
 		case 'tree':
@@ -2788,6 +2829,8 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('d3', plugins_url('/lib/d3.min.js', dirname(__FILE__)));
 			wp_enqueue_script('dhp-browser-view', plugins_url('/js/dhp-browser-view.js', dirname(__FILE__)),
 				'd3' );
+			wp_localize_script('dhp-browser-view', 'localize', array('reset' => __('Reset', 'dhpress'),
+																	 'reset_all' => __('Reset All', 'dhpress')));
 
 			array_push($dependencies, 'd3', 'dhp-browser-view');
 			break;
@@ -2844,8 +2887,8 @@ function dhp_page_template( $page_template )
 
 			// Must insert text needed for dhpServices
 		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
-		$projscript = dhp_get_script_text(DHP_SCRIPT_SERVICES);
-		echo $projscript;
+
+		dhp_include_script(DHP_SCRIPT_SERVICES);
 
 		wp_enqueue_style('dhp-project-css', plugins_url('/css/dhp-project.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 
@@ -2902,8 +2945,9 @@ function dhp_tax_template( $page_template )
 
 			// Must insert text needed for dhpServices
 		wp_enqueue_script('mustache', plugins_url('/lib/mustache.min.js', dirname(__FILE__)));
-		$projscript = dhp_get_script_text(DHP_SCRIPT_SERVICES);
-		echo $projscript;
+
+		dhp_include_script(DHP_SCRIPT_SERVICES);
+		dhp_include_script(DHP_SCRIPT_TAX);
 
 			// Are we on a taxonomy/archive page that corresponds to transcript "source"?
 		$isTranscript = ($project_settings->views->transcript->source == $term_parent->name);

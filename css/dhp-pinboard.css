@@ -3,14 +3,18 @@
 
 @charset "UTF-8";
 
+    /* Enable scroll bar in case background image is too large */
+#dhp-visual {
+    overflow: auto;
+}
+
 .hide {
 	display: hidden;
 }
 
-    /* Enable scroll bar in case background image is too large */
 #svg-container {
-    overflow-x: auto;
-    overflow-y: auto;
+    padding-top: 45px;
+    padding-left: 4px;
 }
 
 svg {
@@ -25,7 +29,7 @@ svg {
 
     /* image movement & animation control icons */
 #dhp-pin-controls {
-    height: 38px;
+    height: 48px;
     margin: 3px;
     margin-right: 6px;
     padding: 0;
@@ -38,15 +42,38 @@ svg {
     -webkit-box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
     box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
 }
+/*
+#dhp-pin-controls button {
+    background: none;
+    border-bottom: none;
+}*/
 
     /* control buttons are Foundation font icons */
-.pin-fndn-icon {
-    padding: 3px;
-    padding-top: 4px;
-    color: black;
+#dhp-pin-controls .pin-fndn-icon {
     margin-left: 4px;
+    margin-right: 4px;
+    font-size: 32px;
+    line-height: 32px;
+    height: 36px;
+}
+    /* style for control buttons */
+#dhp-pin-controls .pin-fndn-icon button:before {
+    color: black;
+
+}
+#dhp-pin-controls .pin-fndn-icon button {
+    background-color: white !important;
     font-size: 28px;
-    line-height: 28px;
+    padding: 6px 4px 4px;
+}
+    /*gives user feedback of hovering over control*/
+#dhp-pin-controls .pin-fndn-icon button:hover {
+    box-shadow: inset 0 0 2px 2px rgba(0,0,0,0.3);
+    background-color: transparent !important;
+}
+#dhp-pin-controls .pin-fndn-icon button:focus {
+    background-color: transparent !important;
+    outline: 0;
 }
 
 

@@ -169,10 +169,10 @@ var dhpServices = {
 		projectID = theProjID;
 		projSettings = theSettings;
 		markerURL = theMarkerURL;
-		dhpServices.dateNoLater = dhpServices.getText("#dhp-date-nolater");
-		dhpServices.dateAtLeast = dhpServices.getText("#dhp-date-atleast");
-		dhpServices.dateAbout  = dhpServices.getText("#dhp-date-about");
-		dhpServices.dateFromTo  = dhpServices.getText("#dhp-date-from-to");
+		dhpServices.dateNoLater = "#dhp-date-nolater";
+		dhpServices.dateAtLeast = "#dhp-date-atleast";
+		dhpServices.dateAbout  = "#dhp-date-about";
+		dhpServices.dateFromTo  = "#dhp-date-from-to";
 	}, // initialize()
 
 
@@ -223,7 +223,8 @@ var dhpServices = {
 						hasParentClass = 'hasParent';
 					}
 					if (theTerm.icon_url == null || theTerm.icon_url == undefined) {
-						throw new Error("Legend value "+theTerm.name+" has not been assigned a color or icon");
+						// throw new Error("Legend value "+theTerm.name+" has not been assigned a color or icon");
+						theTerm.icon_url = '#888888';
 					}
 
 					var firstIconChar = theTerm.icon_url.charAt(0);
@@ -253,7 +254,7 @@ var dhpServices = {
 													theTerm.id+'" data-parent="'+theTerm.parent+'">'+theTerm.name+'</a></div></div>');
 				}
 			});
-			jQuery('.terms',legendHtml).prepend(Mustache.render(jQuery("#dhp-script-legend-hideshow").html()));
+			jQuery('.terms',legendHtml).prepend(jQuery("#dhp-script-legend-hideshow").html());
 
 			jQuery('#legends .legend-row').append(legendHtml);
 				// Add Legend title to dropdown menu in navbar -- make 1st Legend active by default
@@ -564,8 +565,10 @@ var dhpServices = {
 		// PURPOSE: Remove the Loading pop-up modal dialog
 	remLoadingModal: function()
 	{
-			// Remove Loading modal
-		jQuery('#loading').foundation('reveal', 'close');
+			// Need to add 250ms delay to prevent race condition (since open uses 250ms open animation)
+		window.setTimeout(function() {
+			jQuery('#loading').foundation('reveal', 'close');
+		}, 250);
 	}, // remLoadingModal()
 
 
@@ -867,7 +870,7 @@ var dhpServices = {
 				} else {
 					theString = dhpServices.dateAtLeast;
 				}
-				return Mustache.render(theString, { date: dateStr.substr(1) });
+				return dhpServices.compileText(theString, { date: dateStr.substr(1) });
 			} else 
 				return dateStr;
 		} // dateExplain()
@@ -888,16 +891,17 @@ var dhpServices = {
 				var dateSegs = mVal.split('/');
 				var start = dateSegs[0].trim();
 				if (dateSegs.length == 1) {
+					
 					var dateStr;
 					if (start.charAt(0) === '~') {
-						dateStr = Mustache.render(dhpServices.dateAbout, { date: start.substr(1) });
+						dateStr = dhpServices.compileText(dhpServices.dateAbout, { date: start.substr(1) });
 					} else {
 						dateStr = start;
 					}
 					builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+dateStr+'</div>';
 				} else {
 					builtHTML = '<div><span class="dhp-mote-title">'+moteName+'</span>: '+
-						Mustache.render(dhpServices.dateFromTo, { d1: dateExplain(start, true), d2: dateExplain(dateSegs[1].trim(), false) });+
+						dhpServices.compileText(dhpServices.dateFromTo, { d1: dateExplain(start, true), d2: dateExplain(dateSegs[1].trim(), false) });+
 						'</div>';
 				}
 				break;
@@ -991,8 +995,17 @@ var dhpServices = {
 		//          vars = names and values of variables in text
 	compileText: function(scriptName, vars)
 	{
-		var baseText = jQuery(scriptName).html().trim();
-		var template = Mustache.render(baseText, vars);
+		_.templateSettings = {
+ 			 interpolate: /\{\{(.+?)\}\}/g
+		};
+
+		var baseText = scriptName;
+
+		if(typeof baseText == "string"){
+			baseText = jQuery(scriptName).html().trim();
+		}
+
+		var template = _.template(baseText, vars);
 		return template;
 	} // compileText()
 }; // dhpServices

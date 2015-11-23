@@ -11,16 +11,7 @@
 
 // ====================== Global Variables ==========================
 
-	// GUI components added to Marker Settings box in Edit Marker admin panel
-$dhp_marker_settings_fields = array(
-	array(
-		'label'=> 'Associated Project',
-		'desc'	=> 'Select Project to which this marker should belong',
-		'id'	=> 'project_id',
-		'type'	=> 'select',
-		'options' => dhp_get_projects()
-		)
-);
+$dhp_marker_settings_fields = null;
 
 // ====================== Init Functions ==========================
 
@@ -31,36 +22,18 @@ add_action( 'init', 'dhp_marker_init' );
 
 function dhp_marker_init()
 {
-  $labels = array(
-    'name' => _x('Markers', 'post type general name'),
-    'singular_name' => _x('Marker', 'post type singular name'),
-    'add_new' => _x('Add New', 'dhp-markers'),
-    'add_new_item' => __('Add New Marker'),
-    'edit_item' => __('Edit Marker'),
-    'new_item' => __('New Marker'),
-    'all_items' => __('Markers'),
-    'view_item' => __('View Marker'),
-     'search_items' => __('Search Markers'),
-    'not_found' =>  __('No markers found'),
-    'not_found_in_trash' => __('No markers found in Trash'), 
-    'parent_item_colon' => '',
-    'menu_name' => __('Markers')
-  );
-  $args = array(
-    'labels' => $labels,
-    'public' => true,
-    'publicly_queryable' => true,
-    'show_ui' => true, 
-    'show_in_menu' => 'dhp-top-level-handle', 
-    'query_var' => true,
-    'rewrite' => true,
-    'capability_type' => 'post',
-    'has_archive' => true, 
-    'hierarchical' => false,
-    'menu_position' => null,
-    'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions','custom-fields' )
-  ); 
-  register_post_type('dhp-markers',$args);
+    global $dhp_marker_settings_fields;
+
+    // GUI components added to Marker Settings box in Edit Marker admin panel
+    $dhp_marker_settings_fields = array(
+        array(
+            'label' => __('Associated Project', 'dhpress'),
+            'desc'  => __('Select Project to which this marker should belong', 'dhpress'),
+            'id'    => 'project_id',
+            'type'  => 'select',
+            'options' => dhp_get_projects()
+        )
+    );
 } // dhp_marker_init()
 
 
@@ -109,12 +82,17 @@ function add_dhp_marker_admin_scripts( $hook )
 			wp_enqueue_style('dhp-admin', plugins_url('/css/dhp-admin.css',  dirname(__FILE__) ));
 			wp_enqueue_script('jquery');
 
+            $localized = array(
+                'choose_field' => __('Choose a custom field to add/edit.', 'dhpress'),
+                'add_edit' => __('Add/Update', 'dhpress')
+            );
 			wp_enqueue_script('dhp-marker-script', plugins_url('/js/dhp-marker-admin.js', dirname(__FILE__) ));
 			wp_localize_script('dhp-marker-script', 'dhpDataLib', array(
 				'ajax_url' => $dev_url,
                 'projectID' => $project_id,
                 'markerID' => $markerID,
-                'customFields' => $custom_fields
+                'customFields' => $custom_fields,
+                'localized' => json_encode($localized)
 			) );
         }
 
@@ -142,13 +120,13 @@ function dhp_marker_updated_messages( $messages )
     3 => __('Custom field deleted.'),
     4 => __('Marker updated.'),
     /* translators: %s: date and time of the revision */
-    5 => isset($_GET['revision']) ? sprintf( __('Marker restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+    5 => isset($_GET['revision']) ? sprintf( _x('Marker restored to revision from %s', 'translators: %s: date and time of the revision'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
     6 => sprintf( __('Marker published. <a href="%s">View marker</a>'), esc_url( get_permalink($post_ID) ) ),
     7 => __('Marker saved.'),
     8 => sprintf( __('Marker submitted. <a target="_blank" href="%s">Preview marker</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
     9 => sprintf( __('Marker scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview marker</a>'),
       // translators: Publish box date format, see http://php.net/date
-      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+      date_i18n( _x( 'M j, Y @ G:i', 'translators: Publish box date format, see http://php.net/date'), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
     10 => sprintf( __('Marker draft updated. <a target="_blank" href="%s">Preview marker</a>'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
   );
 
@@ -239,7 +217,7 @@ add_action('add_meta_boxes', 'add_dhp_marker_settings_box');
 function add_dhp_marker_settings_box() {
     add_meta_box(
 		'dhp_marker_settings_meta_box', 		// $id
-		'Marker Settings', 						// $title
+		__('Marker Settings', 'dhpress'), 		// $title
 		'show_dhp_marker_settings_box', 		// $callback
 		'dhp-markers', 						// $page
 		'normal',								// $context

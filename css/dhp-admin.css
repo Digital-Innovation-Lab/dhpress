@@ -49,6 +49,44 @@ ul.wp-submenu {
   padding-bottom: 5px;
 }
 
+#entryPoints div.ep {
+  margin-bottom: 20px;
+}
+
+#entryPoints div.ep .ep-header {
+  padding-bottom: 2px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #aaa;
+  font-weight: bold;
+  font-size: 1.2em;
+  cursor: move;
+}
+
+#entryPoints div.ep .ep-header span.ui-icon {
+  display: inline-block;
+  vertical-align: -6%;
+}
+
+#entryPoints div.ep .ep-header .left {
+  float: left;
+  margin-top: 5px;
+}
+
+#entryPoints div.ep .ep-header button {
+  font-size: .85em;
+  float: right;
+}
+
+#entryPoints div.ep .ep-header .clear {
+  clear: both;
+}
+
+
+#testResults strong {
+  display: block;
+  padding-top: 10px;
+}
+
 
 /* ========== For show/hide of components ========== */
 
@@ -116,6 +154,35 @@ ul.wp-submenu {
     width: 5px;
     padding-left: 5px;
     z-index: 2;
+}
+
+/* ---- Iris Color Picker ---- */
+
+#mdl-select-color .iris-picker {
+  margin: 0 auto;
+}
+
+.iris-slider-offset {
+  margin: 0 !important;
+}
+
+/* ---- Color Reset Modal ---- */
+
+#mdl-reset-color-options .color-box {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 20px;
+  cursor: cell;
+}
+
+#mdl-reset-color-options p {
+  margin-bottom: 0;
+}
+
+#mdl-reset-color-options #gradient-colors {
+  text-align: center;
+  font-weight: bold;
 }
 
 /* ---- Geo Locate Selector ---- */

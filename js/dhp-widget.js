@@ -143,7 +143,7 @@ var dhpWidget = {
 		}
 
 		if (usingAV && haveTransc) {
-			jQuery(appendPos).append(Mustache.render(jQuery("#dhp-script-transc-scroll").html()));
+			jQuery(appendPos).append(jQuery("#dhp-script-transc-scroll").html());
 		}
 	}, // prepareOneTranscript()
 
@@ -423,12 +423,12 @@ var dhpWidget = {
 					if (val.charAt(0) === '[' && (val.charAt(1) >= '0' && val.charAt(1) <= '9'))
 					{
 						timeCode = dhpServices.tcToMilliSeconds(val);
-						if (textBlock.length) {
+						if (textBlock.length > 0) {
 								// Append timecode entry once range is defined
 							if (lastStamp) {
 								dhpWidget.tcArray.push({ start: lastCode, end: timeCode });
 							}
-							jQuery(transcriptHtml).append('<div class="row"><div class="type-timecode" data-timecode="'+
+							transcriptHtml.append('<div class="row"><div class="type-timecode" data-timecode="'+
 									lastCode+'" data-tcindex="'+tcIndex++ +'">'+lastStamp+'</div><div class="type-text">'+textBlock+'</div></div>')
 							textBlock = '';
 						}
@@ -443,10 +443,10 @@ var dhpWidget = {
 			}); // each()
 
 				// Handle any dangling text
-			if (textBlock.length) {
+			if (textBlock.length > 0) {
 					// Append very large number to ensure can't go past last item! 9 hours * 60 minutes * 60 seconds * 1000 milliseconds
 				dhpWidget.tcArray.push({ start: lastCode, end: 32400000 });
-				jQuery(transcriptHtml).append('<div class="row"><div class="type-timecode" data-timecode="'+
+				transcriptHtml.append('<div class="row"><div class="type-timecode" data-timecode="'+
 									lastCode+'" data-tcindex="'+tcIndex+'">'+lastStamp+'</div><div class="type-text">'+textBlock+'</div></div>');
 			}
 		} // if split

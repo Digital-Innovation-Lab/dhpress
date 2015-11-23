@@ -101,7 +101,7 @@ var dhpTimeline = {
 
 			// Do we need to localize D3?
 		var d3Local = dhpServices.getText('#dhp-script-d3-local');
-		if (d3Local.length > 1) {
+		if (d3Local != 'default') {
 			var locale = d3.locale(JSON.parse(d3Local));
 			dhpTimeline.local = locale.timeFormat.multi([
 				["%H:%M", function(d) { return d.getMinutes(); }],
@@ -143,7 +143,7 @@ var dhpTimeline = {
 		jQuery("#dhp-visual").append('<div id="dhp-controls"></div>');
 
 			// Create placeholder for Legend menu
-		jQuery('#dhp-controls').append(Mustache.render(jQuery("#dhp-script-legend-head").html()));
+		jQuery('#dhp-controls').append(jQuery("#dhp-script-legend-head").html());
 
 			// Create SVG and frame for graphics
 			// svgMargin is for space inside of dhp-timeline occupied by #svg-container
@@ -322,19 +322,33 @@ var dhpTimeline = {
 				}
 				var name = color.substr(1);
 					// Create three variants of each color
-				gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
-				gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
-				gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
-				gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
-				gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
-				gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
-				gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
-				gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
-				gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
+					gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
+					gradDef.append('stop').attr('offset', '0%').attr('stop-color', '#C0C0C0');
+					gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
+					gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
+					gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '100%').attr('stop-color', '#C0C0C0');
+					gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
+					gradDef.append('stop').attr('offset', '0%').attr('stop-color', '#C0C0C0');
+					gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+					gradDef.append('stop').attr('offset', '100%').attr('stop-color', '#C0C0C0');
+
+				// gradDef = defSpace.append('linearGradient').attr('id', name+'-fs');
+				// gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
+				// gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '100%').attr('stop-color', color);
+				// gradDef = defSpace.append('linearGradient').attr('id', name+'-fe');
+				// gradDef.append('stop').attr('offset', '0%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
+				// gradDef = defSpace.append('linearGradient').attr('id', name+'-fb');
+				// gradDef.append('stop').attr('offset', '0%').attr('stop-color', 'white');
+				// gradDef.append('stop').attr('offset', '5%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '95%').attr('stop-color', color);
+				// gradDef.append('stop').attr('offset', '100%').attr('stop-color', 'white');
 			}
 		});
 	}, // createLegendGrads
