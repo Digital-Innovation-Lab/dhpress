@@ -1,5 +1,4 @@
-# DH Press - Digital Humanities Toolkit
-
+=== DH Press - Digital Humanities Toolkit ===
 Contributors: Michael Newton, Joe Hope, Kevin Jacoby, Tim Wu
 Donate link: http://digitalinnovation.unc.edu/projects/dhpress/
 Tags: plugin, visualization, humanities, toolkit, historical
@@ -48,11 +47,10 @@ All actions or proceedings related to this Agreement shall be litigated in state
 The distribution of modified versions of the software under the DH Press trademark is prohibited, except to the extent used in the required statement, “Based on DH Press technology,” which must be prominently displayed to users or recipients of any modified or derivative versions of the software.
 
 
-== Installation of zip file ==
+== Installation ==
 
-1. Rename folder to 'dhpress'
-2. Upload 'dhpress' to the '/wp-content/plugins/' directory
-3. Activate the plugin through the 'Plugins' menu in WordPress
+1. Upload 'dhpress' to the '/wp-content/plugins/' directory
+2. Activate the plugin through the 'Plugins' menu in WordPress
 
 
 == Frequently Asked Questions ==
