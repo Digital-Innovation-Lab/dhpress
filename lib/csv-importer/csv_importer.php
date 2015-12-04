@@ -2,7 +2,7 @@
 /*
 Plugin Name: CSV Importer
 Description: Import data as posts from a CSV file. <em>You can reach the author at <a href="mailto:d.v.kobozev@gmail.com">d.v.kobozev@gmail.com</a></em>.
-Version: 0.3.7
+Version: 0.3.8
 Author: Denis Kobozev
 */
 
@@ -186,6 +186,12 @@ class CSVImporterPlugin {
             return;
         }
 
+        if (!current_user_can('publish_pages') || !current_user_can('publish_posts')) {
+            $this->log['error'][] = 'You don\'t have the permissions to publish posts and pages. Please contact the blog\'s administrator.';
+            $this->print_messages();
+            return;
+        }
+
         require_once 'File_CSV_DataSource/DataSource.php';
 
         $time_start = microtime(true);
@@ -237,7 +243,8 @@ class CSVImporterPlugin {
     }
 
     function create_post($data, $options) {
-        extract($options);
+        $opt_draft = isset($options['opt_draft']) ? $options['opt_draft'] : null;
+        $opt_cat = isset($options['opt_cat']) ? $options['opt_cat'] : null;
 
         $data = array_merge($this->defaults, $data);
         $type = $data['csv_post_type'] ? $data['csv_post_type'] : 'post';
@@ -549,7 +556,14 @@ class CSVImporterPlugin {
         if (is_numeric($author)) {
             return $author;
         }
-        $author_data = get_userdatabylogin($author);
+
+        // get_userdatabylogin is deprecated as of 3.3.0
+        if (function_exists('get_user_by')) {
+            $author_data = get_user_by('login', $author);
+        } else {
+            $author_data = get_userdatabylogin($author);
+        }
+
         return ($author_data) ? $author_data->ID : 0;
     }
 
