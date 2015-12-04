@@ -21,7 +21,9 @@ require_once( dirname(__FILE__) . '/../lib/category-checklist-tree/category-chec
 
 require_once( dirname(__FILE__) . '/../lib/term-menu-order/term-menu-order.php' );
 
-require_once( dirname(__FILE__) . '/../lib/csv-importer/csv_importer.php' );
+if ( ! class_exists( 'CSVImporterPlugin' ) ) {
+	require_once( dirname(__FILE__) . '/../lib/csv-importer/csv_importer.php' );
+}
 
 // action function for above hook
 function dhp_add_pages() {

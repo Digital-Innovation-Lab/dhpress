@@ -3,7 +3,7 @@
 Plugin Name: DH Press | Digital Humanities Toolkit
 Plugin URI: http://dhpress.org/
 Description: DHPress is a flexible, repurposable, fully extensible digital humanities toolkit designed for non-technical users.
-Version: 2.7
+Version: 2.7.1
 Author: DHPress Team: Michael Newton, Joe E Hope, Pam Lach
 Text Domain: dhpress
 Domain Path: /languages
