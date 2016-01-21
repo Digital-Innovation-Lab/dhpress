@@ -3,13 +3,13 @@
 Plugin Name: DH Press | Digital Humanities Toolkit
 Plugin URI: http://dhpress.org/
 Description: DHPress is a flexible, repurposable, fully extensible digital humanities toolkit designed for non-technical users.
-Version: 2.7.1
+Version: 2.7.2
 Author: DHPress Team: Michael Newton, Joe E Hope, Pam Lach
 Text Domain: dhpress
 Domain Path: /languages
 License: GPLv2
 */
-/*  Copyright 2014  DHPress Team  (email : info@dhpress.org)
+/*  Copyright 2016  DHPress Team  (email : info@dhpress.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -31,7 +31,7 @@ define('DHP_REQUIRED_PHP_VERSION', '5.2');
 define('DHP_REQUIRED_WP_VERSION', '3.5');
 define('DHP_PLUGIN_URL', plugins_url('', __FILE__ ));
 define('DHP_MAPS_TABLE_VERSION', '0.1');
-define('DHP_PLUGIN_VERSION', '2.7');
+define('DHP_PLUGIN_VERSION', '2.7.2');
 
 
 // ================== Localization ===================
