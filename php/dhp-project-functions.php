@@ -2619,6 +2619,9 @@ function dhp_mod_page_content($content)
 			// NOTE: This is not called in case of Viewing Projects
 		return $content.'<div class="dhp-post" id="'.$post->ID.'"><div class="dhp-entrytext"></div></div>';
 	}
+	else {
+		return $content;
+	}
 } // dhp_mod_page_content()
 
 
