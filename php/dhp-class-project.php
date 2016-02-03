@@ -736,7 +736,7 @@ class DHPressMarkerQuery
 			// Does item link to its own Marker page, Taxonomy page, or Mote value?
 		if ($this->linkParent && $this->childTerms && $this->childTerms != 'disable') {
 			if ($this->childTerms=='marker') {
-				$term_links = get_permalink();
+				$term_links = get_permalink($markerID);
 			} elseif (strpos($this->linkParent, '(Mote)') !== FALSE) {
 				$term_links = get_post_meta($markerID, $this->childTerms->cf, true);
 			} else {
@@ -749,7 +749,7 @@ class DHPressMarkerQuery
 
 		if ($this->linkParent2 && $this->childTerms2 && $this->childTerms2 != 'disable') {
 			if ($this->childTerms2=='marker') {
-				$term_links = get_permalink();
+				$term_links = get_permalink($markerID);
 			} elseif (strpos($this->linkParent2, '(Mote)') !== FALSE) {
 				$term_links = get_post_meta($markerID, $this->childTerms2->cf, true);
 			} else {
