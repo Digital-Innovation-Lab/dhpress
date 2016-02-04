@@ -2594,7 +2594,7 @@ jQuery(document).ready(function($) {
 
     // Initialize jQuery components
   $("#accordion, #subaccordion").accordion({ collapsible: true, heightStyle: 'content' });
-  $("#accordion").click(function(){
+  $(".ui-accordion-header").click(function(){
       $('html, body').animate({scrollTop: $("#accordion").offset().top}, 500);
     });
 
