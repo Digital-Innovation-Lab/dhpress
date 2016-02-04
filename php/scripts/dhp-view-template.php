@@ -54,7 +54,8 @@
 
 			// Scripts
 			$global_scripts = array('admin-bar', 'underscore', 'jquery', 'dhp-foundation', 'dhp-modernizr', 'mustache', 'dhp-services', 'dhp-public-project-script', 'soundcloud-api', 'dhp-widget');
-			$scripts = array_merge($global_scripts, $page_scripts);
+			$scripts_whitelist = array_map('trim', explode(',', get_option('scripts_whitelist')));
+			$scripts = array_merge($global_scripts, $scripts_whitelist, $page_scripts);
 			foreach ($wp_scripts->queue as $script) {
 				if (!in_array($script, $scripts)) {
 					wp_dequeue_script($script);
@@ -63,7 +64,8 @@
 		
 			// Styles
 			$global_styles = array('admin-bar', 'dhp-foundation-style', 'dhp-foundation-icons', 'dhp-project-css', 'dhp-transcript-css');
-			$styles = array_merge($global_styles, $page_styles);
+			$styles_whitelist = array_map('trim', explode(',', get_option('styles_whitelist')));
+			$styles = array_merge($global_styles, $styles_whitelist, $page_styles);
 			foreach ($wp_styles->queue as $style) {
 				if (!in_array($style, $styles)) {
 					wp_dequeue_style($style);

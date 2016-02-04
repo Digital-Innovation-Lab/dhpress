@@ -40,6 +40,8 @@ if (!class_exists( 'DHPressSettings')) {
 			register_setting('dhp_global_settings-group', 'kiosk_useragent');
 			register_setting('dhp_global_settings-group', 'kiosk_blockurls');
 			register_setting('dhp_global_settings-group', 'tip_url');
+			register_setting('dhp_global_settings-group', 'scripts_whitelist');
+			register_setting('dhp_global_settings-group', 'styles_whitelist');
 		} // init_settings()
 
 			// Add options page for global utilities
@@ -106,7 +108,7 @@ if (!class_exists( 'DHPressSettings')) {
 									<?php _e('Enter URL to redirect site when timeout occurs.', 'dhpress'); ?></td>
 							</tr>
 							<tr valign="top">
-								<th scope="row"><label for="redirect_url"><?php _e('Kiosk User Agent', 'dhpress'); ?></label></th>
+								<th scope="row"><label for="kiosk_useragent"><?php _e('Kiosk User Agent', 'dhpress'); ?></label></th>
 								<td><input type="text" name="kiosk_useragent" id="kiosk_useragent" value="<?php echo get_option( 'kiosk_useragent' ); ?>" /> 
 									<?php _e('Only block external URLs for a specific device or browser. Leave empty if enabled for all devices and browsers.', 'dhpress'); ?></td>
 							</tr>
@@ -114,6 +116,24 @@ if (!class_exists( 'DHPressSettings')) {
 								<th scope="row"><label for="redirect_url"><?php _e('Block External URLs', 'dhpress'); ?></label></th>
 								<td><?php _e('Enter comma separated list of domains that you wish to block if they appear in URLs on a webpage.', 'dhpress'); ?><br/>
 									<textarea name="kiosk_blockurls" id="kiosk_blockurls"><?php echo get_option( 'kiosk_blockurls' ); ?></textarea> 
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row"></th>
+								<td><?php _e('DH Press removes all theme scripts and styles on pages it generates in order to prevent conflicts.<br />
+											  If you would like to allow a script or style on DH Press project pages, add it to a comma separated list in the respective whitelist below.', 'dhpress'); ?>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row"><label for="scripts_whitelist"><?php _e('Scripts Whitelist', 'dhpress'); ?></label></th>
+								<td>
+									<textarea name="scripts_whitelist" id="scripts_whitelist"><?php echo get_option( 'scripts_whitelist' ); ?></textarea> 
+								</td>
+							</tr>
+							<tr valign="top">
+								<th scope="row"><label for="styles_whitelist"><?php _e('Styles Whitelist', 'dhpress'); ?></label></th>
+								<td>
+									<textarea name="styles_whitelist" id="styles_whitelist"><?php echo get_option( 'styles_whitelist' ); ?></textarea> 
 								</td>
 							</tr>
 						</table>
