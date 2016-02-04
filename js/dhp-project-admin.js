@@ -2050,14 +2050,6 @@ jQuery(document).ready(function($) {
           break;
         case 'flow':
         case 'browser':
-          ko.utils.arrayForEach(theEP.settings.motes(), function (mote) {
-            var moteName = mote.name();
-              // Don't add if it already exists
-            if (linkList.indexOf(moteName) == -1) {
-              linkList.push(moteName);
-            }
-          });
-          break;
         }
       });
 
@@ -2066,6 +2058,9 @@ jQuery(document).ready(function($) {
       ko.utils.arrayForEach(self.allMotes(), function(theMote) {
         if (theMote.type === 'Link To') {
           linkList.push(theMote.name+' (Mote)');
+        }
+        if (theMote.type === 'Short Text' && linkList.indexOf(theMote.name) == -1) {
+          linkList.push(theMote.name);
         }
       });
 
@@ -2599,7 +2594,7 @@ jQuery(document).ready(function($) {
 
     // Initialize jQuery components
   $("#accordion, #subaccordion").accordion({ collapsible: true, heightStyle: 'content' });
-  $("#accordion").click(function(){
+  $(".ui-accordion-header").click(function(){
       $('html, body').animate({scrollTop: $("#accordion").offset().top}, 500);
     });
 

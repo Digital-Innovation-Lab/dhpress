@@ -1,8 +1,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: DH Press 2.7\n"
-"POT-Creation-Date: 2015-11-23 14:14-0500\n"
+"Project-Id-Version: DH Press 2.7.3\n"
+"POT-Creation-Date: 2016-02-04 15:40-0500\n"
 "PO-Revision-Date: 2015-09-28 13:22-0400\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,212 +19,229 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: js\n"
 "X-Poedit-SearchPathExcluded-1: lib\n"
 
-#: dhpress.php:91
+#: dhpress.php:90
 msgctxt "post type general name"
 msgid "Projects"
 msgstr ""
 
-#: dhpress.php:92
+#: dhpress.php:91
 msgctxt "post type singular name"
 msgid "Project"
 msgstr ""
 
-#: dhpress.php:93
+#: dhpress.php:92
 msgctxt "project"
 msgid "Add New"
 msgstr ""
 
-#: dhpress.php:94
+#: dhpress.php:93
 msgid "Add New Project"
 msgstr ""
 
-#: dhpress.php:95
+#: dhpress.php:94
 msgid "Edit Project"
 msgstr ""
 
-#: dhpress.php:96
+#: dhpress.php:95
 msgid "New Project"
 msgstr ""
 
-#: dhpress.php:97 dhpress.php:103
+#: dhpress.php:96 dhpress.php:102
 msgid "Projects"
 msgstr ""
 
-#: dhpress.php:98
+#: dhpress.php:97
 msgid "View Project"
 msgstr ""
 
-#: dhpress.php:99
+#: dhpress.php:98
 msgid "Search Projects"
 msgstr ""
 
-#: dhpress.php:100
+#: dhpress.php:99
 msgid "No projects found"
 msgstr ""
 
-#: dhpress.php:101
+#: dhpress.php:100
 msgid "No projects found in Trash"
 msgstr ""
 
-#: dhpress.php:125
+#: dhpress.php:124
 msgctxt "post type general name"
 msgid "Markers"
 msgstr ""
 
-#: dhpress.php:126
+#: dhpress.php:125
 msgctxt "post type singular name"
 msgid "Marker"
 msgstr ""
 
-#: dhpress.php:127
+#: dhpress.php:126
 msgctxt "dhp-markers"
 msgid "Add New"
 msgstr ""
 
-#: dhpress.php:128
+#: dhpress.php:127
 msgid "Add New Marker"
 msgstr ""
 
-#: dhpress.php:129
+#: dhpress.php:128
 msgid "Edit Marker"
 msgstr ""
 
-#: dhpress.php:130
+#: dhpress.php:129
 msgid "New Marker"
 msgstr ""
 
-#: dhpress.php:131 dhpress.php:137 php/scripts/dhp-script-map-view.php:15
+#: dhpress.php:130 dhpress.php:136 php/scripts/dhp-script-map-view.php:15
 #: php/scripts/dhp-script-pin-view.php:51
 msgid "Markers"
 msgstr ""
 
-#: dhpress.php:132
+#: dhpress.php:131
 msgid "View Marker"
 msgstr ""
 
-#: dhpress.php:133
+#: dhpress.php:132
 msgid "Search Markers"
 msgstr ""
 
-#: dhpress.php:134
+#: dhpress.php:133
 msgid "No markers found"
 msgstr ""
 
-#: dhpress.php:135
+#: dhpress.php:134
 msgid "No markers found in Trash"
 msgstr ""
 
-#: dhpress.php:156
+#: dhpress.php:155
 msgctxt "taxonomy general name"
 msgid "Maps"
 msgstr ""
 
-#: dhpress.php:157
+#: dhpress.php:156
 msgctxt "taxonomy singular name"
 msgid "Map"
 msgstr ""
 
-#: dhpress.php:158
+#: dhpress.php:157
 msgid "Add New"
 msgstr ""
 
-#: dhpress.php:159
+#: dhpress.php:158
 msgid "Add New Map"
 msgstr ""
 
-#: dhpress.php:160
+#: dhpress.php:159
 msgid "Edit Map"
 msgstr ""
 
-#: dhpress.php:161 php/scripts/dhp-html-admin-edit.php:59
+#: dhpress.php:160 php/scripts/dhp-html-admin-edit.php:59
 msgid "New Map"
 msgstr ""
 
-#: dhpress.php:162 dhpress.php:168
+#: dhpress.php:161 dhpress.php:167
 msgid "Map Library"
 msgstr ""
 
-#: dhpress.php:163
+#: dhpress.php:162
 msgid "View Map"
 msgstr ""
 
-#: dhpress.php:164
+#: dhpress.php:163
 msgid "Search Maps"
 msgstr ""
 
-#: dhpress.php:165
+#: dhpress.php:164
 msgid "No maps found"
 msgstr ""
 
-#: dhpress.php:166
+#: dhpress.php:165
 msgid "No maps found in Trash"
 msgstr ""
 
-#: php/dhp-class-settings.php:48
+#: php/dhp-class-settings.php:50
 msgid "Global Options"
 msgstr ""
 
-#: php/dhp-class-settings.php:48
+#: php/dhp-class-settings.php:50
 msgid "DH Press Options"
 msgstr ""
 
-#: php/dhp-class-settings.php:67
+#: php/dhp-class-settings.php:69
 msgid "-- No Tip Page --"
 msgstr ""
 
-#: php/dhp-class-settings.php:82
+#: php/dhp-class-settings.php:84
 msgid "DH Press Global Options"
 msgstr ""
 
-#: php/dhp-class-settings.php:89
+#: php/dhp-class-settings.php:91
 msgid "Site Tip Page"
 msgstr ""
 
-#: php/dhp-class-settings.php:94
+#: php/dhp-class-settings.php:96
 msgid "Select the Page whose text is used for global tips here."
 msgstr ""
 
-#: php/dhp-class-settings.php:99
+#: php/dhp-class-settings.php:101
 msgid "Timeout Duration (minutes)"
 msgstr ""
 
-#: php/dhp-class-settings.php:101
+#: php/dhp-class-settings.php:103
 msgid "Leave blank if no timeout is needed."
 msgstr ""
 
-#: php/dhp-class-settings.php:104
+#: php/dhp-class-settings.php:106
 msgid "Redirect URL"
 msgstr ""
 
-#: php/dhp-class-settings.php:106
+#: php/dhp-class-settings.php:108
 msgid "Enter URL to redirect site when timeout occurs."
 msgstr ""
 
-#: php/dhp-class-settings.php:109
+#: php/dhp-class-settings.php:111
 msgid "Kiosk User Agent"
 msgstr ""
 
-#: php/dhp-class-settings.php:111
+#: php/dhp-class-settings.php:113
 msgid ""
 "Only block external URLs for a specific device or browser. Leave empty if "
 "enabled for all devices and browsers."
 msgstr ""
 
-#: php/dhp-class-settings.php:114
+#: php/dhp-class-settings.php:116
 msgid "Block External URLs"
 msgstr ""
 
-#: php/dhp-class-settings.php:115
+#: php/dhp-class-settings.php:117
 msgid ""
 "Enter comma separated list of domains that you wish to block if they appear "
 "in URLs on a webpage."
 msgstr ""
 
-#: php/dhp-class-settings.php:157 php/scripts/dhp-view-template.php:171
+#: php/dhp-class-settings.php:123
+msgid ""
+"DH Press removes all theme scripts and styles on pages it generates in order "
+"to prevent conflicts.<br />\n"
+"\t\t\t\t\t\t\t\t\t\t\t  If you would like to allow a script or style on DH "
+"Press project pages, add it to a comma separated list in the respective "
+"whitelist below."
+msgstr ""
+
+#: php/dhp-class-settings.php:128
+msgid "Scripts Whitelist"
+msgstr ""
+
+#: php/dhp-class-settings.php:134
+msgid "Styles Whitelist"
+msgstr ""
+
+#: php/dhp-class-settings.php:177 php/scripts/dhp-view-template.php:173
 msgid "Close"
 msgstr ""
 
-#: php/dhp-core.php:29
+#: php/dhp-core.php:31
 msgid "DH Press"
 msgstr ""
 
@@ -865,11 +882,11 @@ msgstr ""
 msgid "No dhp_map_typeid metadata for map named %1$s of id %2$s"
 msgstr ""
 
-#: php/dhp-project-functions.php:2832
+#: php/dhp-project-functions.php:2835
 msgid "Reset"
 msgstr ""
 
-#: php/dhp-project-functions.php:2833 php/scripts/dhp-html-admin-edit.php:599
+#: php/dhp-project-functions.php:2836 php/scripts/dhp-html-admin-edit.php:599
 msgid "Reset All"
 msgstr ""
 
@@ -2068,7 +2085,7 @@ msgstr ""
 msgid "Look at Transcript file"
 msgstr ""
 
-#: php/scripts/dhp-script-tax-trans.php:5 php/scripts/dhp-view-template.php:218
+#: php/scripts/dhp-script-tax-trans.php:5 php/scripts/dhp-view-template.php:220
 msgid "Scroll transcript to follow playback"
 msgstr ""
 
@@ -2081,26 +2098,26 @@ msgctxt "D3 Localization. See https://github.com/mbostock/d3/wiki/Localization"
 msgid "default"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:83
+#: php/scripts/dhp-view-template.php:85
 msgid "My Site"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:85
+#: php/scripts/dhp-view-template.php:87
 msgid "Menu"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:180
+#: php/scripts/dhp-view-template.php:182
 msgid "Loading Project"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:189
+#: php/scripts/dhp-view-template.php:191
 msgid "Change View"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:205
+#: php/scripts/dhp-view-template.php:207
 msgid "Hide/Show All"
 msgstr ""
 
-#: php/scripts/dhp-view-template.php:212
+#: php/scripts/dhp-view-template.php:214
 msgid "Tips"
 msgstr ""
