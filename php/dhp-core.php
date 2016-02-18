@@ -21,7 +21,7 @@ require_once( dirname(__FILE__) . '/../lib/category-checklist-tree/category-chec
 
 require_once( dirname(__FILE__) . '/../lib/term-menu-order/term-menu-order.php' );
 
-if ( ! class_exists( 'CSVImporterPlugin' ) ) {
+if ( ! class_exists( 'CSVImporterImprovedPlugin' ) ) {
 	require_once( dirname(__FILE__) . '/../lib/csv-importer/csv_importer.php' );
 }
 
