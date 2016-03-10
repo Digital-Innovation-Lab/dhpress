@@ -615,14 +615,16 @@ class CSVImporterImprovedPlugin {
     }
 }
 
-
-function csv_importer_improved_admin_menu() {
-    require_once ABSPATH . '/wp-admin/admin.php';
-    $plugin = new CSVImporterImprovedPlugin;
-    add_management_page(
-        'edit.php', 'CSV Importer Improved', 'manage_options', __FILE__,
-        array($plugin, 'form')
-    );
+if (!function_exists("csv_importer_improved_admin_menu")) {
+    function csv_importer_improved_admin_menu() {
+        require_once ABSPATH . '/wp-admin/admin.php';
+        $plugin = new CSVImporterImprovedPlugin;
+        add_management_page(
+            'edit.php', 'CSV Importer Improved', 'manage_options', __FILE__,
+            array($plugin, 'form')
+        );
+    }
+    if (!has_action('admin_menu', 'csv_importer_improved_admin_menu')) {
+        add_action('admin_menu', 'csv_importer_improved_admin_menu');
+    }
 }
-
-add_action('admin_menu', 'csv_importer_improved_admin_menu');
