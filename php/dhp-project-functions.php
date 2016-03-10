@@ -513,7 +513,7 @@ function dhp_export_as_csv()
 
 
 	// PURPOSE: Returns array of short text mote legend values for Prospect export
-	// NOTES: Derived from dhp_get_legend_vals() but does not use $_POST
+	// NOTES: Derived from dhp_get_legend_vals() but does not use $_POST and uses Prospect data structure
 function get_legend_vals($mote_name, $mote_delim, $custom_field, $projectID)
 {
 
@@ -566,10 +566,23 @@ function get_legend_vals($mote_name, $mote_delim, $custom_field, $projectID)
 	if ($t_count > 0) {
 		foreach ($terms_loaded as $term) {
 			$term->icon_url = $term->description;
+			if (substr($term->icon_url, 0, 1) != '#') {
+				$term->icon_url = "#888888";
+			}
+		}
+
+		$rootID = $terms_loaded[0]->term_id;
+
+		$terms_loaded = array_shift($terms_loaded);
+		$prospectLegend = array();
+		foreach ($terms_loaded as $term) {
+			$prospectLegend[]->l = $term->name;
+			$prospectLegend[]->v = $term->icon_url;
+			$prospectLegend[]->z = null; // TO DO: Put children into this array
 		}
 	}
 
-	die($terms_loaded);
+	return $terms_loaded;
 } // get_legend_vals()
 
 
@@ -679,7 +692,7 @@ function dhp_export_to_prospect()
 												   'd' => $mote->delim,
 												   'h' => ""),
 								"att-range" => array(),
-								"att-legend" => json_encode($st_legend)
+								"att-legend" => $st_legend
 							);
 		$tmplt["a"][] = $mote->cf;
 		$i++;
