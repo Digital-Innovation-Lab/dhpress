@@ -562,6 +562,8 @@ function get_legend_vals($mote_name, $mote_delim, $custom_field, $projectID)
 	$terms_loaded = get_terms($rootTaxName, 'exclude_tree='.$exclude_string.'&orderby=term_group&hide_empty=0');
 	$t_count = count($terms_loaded);
 
+	$prospectLegend = array();
+
 		// Parse icon_url data from the description metadata
 	if ($t_count > 0) {
 		foreach ($terms_loaded as $term) {
@@ -571,18 +573,34 @@ function get_legend_vals($mote_name, $mote_delim, $custom_field, $projectID)
 			}
 		}
 
-		$rootID = $terms_loaded[0]->term_id;
+		// Get ID of root term
+		$root_id = $terms_loaded[0]->term_id;
+		array_shift($terms_loaded);	
 
-		$terms_loaded = array_shift($terms_loaded);
-		$prospectLegend = array();
-		foreach ($terms_loaded as $term) {
-			$prospectLegend[]->l = $term->name;
-			$prospectLegend[]->v = $term->icon_url;
-			$prospectLegend[]->z = null; // TO DO: Put children into this array
+		while(!empty($terms_loaded)) {
+			foreach ($terms_loaded as $key => $term) {
+				// Find all terms with no parent
+				if ($term->parent == $root_id) {
+					$prospectLegend[$term->term_id]->l = $term->name;
+					$prospectLegend[$term->term_id]->v = $term->icon_url;
+					$prospectLegend[$term->term_id]->z = array();
+					unset($terms_loaded[$key]);
+				}
+				else if (array_key_exists($term->parent, $prospectLegend)) {
+					$child = null;
+					$child->l = $term->name;
+					$child->v = $term->icon_url;
+					$prospectLegend[$term->parent]->z[] = $child;
+					unset($terms_loaded[$key]);
+				}
+			}
 		}
+		
+		// Remove parent keys from array
+		$prospectLegend = array_values($prospectLegend);
 	}
 
-	return $terms_loaded;
+	return $prospectLegend;
 } // get_legend_vals()
 
 
@@ -616,7 +634,7 @@ function dhp_export_to_prospect()
 	$date = new DateTime();
 	$dateFormatted = $date->format("Y-m-d");
 
-	$filename = "prospect-$dateFormatted.json";
+	$filename = "$projSlug-prospect-$dateFormatted.json";
 
 		// Tells the browser to expect a csv file and bring up the save dialog in the browser
 	header('Content-Type: text/json; charset=utf-8');
@@ -638,6 +656,7 @@ function dhp_export_to_prospect()
 	$i = 0;
 	// Convert DH Press Motes to Prospect Attributes
 	foreach($motes as $mote) {
+		$st_legend = array();
 
 		switch ($mote->type) {
 			case "Short Text" :
