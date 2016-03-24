@@ -650,6 +650,8 @@ function dhp_export_to_prospect()
 	$motes = $projSettings->motes;
 	$attributes = array();
 	$st_legend = array();
+    // map for mote name to mote id
+    $mote_id = array();
 
 	$xhbtInspect = array("sc" => array(), "yt" => array(), "transcripts" => array(), "timestamps" => array());
 
@@ -657,6 +659,7 @@ function dhp_export_to_prospect()
 	// Convert DH Press Motes to Prospect Attributes
 	foreach($motes as $mote) {
 		$st_legend = array();
+        $mote_id[$mote->name] = $mote->cf;
 
 		switch ($mote->type) {
 			case "Short Text" :
@@ -753,7 +756,7 @@ function dhp_export_to_prospect()
 								"zFrom" => $ep->settings->openFrom,
 								"zTo" => $ep->settings->openTo,
 								"dAtts" => array($ep->settings->date),
-								"lgnds" => "");
+								"lgnds" => array());
 				break;
 			case "pinboard" :
 				$type = "P";
@@ -771,11 +774,11 @@ function dhp_export_to_prospect()
 								"min" => 5,
 								"max" => 5,
 								"cAtts" => array($ep->settings->coordMote),
-								"pAtts" => "",
-								"sAtts" => "",
-								"lClrs" => "",
-								"lgnds" => "",
-								"lyrs" => "");
+								"pAtts" => array(),
+								"sAtts" => array(),
+								"lClrs" => array(),
+								"lgnds" => array(array()),
+								"lyrs" => array());
 				break;
 			case "flow" :
 				$type = "F";
@@ -795,6 +798,10 @@ function dhp_export_to_prospect()
 					$lyrs[]["lid"] = $lyr->id;
 					$lyrs[]["o"] = $lyr->opacity;
 				}
+                for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
+                    $lyrs[$i]["lid"] = $ep->settings->layers[$i]->id;
+					$lyrs[$i]["o"] = $ep->settings->layers[$i]->opacity;
+                }
 
 				$xhbt_c = array("clat" => $ep->settings->lat,
 								"clon" => $ep->settings->lon,
@@ -805,7 +812,7 @@ function dhp_export_to_prospect()
 								"cAtts" => array(),
 								"pAtts" => array(),
 								"sAtts" => array(),
-								"lgnds" => array(),
+								"lgnds" => array(array()),
 								"lClrs" => array(),
 								"base" => "",
 								"lyrs" => $lyrs);
@@ -846,7 +853,7 @@ function dhp_export_to_prospect()
 								"h" => $height,
 								"iAtts" => array(),
 								"cnt" => $ep->settings->content,
-								"lgnds" => array());
+								"lgnds" => array(array($mote_id), $ep->settings->color));
 				break;
 			case "tree" :
 				$type = "G";
@@ -865,19 +872,19 @@ function dhp_export_to_prospect()
 					 "xhbt-gen" => array("l" => $projTitle,
 					 					 "hbtn" => $projSettings->general->homeLabel,
 					 					 "hurl" => $projSettings->general->homeURL,
-					 					 "ts" => array($projSlug)),
+					 					 "ts" => array("tmplt-".$projSlug)),
 					 "xhbt-views" => $xhbt_views,
 					 "xhbt-inspect" => array("sc" => array("atts" => $xhbtInspect["sc"]),
 						  					 "yt" => array("atts" => $xhbtInspect["yt"]),
-						  					 "t" => array("t1Att" => $xhbtInspect["transcripts"],
-					  									 "t2Att" => $xhbtInspect["transcripts"],
-					  									 "tcAtt" => $xhbtInspect["timestamps"]),
-						  					 "modal" => array("aOn" => null,
+						  					 "t" => array("t1Atts" => $xhbtInspect["transcripts"],
+					  									 "t2Atts" => $xhbtInspect["transcripts"],
+					  									 "tcAtts" => $xhbtInspect["timestamps"]),
+						  					 "modal" => array("aOn" => null,							//// TO DO: Finish exhibit transfer
 						  					 				  "scOn" => null,
 						  					 				  "ytOn" => null,
 						  					 				  "tOn" => null,
 						  					 				  "t2On" => null,
-						  					 				  "atts" => array()) 
+						  					 				  "atts" => array($tmplt["a"])) 
 						  					)
 					 ));
 
