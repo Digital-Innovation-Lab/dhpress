@@ -749,6 +749,9 @@ function dhp_export_to_prospect()
 		switch ($ep->type) {
 			case "time" :
 				$type = "T";
+                
+                $lgnds = ($ep->settings->color == "disable") ? "" : $mote_id[$ep->settings->color];
+
 				$xhbt_c = array("bHt" => $ep->settings->bandHt,
 								"xLbl" => $ep->settings->wAxisLbl,
 								"from" => $ep->settings->from,
@@ -756,7 +759,7 @@ function dhp_export_to_prospect()
 								"zFrom" => $ep->settings->openFrom,
 								"zTo" => $ep->settings->openTo,
 								"dAtts" => array($ep->settings->date),
-								"lgnds" => array());
+								"lgnds" => array(array($lgnds)));
 				break;
 			case "pinboard" :
 				$type = "P";
@@ -765,6 +768,11 @@ function dhp_export_to_prospect()
 					$lyrs[]["url"] = $lyr->file;
 					$lyrs[]["o"] = 1; 
 				}
+                
+                $lgnds = array();
+                foreach ($ep->settings->legends as $lgnd) {
+                    $lgnds[] = $mote_id[$lgnd];
+                }
 
 				$xhbt_c = array("iw" => $ep->settings->iw,
 								"ih" => $ep->settings->ih,
@@ -777,7 +785,7 @@ function dhp_export_to_prospect()
 								"pAtts" => array(),
 								"sAtts" => array(),
 								"lClrs" => array(),
-								"lgnds" => array(array()),
+								"lgnds" => array($lgnds),
 								"lyrs" => array());
 				break;
 			case "flow" :
@@ -794,13 +802,18 @@ function dhp_export_to_prospect()
 			case "map" :
 				$type = "M";
 				$lyrs = array();
-				foreach ($ep->settings->layers as $lyr) {
+				/*foreach ($ep->settings->layers as $lyr) {
 					$lyrs[]["lid"] = $lyr->id;
 					$lyrs[]["o"] = $lyr->opacity;
-				}
+				}*/
                 for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
                     $lyrs[$i]["lid"] = $ep->settings->layers[$i]->id;
 					$lyrs[$i]["o"] = $ep->settings->layers[$i]->opacity;
+                }
+                
+                $lgnds = array();
+                foreach ($ep->settings->legends as $lgnd) {
+                    $lgnds[] = $mote_id[$lgnd];
                 }
 
 				$xhbt_c = array("clat" => $ep->settings->lat,
@@ -809,10 +822,10 @@ function dhp_export_to_prospect()
 								"min" => 5,
 								"max" => 5,
 								"clstr" => $ep->settings->cluster,
-								"cAtts" => array(),
+								"cAtts" => array(array($mote_id[$ep->settings->coordMote])),
 								"pAtts" => array(),
 								"sAtts" => array(),
-								"lgnds" => array(array()),
+								"lgnds" => array($lgnds),
 								"lClrs" => array(),
 								"base" => "",
 								"lyrs" => $lyrs);
@@ -847,13 +860,16 @@ function dhp_export_to_prospect()
 						$height = "m";
 						break;
 				}
+                
+                // Use color mote as legend, or null if "disable"
+                $lgnds = ($ep->settings->color == "disable") ? "" : $mote_id[$ep->settings->color];
 
 				$xhbt_c = array("l0n" => $ep->settings->titleOn,
 								"w" => $width,
 								"h" => $height,
 								"iAtts" => array(),
-								"cnt" => $ep->settings->content,
-								"lgnds" => array(array($mote_id), $ep->settings->color));
+								"cnt" => array($ep->settings->content),
+								"lgnds" => array(array($lgnd)));
 				break;
 			case "tree" :
 				$type = "G";
