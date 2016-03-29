@@ -764,10 +764,10 @@ function dhp_export_to_prospect()
 			case "pinboard" :
 				$type = "P";
 				$lyrs = array();
-				foreach ($ep->settings->layers as $lyr) {
-					$lyrs[]["url"] = $lyr->file;
-					$lyrs[]["o"] = 1; 
-				}
+                for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
+                    $lyrs[$i]["url"] = $ep->settings->layers[$i]->file;
+					$lyrs[$i]["o"] = 1;
+                }
                 
                 $lgnds = array();
                 foreach ($ep->settings->legends as $lgnd) {
@@ -786,7 +786,7 @@ function dhp_export_to_prospect()
 								"sAtts" => array(),
 								"lClrs" => array(),
 								"lgnds" => array($lgnds),
-								"lyrs" => array());
+								"lyrs" => $lyrs);
 				break;
 			case "flow" :
 				$type = "F";
@@ -802,10 +802,6 @@ function dhp_export_to_prospect()
 			case "map" :
 				$type = "M";
 				$lyrs = array();
-				/*foreach ($ep->settings->layers as $lyr) {
-					$lyrs[]["lid"] = $lyr->id;
-					$lyrs[]["o"] = $lyr->opacity;
-				}*/
                 for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
                     $lyrs[$i]["lid"] = $ep->settings->layers[$i]->id;
 					$lyrs[$i]["o"] = $ep->settings->layers[$i]->opacity;
@@ -895,11 +891,11 @@ function dhp_export_to_prospect()
 						  					 "t" => array("t1Atts" => $xhbtInspect["transcripts"],
 					  									 "t2Atts" => $xhbtInspect["transcripts"],
 					  									 "tcAtts" => $xhbtInspect["timestamps"]),
-						  					 "modal" => array("aOn" => null,							//// TO DO: Finish exhibit transfer
-						  					 				  "scOn" => null,
-						  					 				  "ytOn" => null,
-						  					 				  "tOn" => null,
-						  					 				  "t2On" => null,
+						  					 "modal" => array("aOn" => false,							//// TO DO: Finish exhibit transfer
+						  					 				  "scOn" => false,
+						  					 				  "ytOn" => false,
+						  					 				  "tOn" => false,
+						  					 				  "t2On" => false,
 						  					 				  "atts" => array($tmplt["a"])) 
 						  					)
 					 ));
