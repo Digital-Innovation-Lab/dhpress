@@ -869,7 +869,7 @@ function dhp_export_to_prospect()
 								"h" => $height,
 								"iAtts" => array(),
 								"cnt" => array($ep->settings->content),
-								"lgnds" => array(array($lgnd)));
+								"lgnds" => array(array($lgnds)));
 				break;
 			case "tree" :
 				$type = "G";
