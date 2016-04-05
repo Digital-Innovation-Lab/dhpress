@@ -668,6 +668,7 @@ function dhp_export_to_prospect()
 				break;
 			case "Long Text" :
 				$type = 'T';
+				break;
 			case "Lat/Lon Coordinates" :
 				$type = 'L';
 				break;
