@@ -742,6 +742,11 @@ function dhp_export_to_prospect()
 	$eps = $projSettings->eps;
 	$xhbt_views = array();
 
+
+	$get_mote_id = function($key) use ($mote_id) {
+		return $mote_id[$key];
+	};
+
 	// Convert DH Press Entry Points to a Prospect Exhibit
 	foreach ($eps as $ep) {
 
@@ -793,12 +798,12 @@ function dhp_export_to_prospect()
 				$type = "F";
 				$xhbt_c = array("w" => $ep->settings->width,
 								"gr" => false,
-								"fcts" => $ep->settings->motes);
+								"fcts" => array_map($get_mote_id, $ep->settings->motes));
 				break;
 			case "browser" :
 				$type = "B";
 				$xhbt_c = array("gr" => false,
-								"fcts" => $ep->settings->motes);
+								"fcts" => array_map($get_mote_id, $ep->settings->motes));
 				break;
 			case "map" :
 				$type = "M";
@@ -806,11 +811,6 @@ function dhp_export_to_prospect()
                 for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
                     $lyrs[$i]["lid"] = $ep->settings->layers[$i]->id;
 					$lyrs[$i]["o"] = $ep->settings->layers[$i]->opacity;
-                }
-                
-                $lgnds = array();
-                foreach ($ep->settings->legends as $lgnd) {
-                    $lgnds[] = $mote_id[$lgnd];
                 }
 
 				$xhbt_c = array("clat" => $ep->settings->lat,
@@ -822,7 +822,7 @@ function dhp_export_to_prospect()
 								"cAtts" => array(array($mote_id[$ep->settings->coordMote])),
 								"pAtts" => array(),
 								"sAtts" => array(),
-								"lgnds" => array($lgnds),
+								"lgnds" => array(array_map($get_mote_id, $ep->settings->legends)),
 								"lClrs" => array(),
 								"base" => "",
 								"lyrs" => $lyrs);
@@ -861,11 +861,11 @@ function dhp_export_to_prospect()
                 // Use color mote as legend, or null if "disable"
                 $lgnds = ($ep->settings->color == "disable") ? "" : $mote_id[$ep->settings->color];
 
-				$xhbt_c = array("l0n" => $ep->settings->titleOn,
+				$xhbt_c = array("lOn" => $ep->settings->titleOn,
 								"w" => $width,
 								"h" => $height,
 								"iAtts" => array(),
-								"cnt" => array($ep->settings->content),
+								"cnt" => array(array_map($get_mote_id, $ep->settings->content)),
 								"lgnds" => array(array($lgnds)));
 				break;
 			case "tree" :
