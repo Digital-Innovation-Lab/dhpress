@@ -721,7 +721,28 @@ function dhp_export_to_prospect()
 		$i++;
 	}
 
+	$get_mote_id = function($key) use ($mote_id) {
+		return $mote_id[$key];
+	};
+
+
 	$projTranscript = $projSettings->views->transcript;
+
+	foreach ($projTranscript as $t) {
+		if ($t != "disable") {
+			$t = strtolower($mote_id[$t]);
+		}
+	}
+
+	$xhbtModal = array();
+	$xhbtModal["audio"] = ($projTranscript->audio == "disable" ? false : true);
+	$xhbtModal["video"] = ($projTranscript->video == "disable" ? false : true);
+	$xhbtModal["transcript"] = ($projTranscript->transcript == "disable" ? false : true);
+	$xhbtModal["transcript2"] = ($projTranscript->transcript2 == "disable" ? false : true);
+
+	$projSettings->views->post->content = array_map($get_mote_id, $projSettings->views->post->content);
+
+
 	$template = array(array("type" => "Template",
 					  "tmplt-id" => "tmplt-".$projSlug,
 					  "tmplt-def" => array("l" => $projTitle,
@@ -734,7 +755,7 @@ function dhp_export_to_prospect()
 					  						"t" => array("t1Att" => $projTranscript->transcript,
 					  									 "t2Att" => $projTranscript->transcript2,
 					  									 "tcAtt" => $projTranscript->timecode),
-					  						"cnt" => $tmplt["a"])
+					  						"cnt" => $projSettings->views->post->content)
 				));
 
 
@@ -743,9 +764,7 @@ function dhp_export_to_prospect()
 	$xhbt_views = array();
 
 
-	$get_mote_id = function($key) use ($mote_id) {
-		return $mote_id[$key];
-	};
+	
 
 	// Convert DH Press Entry Points to a Prospect Exhibit
 	foreach ($eps as $ep) {
@@ -892,12 +911,12 @@ function dhp_export_to_prospect()
 						  					 "t" => array("t1Atts" => $xhbtInspect["transcripts"],
 					  									 "t2Atts" => $xhbtInspect["transcripts"],
 					  									 "tcAtts" => $xhbtInspect["timestamps"]),
-						  					 "modal" => array("aOn" => false,							//// TO DO: Finish exhibit transfer
-						  					 				  "scOn" => false,
-						  					 				  "ytOn" => false,
-						  					 				  "tOn" => false,
-						  					 				  "t2On" => false,
-						  					 				  "atts" => array($tmplt["a"])) 
+						  					 "modal" => array("aOn" => $xhbtModal["audio"],
+						  					 				  "scOn" => $xhbtModal["audio"],
+						  					 				  "ytOn" => $xhbtModal["video"],
+						  					 				  "tOn" => $xhbtModal["transcript"],
+						  					 				  "t2On" => $xhbtModal["transcript2"],
+						  					 				  "atts" => array($projSettings->views->post->content)) 
 						  					)
 					 ));
 
