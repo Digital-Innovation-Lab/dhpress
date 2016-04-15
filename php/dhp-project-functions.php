@@ -634,23 +634,15 @@ function dhp_export_to_prospect()
 	$date = new DateTime();
 	$dateFormatted = $date->format("Y-m-d");
 
-	$filename = "$projSlug-prospect-$dateFormatted.json";
+	$filename = "$projSlug-prospect-$dateFormatted";
 
-		// Tells the browser to expect a csv file and bring up the save dialog in the browser
-	header('Content-Type: text/json; charset=utf-8');
-	header('Content-Disposition: attachment;filename='.$filename);
-
-		// This opens up the output buffer as a "file"
-	$fp = fopen('php://output', 'w');
-		// Hack to write as UTF-8 format
-	fwrite($fp, pack("CCC",0xef,0xbb,0xbf));
-
+		// Array to be returned as JSON-formatted Prospect archive
 	$archive = array("type" => "Archive");
 
 	$motes = $projSettings->motes;
 	$attributes = array();
 	$st_legend = array();
-    // map for mote name to mote id
+    	// map for mote name to mote id
     $mote_id = array();
 
 	$xhbtInspect = array("sc" => array(), "yt" => array(), "transcripts" => array(), "timestamps" => array());
@@ -659,6 +651,11 @@ function dhp_export_to_prospect()
 	// Convert DH Press Motes to Prospect Attributes
 	foreach($motes as $mote) {
 		$st_legend = array();
+		
+			// DH Press is more lenient with custom field names, so ensure they consist of lowercase alphanumeric characters, underscores and hyphens
+		$mote->cf = remove_accents($mote->cf);
+		$mote->cf = sanitize_title($mote->cf);
+		
         $mote_id[$mote->name] = $mote->cf;
 
 		switch ($mote->type) {
@@ -923,14 +920,27 @@ function dhp_export_to_prospect()
 
 
 	$archive["items"] = array_merge($attributes, $template, $exhibit);
-
-	fwrite($fp, json_encode($archive));
-
-
-		// Close the output buffer
-	fclose($fp);
- 
-	exit();
+	
+	$readme = "The following is a map of DH Press mote names to attribute IDs that will be used by Prospect:\n";
+	foreach ($mote_id as $mote => $id) {
+		$readme .= $mote . " : " . $id . "\n";
+	}
+	
+	$tmpFile = tempnam(sys_get_temp_dir(), "");
+	
+	$zip = new ZipArchive;
+	if ($zip->open($tmpFile, ZipArchive::CREATE) == TRUE) {
+		$zip->addFromString($filename . ".json", json_encode($archive));
+		$zip->addFromString("README.txt", $readme);
+	}
+	$zip->close();
+	
+	header('Content-disposition: attachment; filename=' . $filename . '.zip');
+    header('Content-type: application/zip');
+	readfile($tmpFile);
+	
+	// Delete temporary file
+	unlink($tmpFile);
 } // dhp_export_to_prospect()
 
 
