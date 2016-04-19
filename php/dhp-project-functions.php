@@ -738,6 +738,7 @@ function dhp_export_to_prospect()
 	$xhbtModal["transcript2"] = ($projTranscript->transcript2 == "disable" ? false : true);
 
 	$projSettings->views->post->content = array_map($get_mote_id, $projSettings->views->post->content);
+	$projSettings->views->select->content = array_map($get_mote_id, $projSettings->views->select->content);
 
 
 	$template = array(array("type" => "Template",
@@ -913,7 +914,7 @@ function dhp_export_to_prospect()
 						  					 				  "ytOn" => $xhbtModal["video"],
 						  					 				  "tOn" => $xhbtModal["transcript"],
 						  					 				  "t2On" => $xhbtModal["transcript2"],
-						  					 				  "atts" => array($projSettings->views->post->content)) 
+						  					 				  "atts" => array($projSettings->views->select->content)) 
 						  					)
 					 ));
 
