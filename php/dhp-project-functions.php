@@ -733,7 +733,7 @@ function dhp_export_to_prospect()
 
 	foreach ($projTranscript as $t) {
 		if ($t != "disable") {
-			$t = strtolower($mote_id[$t]);
+			$t = $mote_id[$t];
 		}
 	}
 
@@ -751,7 +751,7 @@ function dhp_export_to_prospect()
 					  "tmplt-id" => "tmplt-".$projSlug,
 					  "tmplt-def" => array("l" => $projTitle,
 					  					   "d" => false,
-					  					   "t" => $projSettings->general->mTitle,
+					  					   "t" => $mote_id[$projSettings->general->mTitle],
 					  					   "a" => $tmplt["a"]),
 					  "tmplt-joins" => array(),
 					  "tmplt-view" => array("sc" => $projTranscript->audio,
