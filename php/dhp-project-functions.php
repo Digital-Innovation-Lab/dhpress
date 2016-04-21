@@ -936,7 +936,7 @@ function dhp_export_to_prospect()
 	$readme .= "3) If desired, update the \"csv_post_title\" column values to human-readable titles (see page 46 of the Prospect manual for more information)\n";
 	$readme .= "4) Change the \"csv_post_type\" column values to \"prsp-record\"\n";
 	$readme .= "5) Create a column entitled \"tmplt-id\" and set its value to \"tmplt-". $projSlug ."\" for every row\n";
-	$readme .= "6) Ensure that the rest of your column names match the attribute IDs of their corresponding motes exactly (use the list below as a guide). If any of your mote IDs contained spaces, special characters, or capital letters, the IDs of their corresponding attributes have been changed.\n";
+	$readme .= "6) Ensure that the rest of your column names match the attribute IDs of their corresponding motes exactly (use the list below as a guide). If any of your mote IDs contained spaces, special characters, or capital letters, the IDs of their corresponding attributes have been changed\n";
 	$readme .= "7) After completing these steps, you can import this .csv file into Prospect using the CSV Importer tool. This can be found in Tools > CSV Importer in your WordPress admin panel\n\n";
 	
 	$readme .= "The following is a list of this project's motes and the corresponding attribute IDs that will be used by Prospect. IDs that have been changed are marked with an asterisk.\n";
