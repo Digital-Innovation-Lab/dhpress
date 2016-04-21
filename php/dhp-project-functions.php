@@ -731,7 +731,7 @@ function dhp_export_to_prospect()
 
 	$projTranscript = $projSettings->views->transcript;
 
-	foreach ($projTranscript as $t) {
+	foreach ($projTranscript as &$t) {
 		if ($t != "disable") {
 			$t = $mote_id[$t];
 		}
