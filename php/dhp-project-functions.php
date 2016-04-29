@@ -512,6 +512,60 @@ function dhp_export_as_csv()
 } // dhp_export_as_csv()
 
 
+
+// PURPOSE: Return all of the marker data associated with Project in Prospect CSV format
+// NOTES:   This is similar to dhp_export_as_csv(), but converts the CSV file so it can be 
+//			imported into Prospect.
+
+function dhp_export_as_prospect_csv($postID, $tmplt_id)
+{
+		// Mote id map
+	$get_mote_id = function($key) {
+		$val = remove_accents($key);
+		$val = sanitize_title($val);
+		return $val;
+	};
+	
+		// Get associated Project Data
+	$projObj = new DHPressProject($postID);
+
+	$csvFile = tempnam(sys_get_temp_dir(), "");
+
+	$fp = fopen($csvFile, 'w');
+		// Hack to write as UTF-8 format
+	fwrite($fp, pack("CCC",0xef,0xbb,0xbf));
+
+	$cfs = $projObj->getAllCustomFieldNames();
+		// Prospect attribute IDs
+	$attIDs = array_map($get_mote_id, $cfs);
+	
+	$firstLine = array_merge(array('csv_post_type', 'csv_post_title', 'tmplt-id', 'record-id'), $attIDs);
+	array_push($firstLine, 'csv_post_post');
+
+		// Output the names of columns first
+	fputcsv($fp, $firstLine);
+
+		// Go through all of the Project's Markers and gather data
+	$loop = $projObj->setAllMarkerLoop();
+	while ( $loop->have_posts() ) : $loop->the_post();
+		$markerID = get_the_ID();
+
+		$values = array('prsp-record', get_the_title(), $tmplt_id, basename(get_permalink()) );
+
+		foreach ($cfs as $theCF) {
+			$content_val = get_post_meta($markerID, $theCF, true);
+			array_push($values, $content_val);
+		} // foreach
+
+		array_push($values, get_the_content());
+
+		fputcsv($fp, $values);
+	endwhile;
+
+	return $csvFile;
+} // dhp_export_as_prospect_csv()
+
+
 	// PURPOSE: Returns array of short text mote legend values for Prospect export
 	// NOTES: Derived from dhp_get_legend_vals() but does not use $_POST and uses Prospect data structure
 function get_legend_vals($mote_name, $mote_delim, $custom_field, $projectID)
@@ -957,12 +1011,17 @@ function dhp_export_to_prospect()
 	
 	$tmpFile = tempnam(sys_get_temp_dir(), "");
 	
+	$csvFile = dhp_export_as_prospect_csv($postID, "tmplt-" . $projSlug, $mote_id);
+	
 	$zip = new ZipArchive;
 	if ($zip->open($tmpFile, ZipArchive::CREATE) == TRUE) {
 		$zip->addFromString($filename . ".json", json_encode($archive));
 		$zip->addFromString("README.txt", $readme);
+		$zip->addFile($csvFile, $filename . ".csv");
 	}
 	$zip->close();
+	
+	fclose($csvFile);
 	
 	header('Content-disposition: attachment; filename=' . $filename . '.zip');
     header('Content-type: application/zip');
