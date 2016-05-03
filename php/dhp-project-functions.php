@@ -821,8 +821,7 @@ function dhp_export_to_prospect()
 	$eps = $projSettings->eps;
 	$xhbt_views = array();
 
-
-	
+	$maps = array();
 
 	// Convert DH Press Entry Points to a Prospect Exhibit
 	foreach ($eps as $ep) {
@@ -884,12 +883,67 @@ function dhp_export_to_prospect()
 				break;
 			case "map" :
 				$type = "M";
+				
+				$mapBase = "";
+				$baseLayers = array(".blank", ".mq-aerial", ".mq-base", ".osm-base");
 				$lyrs = array();
-                for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
-                    $lyrs[$i]["lid"] = $ep->settings->layers[$i]->id;
-					$lyrs[$i]["o"] = $ep->settings->layers[$i]->opacity;
-                }
-
+				$i = 0;
+                foreach ($ep->settings->layers as $layer) { 
+					if (in_array($layer->id, $baseLayers)) {
+						$mapBase = $layer->id;
+					}
+					else {
+						$lyrs[$i]["lid"] = $layer->id;
+						$lyrs[$i]["o"] = $layer->opacity;
+						$i++;
+					}
+				}
+								
+				if (count($lyrs) > 0) {	
+					$ids  = array();
+		
+					foreach($lyrs as $lyr) {
+						$ids[] = $lyr['lid'];
+					}
+		
+					$args = array('posts_per_page' => -1,
+								  'post_type'      => 'dhp-maps');
+					$posts = get_posts($args);
+		
+					foreach($posts as $post) {
+						$mapID = get_post_meta($post->ID, 'dhp_map_id', true);
+			
+						if(in_array($mapID, $ids)) {
+								// Borrowed from dhp_get_map_custom_fields() in dhp-map-library
+							$dhp_map_custom_fields = array( 'dhp_map_sname', 'dhp_map_url', 'dhp_map_subdomains',
+                           		   	'dhp_map_n_bounds', 'dhp_map_s_bounds', 'dhp_map_e_bounds', 'dhp_map_w_bounds',
+                               		'dhp_map_min_zoom', 'dhp_map_max_zoom', 'dhp_map_inverse_y', 'dhp_map_desc', 'dhp_map_credits'
+                            );
+							
+							$mapFields = array();
+							foreach ($dhp_map_custom_fields as $field) {
+        						$value = get_post_meta($post->ID, $field, true);
+        						$mapFields[$field] = $value;
+    						}
+				
+							$maps[] = array("type" => "Map",
+											"map-id" => $mapID,
+											"map_sname" => $mapFields["dhp_map_sname"],
+											"map_url" => $mapFields["dhp_map_url"],
+											"map_inverse_y" => $mapFields["dhp_map_inverse_y"],
+											"map_subdomains" => $mapFields["dhp_map_subdomains"],
+											"map_min_zoom" => $mapFields["dhp_map_min_zoom"],
+											"map_max_zoom" => $mapFields["dhp_map_max_zoom"],
+											"map_credits" => $mapFields["dhp_map_credits"],
+											"map_n_bounds" => $mapFields["dhp_map_n_bounds"],
+											"map_s_bounds" => $mapFields["dhp_map_s_bounds"],
+											"map_e_bounds" => $mapFields["dhp_map_e_bounds"],
+											"map_w_bounds" => $mapFields["dhp_map_w_bounds"],
+											);
+						}
+					}
+				}
+				
 				$xhbt_c = array("clat" => $ep->settings->lat,
 								"clon" => $ep->settings->lon,
 								"zoom" => $ep->settings->zoom,
@@ -901,7 +955,7 @@ function dhp_export_to_prospect()
 								"sAtts" => array(),
 								"lgnds" => array(array_map($get_mote_id, $ep->settings->legends)),
 								"lClrs" => array(),
-								"base" => "",
+								"base" => $mapBase,
 								"lyrs" => $lyrs);
 				break;
 			case "cards" :
@@ -980,7 +1034,7 @@ function dhp_export_to_prospect()
 
 
 
-	$archive["items"] = array_merge($attributes, $template, $exhibit);
+	$archive["items"] = array_merge($attributes, $template, $exhibit, $maps);
 	
 	$readme  = "Transferring your DH Press project to Prospect requires that you 1) Import your project's marker data as Prospect records and 2) Import your project's settings using the \"". $filename .".json\" file included in this zip. This file contains all of the Prospect settings necessary to transfer your project with minimal additional work.\n\n";
 	
