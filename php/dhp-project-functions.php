@@ -1036,31 +1036,54 @@ function dhp_export_to_prospect()
 
 	$archive["items"] = array_merge($attributes, $template, $exhibit, $maps);
 	
-	$readme  = "Transferring your DH Press project to Prospect requires that you 1) Import your project's marker data as Prospect records and 2) Import your project's settings using the \"". $filename .".json\" file included in this zip. This file contains all of the Prospect settings necessary to transfer your project with minimal additional work.\n\n";
+	$readme  = "Transferring your DH Press project to Prospect requires that you 1) Import your project's marker data as Prospect records and 2) Import your project's settings using the \"". $filename .".json\" file included in this zip. This file contains all of the Prospect settings necessary to transfer your project with minimal additional work.\n\n\n";
 	
-	$readme .= "To import your DH Press project's data, you must manually update your .csv file that contains this data:\n";
-	$readme .= "1) Remove the \"project_id\" column\n";
+	
+	$readme .= "To import your DH Press project marker data into Prospect, you may either import the automatically-generated .csv file included in this zip file or manually update your own .csv file.\n\n";
+	
+	$readme .= "To import the automatically-generated .csv file, follow these steps:\n";
+	$readme .= "1) Navigate to Tools > CSV Importer Improved in your WordPress admin panel\n";
+	$readme .= "2) Select the \"". $filename .".csv\" file included in this zip";
+	$readme .= "3) Press \"Import\"\n\n";
+	
+	$readme .= "If you do not want to use the automatically-generated .csv file, you can also import your DH Press project's marker data manually by modifying your .csv file to follow Prospect's data structure.\n";
+	$readme .= "To manually update your .csv file containg your project's data, follow these steps:\n";
+	$readme .= "1) In the .csv file, remove the \"project_id\" column\n";
 	$readme .= "2) Create a column entitled \"record-id\" and copy the values from the \"csv_post_title\" column\n";
 	$readme .= "3) If desired, update the \"csv_post_title\" column values to human-readable titles (see page 46 of the Prospect manual for more information)\n";
 	$readme .= "4) Change the \"csv_post_type\" column values to \"prsp-record\"\n";
 	$readme .= "5) Create a column entitled \"tmplt-id\" and set its value to \"tmplt-". $projSlug ."\" for every row\n";
 	$readme .= "6) Ensure that the rest of your column names match the attribute IDs of their corresponding motes exactly (use the list below as a guide). If any of your mote IDs contained spaces, special characters, or capital letters, the IDs of their corresponding attributes have been changed\n";
-	$readme .= "7) After completing these steps, you can import this .csv file into Prospect using the CSV Importer tool. This can be found in Tools > CSV Importer in your WordPress admin panel\n\n";
+	$readme .= "7) After completing these steps, you can import this .csv file into Prospect using the CSV Importer tool by following the same steps for importing the automatically-generated .csv file.\n\n";
 	
-	$readme .= "The following is a list of this project's motes and the corresponding attribute IDs that will be used by Prospect. IDs that have been changed are marked with an asterisk.\n";
-	$readme .= "===================================================\n";
-	$readme .= "Mote Name : Original Mote ID : New Attribute ID (*)\n";
-	$readme .= "===================================================\n";
+	$readme .= "For your reference, the following list contains this project's motes and the corresponding attribute IDs that will be used by Prospect. IDs that have been changed are marked with asterisks.\n\n";
+	
+	$readme .= "===========================================================================\n";
+	$readme .= " DH Press Mote Name  :  Original Mote ID  :  New Prospect Attribute ID (**) \n";
+	$readme .= "===========================================================================\n";
 	foreach ($mote_id as $mote => $id) {
-			$readme .= $mote ." : ". $original_mote_ids[$mote] ." : ". $id;
+			$nameSpaces = 21 - strlen($mote);
+			$nameSpaces = max(0, $nameSpaces); // Set to 0 if negative
+			$nameSpaces = str_repeat(" ", $nameSpaces); // Generate whitespace for table spacing
+			
+			$idSpaces = 19 - strlen($original_mote_ids[$mote]);
+			$idSpaces = max(0, $idSpaces); // Set to 0 if negative
+			$idSpaces = str_repeat(" ", $idSpaces); // Generate whitespace for table spacing
+			
+			$readme .= $mote . $nameSpaces . ": " . $original_mote_ids[$mote] . $idSpaces . ": ". $id;
 			if ($original_mote_ids[$mote] != $id) {
-				$readme .= "  *";
+				$readme .= "  **";
 			}
 			$readme .= "\n";
 	}
 	
-	$readme .= "\n\nTo import your DH Press project settings into Prospect:\n1) Navigate to Prospect > Archive in your WordPress admin panel\n2) Select the .json file included in this zip under \"Import JSON Archive File\"\n3) Press \"Upload Archive\"\n\n";
-	$readme .= "This will generate a Prospect template, exhibit, and attributes which correspond to your DH Press project.\n\n";  
+	
+	$readme .= "\n\n\nTo import your DH Press project settings into Prospect:\n";
+	$readme .= "1) Navigate to Prospect > Archive in your WordPress admin panel\n";
+	$readme .= "2) Select the \"". $filename .".json\" file included in this zip under \"Import JSON Archive File\"\n";
+	$readme .= "3) Press \"Upload Archive\"\n\n";
+	
+	$readme .= "This will generate a Prospect template, exhibit, attributes, and maps which correspond to your DH Press project.\n\n";  
 	
 	
 	$tmpFile = tempnam(sys_get_temp_dir(), "");
