@@ -1043,7 +1043,7 @@ function dhp_export_to_prospect()
 	
 	$readme .= "To import the automatically-generated .csv file, follow these steps:\n";
 	$readme .= "1) Navigate to Tools > CSV Importer Improved in your WordPress admin panel\n";
-	$readme .= "2) Select the \"". $filename .".csv\" file included in this zip";
+	$readme .= "2) Select the \"". $filename .".csv\" file included in this zip\n";
 	$readme .= "3) Press \"Import\"\n\n";
 	
 	$readme .= "If you do not want to use the automatically-generated .csv file, you can also import your DH Press project's marker data manually by modifying your .csv file to follow Prospect's data structure.\n";
