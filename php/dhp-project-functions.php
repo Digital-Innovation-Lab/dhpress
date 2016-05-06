@@ -1050,7 +1050,7 @@ function dhp_export_to_prospect()
 	$readme .= "To manually update your .csv file containg your project's data, follow these steps:\n";
 	$readme .= "1) In the .csv file, remove the \"project_id\" column\n";
 	$readme .= "2) Create a column entitled \"record-id\" and copy the values from the \"csv_post_title\" column\n";
-	$readme .= "3) If desired, update the \"csv_post_title\" column values to human-readable titles (see page 46 of the Prospect manual for more information)\n";
+	$readme .= "3) If desired, update the \"csv_post_title\" column values to human-readable titles (see \"Importing Record CSV files (advanced)\" in Chapter 3 of the Prospect manual for more information)\n";
 	$readme .= "4) Change the \"csv_post_type\" column values to \"prsp-record\"\n";
 	$readme .= "5) Create a column entitled \"tmplt-id\" and set its value to \"tmplt-". $projSlug ."\" for every row\n";
 	$readme .= "6) Ensure that the rest of your column names match the attribute IDs of their corresponding motes exactly (use the list below as a guide). If any of your mote IDs contained spaces, special characters, or capital letters, the IDs of their corresponding attributes have been changed\n";
