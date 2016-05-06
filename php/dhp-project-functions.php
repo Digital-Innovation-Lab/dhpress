@@ -221,7 +221,7 @@ function dhp_project_updated_messages( $messages )
 // post_row_actions enables us to modify the hover links in the Dashboard directories
 add_filter( 'post_row_actions', 'dhp_export_post_link', 10, 2 );
 
-// PURPOSE: Add a "CSV Export" hover link to listing of DH Press Projects
+// PURPOSE: Add a "CSV Export" and "Export to Prospect" hover link to listing of DH Press Projects
 
 function dhp_export_post_link( $actions, $post )
 {
@@ -231,6 +231,7 @@ function dhp_export_post_link( $actions, $post )
 
 	if (current_user_can('edit_posts')) {
 		$actions['CSV_Export'] = '<a href="admin.php?action=dhp_export_as_csv&amp;post='.$post->ID.'" title="Export this item as CSV" rel="permalink">CSV Export</a>';
+		$actions['Prospect_Export'] = '<a href="admin.php?action=dhp_export_to_prospect&amp;post='.$post->ID.'" title="Export this project for use in Prospect" rel="permalink">'. __('Export to Prospect', 'dhpress'). '</a>';
 	}
 	return $actions;
 } // dhp_export_post_link()
@@ -509,6 +510,595 @@ function dhp_export_as_csv()
  
 	exit();
 } // dhp_export_as_csv()
+
+
+
+// PURPOSE: Return all of the marker data associated with Project in Prospect CSV format
+// NOTES:   This is similar to dhp_export_as_csv(), but converts the CSV file so it can be 
+//			imported into Prospect.
+
+function dhp_export_as_prospect_csv($postID, $tmplt_id)
+{
+		// Mote id map
+	$get_mote_id = function($key) {
+		$val = remove_accents($key);
+		$val = sanitize_title($val);
+		return $val;
+	};
+	
+		// Get associated Project Data
+	$projObj = new DHPressProject($postID);
+
+	$csvFile = tempnam(sys_get_temp_dir(), "");
+
+	$fp = fopen($csvFile, 'w');
+		// Hack to write as UTF-8 format
+	fwrite($fp, pack("CCC",0xef,0xbb,0xbf));
+
+	$cfs = $projObj->getAllCustomFieldNames();
+		// Prospect attribute IDs
+	$attIDs = array_map($get_mote_id, $cfs);
+	
+	$firstLine = array_merge(array('csv_post_type', 'csv_post_title', 'tmplt-id', 'record-id'), $attIDs);
+	array_push($firstLine, 'csv_post_post');
+
+		// Output the names of columns first
+	fputcsv($fp, $firstLine);
+
+		// Go through all of the Project's Markers and gather data
+	$loop = $projObj->setAllMarkerLoop();
+	while ( $loop->have_posts() ) : $loop->the_post();
+		$markerID = get_the_ID();
+
+		$values = array('prsp-record', get_the_title(), $tmplt_id, basename(get_permalink()) );
+
+		foreach ($cfs as $theCF) {
+			$content_val = get_post_meta($markerID, $theCF, true);
+			array_push($values, $content_val);
+		} // foreach
+
+		array_push($values, get_the_content());
+
+		fputcsv($fp, $values);
+	endwhile;
+
+	return $csvFile;
+} // dhp_export_as_prospect_csv()
+
+
+	// PURPOSE: Returns array of short text mote legend values for Prospect export
+	// NOTES: Derived from dhp_get_legend_vals() but does not use $_POST and uses Prospect data structure
+function get_legend_vals($mote_name, $mote_delim, $custom_field, $projectID)
+{
+
+		// Nullify empty string or space
+	if ($mote_delim == '' || $mote_delim == ' ') { $mote_delim = null; }
+
+	$projObj      = new DHPressProject($projectID);
+	$rootTaxName  = $projObj->getRootTaxName();
+
+		// Does term have to be created? -- Do all the work if so
+	if (!term_exists($mote_name, $rootTaxName)) {
+		wp_insert_term($mote_name, $rootTaxName);
+		$parent_term = get_term_by('name', $mote_name, $rootTaxName);
+		$parent_id = $parent_term->term_id;
+
+			// Get unique values used by the related custom field
+		$mArray = $projObj->getCustomFieldUniqueDelimValues($custom_field, $mote_delim);
+
+			// Initialize terms with mArray
+		dhp_initialize_taxonomy($mArray, $parent_id, $rootTaxName);
+
+			// Bind project's markers to the taxonomic terms
+		dhp_bind_tax_to_markers($projObj, $custom_field, $parent_id, $rootTaxName, $mote_delim);
+	} else {
+		$parent_term = get_term_by('name', $mote_name, $rootTaxName);
+		$parent_id = $parent_term->term_id;
+	}
+
+		// Find all of the terms derived from mote (parent/head term) in the Project's taxonomy
+	$parent_terms_to_exclude = get_terms($rootTaxName, 'parent=0&orderby=term_group&hide_empty=0');
+
+		// Create comma-separated string listing terms derived from other motes
+	$exclude_string='';
+	$initial = true;
+	foreach ( $parent_terms_to_exclude as $term ) {
+		if($term->term_id != $parent_id) {
+			if(!$initial) {
+				$exclude_string.=',';
+			}
+			$exclude_string.= $term->term_id;
+			$initial = false;
+		}
+	}
+
+		// Get all taxonomic terms for project, excluding all other motes
+	$terms_loaded = get_terms($rootTaxName, 'exclude_tree='.$exclude_string.'&orderby=term_group&hide_empty=0');
+	$t_count = count($terms_loaded);
+
+	$prospectLegend = array();
+
+		// Parse icon_url data from the description metadata
+	if ($t_count > 0) {
+		foreach ($terms_loaded as $term) {
+			$term->icon_url = $term->description;
+			if (substr($term->icon_url, 0, 1) != '#') {
+				$term->icon_url = "#888888";
+			}
+		}
+
+		// Get ID of root term
+		$root_id = $terms_loaded[0]->term_id;
+		array_shift($terms_loaded);	
+
+		while(!empty($terms_loaded)) {
+			foreach ($terms_loaded as $key => $term) {
+				// Find all terms with no parent
+				if ($term->parent == $root_id) {
+					$prospectLegend[$term->term_id]->l = $term->name;
+					$prospectLegend[$term->term_id]->v = $term->icon_url;
+					$prospectLegend[$term->term_id]->z = array();
+					unset($terms_loaded[$key]);
+				}
+				else if (array_key_exists($term->parent, $prospectLegend)) {
+					$child = null;
+					$child->l = $term->name;
+					$child->v = $term->icon_url;
+					$prospectLegend[$term->parent]->z[] = $child;
+					unset($terms_loaded[$key]);
+				}
+			}
+		}
+		
+		// Remove parent keys from array
+		$prospectLegend = array_values($prospectLegend);
+	}
+
+	return $prospectLegend;
+} // get_legend_vals()
+
+
+
+
+
+add_action( 'admin_action_dhp_export_to_prospect', 'dhp_export_to_prospect' );
+
+// PURPOSE: Return all of the settings associated with Project in a Prospect JSON configuration file
+// NOTES:   
+
+function dhp_export_to_prospect()
+{
+	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'rd_duplicate_post_as_draft' == $_REQUEST['action'] ) ) ) {
+		wp_die(__('No post to export has been supplied!', 'dhpress'));
+	}
+
+		// ensure that this URL has not been faked by non-admin user
+	if (!current_user_can('edit_posts')) {
+		wp_die(__('Invalid request', 'dhpress'));
+	}
+ 
+		// Get post ID and associated Project Data
+	$postID = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
+	$projSlug = get_post_field("post_name", $postID);
+	$projTitle = get_post_field("post_title", $postID);
+	$projObj = new DHPressProject($postID);
+	$projSettings = $projObj->getAllSettings();
+
+		// Create appropriate filename
+	$date = new DateTime();
+	$dateFormatted = $date->format("Y-m-d");
+
+	$filename = "$projSlug-prospect-$dateFormatted";
+
+		// Array to be returned as JSON-formatted Prospect archive
+	$archive = array("type" => "Archive");
+
+	$motes = $projSettings->motes;
+	$attributes = array();
+	$st_legend = array();
+	
+		// Store original mote ids to determine if they have changed
+	$original_mote_ids = array();
+    	// map for mote name to mote id
+    $mote_id = array();
+	
+	$i = 0;
+	// Convert DH Press Motes to Prospect Attributes
+	foreach($motes as $mote) {
+		$st_legend = array();
+		
+		$original_mote_ids[$mote->name] = $mote->cf;
+		
+			// DH Press is more lenient with custom field names, so ensure they consist of lowercase alphanumeric characters, underscores and hyphens
+		$mote->cf = remove_accents($mote->cf);
+		$mote->cf = sanitize_title($mote->cf);
+		
+        $mote_id[$mote->name] = $mote->cf;
+
+		switch ($mote->type) {
+			case "Short Text" :
+				$type =  'V';
+				$st_legend = get_legend_vals($mote->name, $mote->delim, $mote->cf, $postID);
+				break;
+			case "Long Text" :
+				$type = 'T';
+				break;
+			case "Lat/Lon Coordinates" :
+				$type = 'L';
+				break;
+			case "X-Y Coordinates" :
+				$type = 'X';
+				break;
+			case "Date" :
+				$type = 'D';
+				break;
+			case "Pointer" :
+				$type = 'P';
+				break;
+			case "Image" :
+				$type = 'I';
+				break;
+			case "Link To" :
+				$type = 'l';
+				break;
+			case "SoundCloud" :
+				$type = 'S';
+				break;
+			case "YouTube" :
+				$type = 'Y';
+				break;
+			case "Transcript" :
+				$type = 'x';
+				break;
+			case "Timestamp" :
+				$type = 't';
+				break;
+		}
+
+		//$att_id = strtolower(str_replace(' ', '_', trim($mote->name)));
+
+		$attributes[$i] = array("type" => "Attribute",
+								"att-id" => $mote->cf,
+								"att-privacy" => 'o',
+								"att-def" => array('l' => $mote->name,
+												   't' => $type,
+												   'd' => $mote->delim,
+												   'h' => ""),
+								"att-range" => array(),
+								"att-legend" => $st_legend
+							);
+		$tmplt["a"][] = $mote->cf;
+		$i++;
+	}
+
+	$get_mote_id = function($key) use ($mote_id) {
+		return $mote_id[$key];
+	};
+
+
+	$projTranscript = $projSettings->views->transcript;
+
+	foreach ($projTranscript as &$t) {
+		if ($t != "disable") {
+			$t = $mote_id[$t];
+		}
+	}
+
+	$xhbtModal = array();
+	$xhbtModal["audio"] = ($projTranscript->audio == "disable" ? false : true);
+	$xhbtModal["video"] = ($projTranscript->video == "disable" ? false : true);
+	$xhbtModal["transcript"] = ($projTranscript->transcript == "disable" ? false : true);
+	$xhbtModal["transcript2"] = ($projTranscript->transcript2 == "disable" ? false : true);
+
+	$projSettings->views->post->content = array_map($get_mote_id, $projSettings->views->post->content);
+	$projSettings->views->select->content = array_map($get_mote_id, $projSettings->views->select->content);
+
+
+	$template = array(array("type" => "Template",
+					  "tmplt-id" => "tmplt-".$projSlug,
+					  "tmplt-def" => array("l" => $projTitle,
+					  					   "d" => false,
+					  					   "t" => $mote_id[$projSettings->general->mTitle],
+					  					   "a" => $tmplt["a"]),
+					  "tmplt-joins" => array(),
+					  "tmplt-view" => array("sc" => $projTranscript->audio,
+					  						"yt" => $projTranscript->video,
+					  						"t" => array("t1Att" => $projTranscript->transcript,
+					  									 "t2Att" => $projTranscript->transcript2,
+					  									 "tcAtt" => $projTranscript->timecode),
+					  						"cnt" => $projSettings->views->post->content)
+				));
+
+
+
+	$eps = $projSettings->eps;
+	$xhbt_views = array();
+
+	$maps = array();
+
+	// Convert DH Press Entry Points to a Prospect Exhibit
+	foreach ($eps as $ep) {
+
+		$xhbt_c = array();
+
+		switch ($ep->type) {
+			case "time" :
+				$type = "T";
+                
+                $lgnds = ($ep->settings->color == "disable") ? "" : $mote_id[$ep->settings->color];
+
+				$xhbt_c = array("bHt" => $ep->settings->bandHt,
+								"xLbl" => $ep->settings->wAxisLbl,
+								"from" => $ep->settings->from,
+								"to" => $ep->settings->to,
+								"zFrom" => $ep->settings->openFrom,
+								"zTo" => $ep->settings->openTo,
+								"dAtts" => array($ep->settings->date),
+								"lgnds" => array(array($lgnds)));
+				break;
+			case "pinboard" :
+				$type = "P";
+				$lyrs = array();
+                for ($i=0; $i < sizeof($ep->settings->layers); $i++) { 
+                    $lyrs[$i]["url"] = $ep->settings->layers[$i]->file;
+					$lyrs[$i]["o"] = 1;
+                }
+                
+                $lgnds = array();
+                foreach ($ep->settings->legends as $lgnd) {
+                    $lgnds[] = $mote_id[$lgnd];
+                }
+
+				$xhbt_c = array("iw" => $ep->settings->iw,
+								"ih" => $ep->settings->ih,
+								"dw" => $ep->settings->dw,
+								"dh" => $ep->settings->dh,
+								"img" => $ep->settings->imageURL,
+								"min" => 5,
+								"max" => 5,
+								"cAtts" => array($ep->settings->coordMote),
+								"pAtts" => array(),
+								"sAtts" => array(),
+								"lClrs" => array(),
+								"lgnds" => array($lgnds),
+								"lyrs" => $lyrs);
+				break;
+			case "flow" :
+				$type = "F";
+				$xhbt_c = array("w" => $ep->settings->width,
+								"gr" => false,
+								"fcts" => array_map($get_mote_id, $ep->settings->motes));
+				break;
+			case "browser" :
+				$type = "B";
+				$xhbt_c = array("gr" => false,
+								"fcts" => array_map($get_mote_id, $ep->settings->motes));
+				break;
+			case "map" :
+				$type = "M";
+				
+				$mapBase = "";
+				$baseLayers = array(".blank", ".mq-aerial", ".mq-base", ".osm-base");
+				$lyrs = array();
+				$i = 0;
+                foreach ($ep->settings->layers as $layer) { 
+					if (in_array($layer->id, $baseLayers)) {
+						$mapBase = $layer->id;
+					}
+					else {
+						$lyrs[$i]["lid"] = $layer->id;
+						$lyrs[$i]["o"] = $layer->opacity;
+						$i++;
+					}
+				}
+								
+				if (count($lyrs) > 0) {	
+					$ids  = array();
+		
+					foreach($lyrs as $lyr) {
+						$ids[] = $lyr['lid'];
+					}
+		
+					$args = array('posts_per_page' => -1,
+								  'post_type'      => 'dhp-maps');
+					$posts = get_posts($args);
+		
+					foreach($posts as $post) {
+						$mapID = get_post_meta($post->ID, 'dhp_map_id', true);
+			
+						if(in_array($mapID, $ids)) {
+								// Borrowed from dhp_get_map_custom_fields() in dhp-map-library
+							$dhp_map_custom_fields = array( 'dhp_map_sname', 'dhp_map_url', 'dhp_map_subdomains',
+                           		   	'dhp_map_n_bounds', 'dhp_map_s_bounds', 'dhp_map_e_bounds', 'dhp_map_w_bounds',
+                               		'dhp_map_min_zoom', 'dhp_map_max_zoom', 'dhp_map_inverse_y', 'dhp_map_desc', 'dhp_map_credits'
+                            );
+							
+							$mapFields = array();
+							foreach ($dhp_map_custom_fields as $field) {
+        						$value = get_post_meta($post->ID, $field, true);
+        						$mapFields[$field] = $value;
+    						}
+				
+							$maps[] = array("type" => "Map",
+											"map-id" => $mapID,
+											"map_sname" => $mapFields["dhp_map_sname"],
+											"map_url" => $mapFields["dhp_map_url"],
+											"map_inverse_y" => $mapFields["dhp_map_inverse_y"],
+											"map_subdomains" => $mapFields["dhp_map_subdomains"],
+											"map_min_zoom" => $mapFields["dhp_map_min_zoom"],
+											"map_max_zoom" => $mapFields["dhp_map_max_zoom"],
+											"map_credits" => $mapFields["dhp_map_credits"],
+											"map_n_bounds" => $mapFields["dhp_map_n_bounds"],
+											"map_s_bounds" => $mapFields["dhp_map_s_bounds"],
+											"map_e_bounds" => $mapFields["dhp_map_e_bounds"],
+											"map_w_bounds" => $mapFields["dhp_map_w_bounds"],
+											);
+						}
+					}
+				}
+				
+				$xhbt_c = array("clat" => $ep->settings->lat,
+								"clon" => $ep->settings->lon,
+								"zoom" => $ep->settings->zoom,
+								"min" => 5,
+								"max" => 5,
+								"clstr" => $ep->settings->cluster,
+								"cAtts" => array(array($mote_id[$ep->settings->coordMote])),
+								"pAtts" => array(),
+								"sAtts" => array(),
+								"lgnds" => array(array_map($get_mote_id, $ep->settings->legends)),
+								"lClrs" => array(),
+								"base" => $mapBase,
+								"lyrs" => $lyrs);
+				break;
+			case "cards" :
+				$type = "C";
+				switch ($ep->settings->width) {
+					case "thin" :
+						$width = "t";
+						break;
+					case "med-width" :
+						$width = "m";
+						break;
+					case "wide" :
+						$width = "w";
+						break;
+					default :
+						$width = "m";
+						break;
+				}
+				switch ($ep->settings->height) {
+					case "short" :
+						$height = "s";
+						break;
+					case "med-height" :
+						$height = "m";
+						break;
+					case "tall" :
+						$height = "t";
+						break;
+					default :
+						$height = "m";
+						break;
+				}
+                
+                // Use color mote as legend, or null if "disable"
+                $lgnds = ($ep->settings->color == "disable") ? "" : $mote_id[$ep->settings->color];
+
+				$xhbt_c = array("lOn" => $ep->settings->titleOn,
+								"w" => $width,
+								"h" => $height,
+								"iAtts" => array(),
+								"cnt" => array(array_map($get_mote_id, $ep->settings->content)),
+								"lgnds" => array(array($lgnds)));
+				break;
+			case "tree" :
+				$type = "G";
+				break;
+		}
+
+		$xhbt_views[] = array("l" => $ep->label,
+						  	  "n" => "",
+						  	  "vf" => $type,
+						  	  "c" => $xhbt_c
+						  	 );
+	}
+
+	$exhibit = array(array("type" => "Exhibit",
+					 "xhbt-id" => "xhbt-".$projSlug,
+					 "xhbt-gen" => array("l" => $projTitle,
+					 					 "hbtn" => $projSettings->general->homeLabel,
+					 					 "hurl" => $projSettings->general->homeURL,
+					 					 "ts" => array("tmplt-".$projSlug)),
+					 "xhbt-views" => $xhbt_views,
+					 "xhbt-inspect" => array("sc" => array("atts" => array($projTranscript->audio)),
+						  					 "yt" => array("atts" => array($projTranscript->video)),
+						  					 "t" => array("t1Atts" => array($projTranscript->transcript),
+					  									 "t2Atts" => array($projTranscript->transcript2),
+					  									 "tcAtts" => array($projTranscript->timecode)),
+						  					 "modal" => array("aOn" => $xhbtModal["audio"],
+						  					 				  "scOn" => $xhbtModal["audio"],
+						  					 				  "ytOn" => $xhbtModal["video"],
+						  					 				  "tOn" => $xhbtModal["transcript"],
+						  					 				  "t2On" => $xhbtModal["transcript2"],
+						  					 				  "atts" => array($projSettings->views->select->content)) 
+						  					)
+					 ));
+
+
+
+	$archive["items"] = array_merge($attributes, $template, $exhibit, $maps);
+	
+	$readme  = "Transferring your DH Press project to Prospect requires that you 1) Import your project's marker data as Prospect records and 2) Import your project's settings using the \"". $filename .".json\" file included in this zip. This file contains all of the Prospect settings necessary to transfer your project with minimal additional work. Please note that, while these automatically-generated files handle the bulk of the transfer process, they are not always perfect and some project settings may need to be manually updated after they are imported into Prospect.\n\n\n";
+	
+	
+	$readme .= "To import your DH Press project marker data into Prospect, you may either import the automatically-generated .csv file included in this zip file or manually update your own .csv file.\n\n";
+	
+	$readme .= "To import the automatically-generated .csv file, follow these steps:\n";
+	$readme .= "1) Navigate to Tools > CSV Importer Improved in your WordPress admin panel\n";
+	$readme .= "2) Select the \"". $filename .".csv\" file included in this zip\n";
+	$readme .= "3) Press \"Import\"\n\n";
+	
+	$readme .= "If you do not want to use the automatically-generated .csv file, you can also import your DH Press project's marker data manually by modifying your .csv file to follow Prospect's data structure.\n";
+	$readme .= "To manually update your .csv file containg your project's data, follow these steps:\n";
+	$readme .= "1) In the .csv file, remove the \"project_id\" column\n";
+	$readme .= "2) Create a column entitled \"record-id\" and copy the values from the \"csv_post_title\" column. Ensure that these values are unique, concise, and do not contain spaces, special characters, or capital letters\n";
+	$readme .= "3) If desired, update the \"csv_post_title\" column values to human-readable titles (see \"Importing Record CSV files (advanced)\" in Chapter 3 of the Prospect manual for more information)\n";
+	$readme .= "4) Change the \"csv_post_type\" column values to \"prsp-record\"\n";
+	$readme .= "5) Create a column entitled \"tmplt-id\" and set its value to \"tmplt-". $projSlug ."\" for every row\n";
+	$readme .= "6) Ensure that the rest of your column names match the attribute IDs of their corresponding motes exactly (use the list below as a guide). If any of your mote IDs contained spaces, special characters, or capital letters, the IDs of their corresponding attributes have been changed\n";
+	$readme .= "7) After completing these steps, you can import this .csv file into Prospect using the CSV Importer tool by following the same steps for importing the automatically-generated .csv file\n\n";
+	
+	$readme .= "For your reference, the following list contains this project's motes and the corresponding attribute IDs that will be used by Prospect. IDs that have been changed are marked with asterisks.\n\n";
+	
+	$readme .= "================================================================================\n";
+	$readme .= "  DH Press Mote Name  :   Original Mote ID   :  New Prospect Attribute ID (**)  \n";
+	$readme .= "================================================================================\n";
+	foreach ($mote_id as $mote => $id) {
+			$nameSpaces = 22 - strlen($mote);
+			$nameSpaces = max(0, $nameSpaces); // Set to 0 if negative
+			$nameSpaces = str_repeat(" ", $nameSpaces); // Generate whitespace for table spacing
+			
+			$idSpaces = 21 - strlen($original_mote_ids[$mote]);
+			$idSpaces = max(0, $idSpaces); // Set to 0 if negative
+			$idSpaces = str_repeat(" ", $idSpaces); // Generate whitespace for table spacing
+			
+			$readme .= $mote . $nameSpaces . ": " . $original_mote_ids[$mote] . $idSpaces . ": ". $id;
+			if ($original_mote_ids[$mote] != $id) {
+				$readme .= "  **";
+			}
+			$readme .= "\n";
+	}
+	
+	
+	$readme .= "\n\n\nTo import your DH Press project settings into Prospect:\n";
+	$readme .= "1) Navigate to Prospect > Archive in your WordPress admin panel and scroll to the bottom of the page\n";
+	$readme .= "2) Select the \"". $filename .".json\" file included in this zip under \"Import JSON Archive File\"\n";
+	$readme .= "3) Press \"Upload Archive\"\n\n";
+	
+	$readme .= "This will generate a Prospect template, exhibit, attributes, and maps which correspond to your DH Press project.";
+	
+	$tmpFile = tempnam(sys_get_temp_dir(), "");
+	
+	$csvFile = dhp_export_as_prospect_csv($postID, "tmplt-" . $projSlug, $mote_id);
+	
+	$zip = new ZipArchive;
+	if ($zip->open($tmpFile, ZipArchive::CREATE) == TRUE) {
+		$zip->addFromString($filename . ".json", json_encode($archive));
+		$zip->addFromString("README.txt", $readme);
+		$zip->addFile($csvFile, $filename . ".csv");
+	}
+	$zip->close();
+	
+	fclose($csvFile);
+	
+	header('Content-disposition: attachment; filename=' . $filename . '.zip');
+    header('Content-type: application/zip');
+	readfile($tmpFile);
+	
+	// Delete temporary file
+	unlink($tmpFile);
+} // dhp_export_to_prospect()
 
 
 // PURPOSE: Get all of the visual features associated via metadata with the taxonomic terms associated with 1 Mote
