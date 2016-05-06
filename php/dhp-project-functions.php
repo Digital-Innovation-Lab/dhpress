@@ -702,9 +702,6 @@ function dhp_export_to_prospect()
     	// map for mote name to mote id
     $mote_id = array();
 	
-
-	$xhbtInspect = array("sc" => array(), "yt" => array(), "transcripts" => array(), "timestamps" => array());
-
 	$i = 0;
 	// Convert DH Press Motes to Prospect Attributes
 	foreach($motes as $mote) {
@@ -746,19 +743,15 @@ function dhp_export_to_prospect()
 				break;
 			case "SoundCloud" :
 				$type = 'S';
-				$xhbtInspect["sc"][] = $mote->cf;
 				break;
 			case "YouTube" :
 				$type = 'Y';
-				$xhbtInspect["yt"][] = $mote->cf;
 				break;
 			case "Transcript" :
 				$type = 'x';
-				$xhbtInspect["transcripts"][] = $mote->cf;
 				break;
 			case "Timestamp" :
 				$type = 't';
-				$xhbtInspect["timestamps"][] = $mote->cf;
 				break;
 		}
 
@@ -1018,11 +1011,11 @@ function dhp_export_to_prospect()
 					 					 "hurl" => $projSettings->general->homeURL,
 					 					 "ts" => array("tmplt-".$projSlug)),
 					 "xhbt-views" => $xhbt_views,
-					 "xhbt-inspect" => array("sc" => array("atts" => $xhbtInspect["sc"]),
-						  					 "yt" => array("atts" => $xhbtInspect["yt"]),
-						  					 "t" => array("t1Atts" => $xhbtInspect["transcripts"],
-					  									 "t2Atts" => $xhbtInspect["transcripts"],
-					  									 "tcAtts" => $xhbtInspect["timestamps"]),
+					 "xhbt-inspect" => array("sc" => array("atts" => array($projTranscript->audio)),
+						  					 "yt" => array("atts" => array($projTranscript->video)),
+						  					 "t" => array("t1Atts" => array($projTranscript->transcript),
+					  									 "t2Atts" => array($projTranscript->transcript2),
+					  									 "tcAtts" => array($projTranscript->timecode)),
 						  					 "modal" => array("aOn" => $xhbtModal["audio"],
 						  					 				  "scOn" => $xhbtModal["audio"],
 						  					 				  "ytOn" => $xhbtModal["video"],
@@ -1036,7 +1029,7 @@ function dhp_export_to_prospect()
 
 	$archive["items"] = array_merge($attributes, $template, $exhibit, $maps);
 	
-	$readme  = "Transferring your DH Press project to Prospect requires that you 1) Import your project's marker data as Prospect records and 2) Import your project's settings using the \"". $filename .".json\" file included in this zip. This file contains all of the Prospect settings necessary to transfer your project with minimal additional work.\n\n\n";
+	$readme  = "Transferring your DH Press project to Prospect requires that you 1) Import your project's marker data as Prospect records and 2) Import your project's settings using the \"". $filename .".json\" file included in this zip. This file contains all of the Prospect settings necessary to transfer your project with minimal additional work. Please note that, while these automatically-generated files handle the bulk of the transfer process, they are not always perfect and some project settings may need to be manually updated after they are imported into Prospect.\n\n\n";
 	
 	
 	$readme .= "To import your DH Press project marker data into Prospect, you may either import the automatically-generated .csv file included in this zip file or manually update your own .csv file.\n\n";
@@ -1049,24 +1042,24 @@ function dhp_export_to_prospect()
 	$readme .= "If you do not want to use the automatically-generated .csv file, you can also import your DH Press project's marker data manually by modifying your .csv file to follow Prospect's data structure.\n";
 	$readme .= "To manually update your .csv file containg your project's data, follow these steps:\n";
 	$readme .= "1) In the .csv file, remove the \"project_id\" column\n";
-	$readme .= "2) Create a column entitled \"record-id\" and copy the values from the \"csv_post_title\" column\n";
+	$readme .= "2) Create a column entitled \"record-id\" and copy the values from the \"csv_post_title\" column. Ensure that these values are unique, concise, and do not contain spaces, special characters, or capital letters\n";
 	$readme .= "3) If desired, update the \"csv_post_title\" column values to human-readable titles (see \"Importing Record CSV files (advanced)\" in Chapter 3 of the Prospect manual for more information)\n";
 	$readme .= "4) Change the \"csv_post_type\" column values to \"prsp-record\"\n";
 	$readme .= "5) Create a column entitled \"tmplt-id\" and set its value to \"tmplt-". $projSlug ."\" for every row\n";
 	$readme .= "6) Ensure that the rest of your column names match the attribute IDs of their corresponding motes exactly (use the list below as a guide). If any of your mote IDs contained spaces, special characters, or capital letters, the IDs of their corresponding attributes have been changed\n";
-	$readme .= "7) After completing these steps, you can import this .csv file into Prospect using the CSV Importer tool by following the same steps for importing the automatically-generated .csv file.\n\n";
+	$readme .= "7) After completing these steps, you can import this .csv file into Prospect using the CSV Importer tool by following the same steps for importing the automatically-generated .csv file\n\n";
 	
 	$readme .= "For your reference, the following list contains this project's motes and the corresponding attribute IDs that will be used by Prospect. IDs that have been changed are marked with asterisks.\n\n";
 	
-	$readme .= "===========================================================================\n";
-	$readme .= " DH Press Mote Name  :  Original Mote ID  :  New Prospect Attribute ID (**) \n";
-	$readme .= "===========================================================================\n";
+	$readme .= "================================================================================\n";
+	$readme .= "  DH Press Mote Name  :   Original Mote ID   :  New Prospect Attribute ID (**)  \n";
+	$readme .= "================================================================================\n";
 	foreach ($mote_id as $mote => $id) {
-			$nameSpaces = 21 - strlen($mote);
+			$nameSpaces = 22 - strlen($mote);
 			$nameSpaces = max(0, $nameSpaces); // Set to 0 if negative
 			$nameSpaces = str_repeat(" ", $nameSpaces); // Generate whitespace for table spacing
 			
-			$idSpaces = 19 - strlen($original_mote_ids[$mote]);
+			$idSpaces = 21 - strlen($original_mote_ids[$mote]);
 			$idSpaces = max(0, $idSpaces); // Set to 0 if negative
 			$idSpaces = str_repeat(" ", $idSpaces); // Generate whitespace for table spacing
 			
@@ -1079,12 +1072,11 @@ function dhp_export_to_prospect()
 	
 	
 	$readme .= "\n\n\nTo import your DH Press project settings into Prospect:\n";
-	$readme .= "1) Navigate to Prospect > Archive in your WordPress admin panel\n";
+	$readme .= "1) Navigate to Prospect > Archive in your WordPress admin panel and scroll to the bottom of the page\n";
 	$readme .= "2) Select the \"". $filename .".json\" file included in this zip under \"Import JSON Archive File\"\n";
 	$readme .= "3) Press \"Upload Archive\"\n\n";
 	
-	$readme .= "This will generate a Prospect template, exhibit, attributes, and maps which correspond to your DH Press project.\n\n";  
-	
+	$readme .= "This will generate a Prospect template, exhibit, attributes, and maps which correspond to your DH Press project.";
 	
 	$tmpFile = tempnam(sys_get_temp_dir(), "");
 	
