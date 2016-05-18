@@ -1006,6 +1006,6 @@ var dhpServices = {
 		}
 
 		var template = _.template(baseText, vars);
-		return template;
+		return template();
 	} // compileText()
 }; // dhpServices
