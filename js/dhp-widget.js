@@ -259,7 +259,7 @@ var dhpWidget = {
 					switch(dhpWidget.wParams.playerType) {
 					case 'scloud':
 						if (!dhpWidget.playingNow) {
-							dhpWidget.playingNow = true;
+							dhpWidget.playWidget.seekTo(seekToTime);
 							dhpWidget.playWidget.play();
 						}
 						dhpWidget.playWidget.seekTo(seekToTime);
