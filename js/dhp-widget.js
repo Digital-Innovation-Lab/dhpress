@@ -258,11 +258,10 @@ var dhpWidget = {
 						// seekTo doesn't work unless sound is already playing
 					switch(dhpWidget.wParams.playerType) {
 					case 'scloud':
+						dhpWidget.playWidget.seekTo(seekToTime);
 						if (!dhpWidget.playingNow) {
-							dhpWidget.playWidget.seekTo(seekToTime);
 							dhpWidget.playWidget.play();
 						}
-						dhpWidget.playWidget.seekTo(seekToTime);
 						break;
 					case 'youtube':
 						if (!dhpWidget.playingNow) {
