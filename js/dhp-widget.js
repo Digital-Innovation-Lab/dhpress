@@ -14,7 +14,6 @@ var dhpWidget = {
 	//      wParams         = parameters describing operation of widget
 	//      readyFor2nd     = for handling asynchronous loading of transcripts
 	//      playingNow      = true if currently playing back
-	//      primeAudio      = to handle quirk that widget has to be playing before seek can be done
 	//      playWidget      = playback object itself
 
 	//      seekBound       = true once code has been bound to seek to selected transcript section
@@ -35,7 +34,6 @@ var dhpWidget = {
 		dhpWidget.transcriptData = [];
 		dhpWidget.readyFor2nd    = false;
 		dhpWidget.playingNow     = false;
-		dhpWidget.primeAudio     = true;
 		dhpWidget.playWidget     = null;
 		dhpWidget.wParams        = wParams;
 		dhpWidget.seekBound      = false;
@@ -159,8 +157,6 @@ var dhpWidget = {
 			playWidget = dhpWidget.playWidget;
 				// Setup audio/transcript SoundCloud player after entire sound clip loaded
 			playWidget.bind(SC.Widget.Events.READY, function() {
-					// Prime the audio -- must initially play (seekTo won't work until sound loaded and playing)
-				playWidget.play();
 				playWidget.bind(SC.Widget.Events.PLAY, function() {
 					dhpWidget.playingNow = true;
 				});
@@ -169,12 +165,6 @@ var dhpWidget = {
 				});
 
 				playWidget.bind(SC.Widget.Events.PLAY_PROGRESS, function(params) {
-						// Pauses audio after it primes so seekTo will work properly
-					if (dhpWidget.primeAudio) {
-						playWidget.pause();
-						dhpWidget.primeAudio = false;
-						dhpWidget.playingNow = false;
-					}
 						// Keep within bounds if only excerpt of longer transcript
 					if (dhpWidget.wParams.timecode !== -1) {
 						if (params.currentPosition < dhpWidget.wParams.startTime) {
@@ -268,11 +258,10 @@ var dhpWidget = {
 						// seekTo doesn't work unless sound is already playing
 					switch(dhpWidget.wParams.playerType) {
 					case 'scloud':
+						dhpWidget.playWidget.seekTo(seekToTime);
 						if (!dhpWidget.playingNow) {
-							dhpWidget.playingNow = true;
 							dhpWidget.playWidget.play();
 						}
-						dhpWidget.playWidget.seekTo(seekToTime);
 						break;
 					case 'youtube':
 						if (!dhpWidget.playingNow) {

@@ -1005,7 +1005,7 @@ var dhpServices = {
 			baseText = jQuery(scriptName).html().trim();
 		}
 
-		var template = _.template(baseText, vars);
-		return template;
+		var template = _.template(baseText);
+		return template(vars);
 	} // compileText()
 }; // dhpServices
