@@ -1479,7 +1479,7 @@ function dhp_get_markers()
 
 			// Fetch title for marker
 		if ($mQuery->titleMote=='the_title') {
-			$thisFeature["title"] = get_the_title();
+			$thisFeature["title"] = get_the_title($markerID);
 		} else {
 			$thisFeature["title"] = get_post_meta($markerID, $mQuery->titleMote, true);
 		}
