@@ -81,7 +81,7 @@ var dhpWidget = {
 			// Sound Cloud
 		case 'scloud':
 			usingAV = true;
-			jQuery('#player-widget').append('<p class="pull-right"><iframe id="scWidget" class="player" width="100%" height="166" src="http://w.soundcloud.com/player/?url='+
+			jQuery('#player-widget').append('<p class="pull-right"><iframe id="scWidget" class="player" width="100%" height="166" src="https://w.soundcloud.com/player/?url='+
 				dhpWidget.wParams.stream+'"></iframe></p>');
 
 				// Must set these variables after HTML appended above

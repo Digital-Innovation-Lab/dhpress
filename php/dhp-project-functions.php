@@ -3445,7 +3445,7 @@ function dhp_page_template( $page_template )
 			wp_enqueue_script('dhp-widget', plugins_url('/js/dhp-widget.js',  dirname(__FILE__)),
 				 array('jquery', 'underscore') );
 			if ($projObj->selectModalHas('scloud')) {
-				wp_enqueue_script('soundcloud-api', 'http://w.soundcloud.com/player/api.js');
+				wp_enqueue_script('soundcloud-api', 'https://w.soundcloud.com/player/api.js');
 				array_push($dependencies, 'soundcloud-api');
 			}
 			// if ($projObj->selectModalHas('youtube')) {
