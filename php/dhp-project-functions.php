@@ -3559,7 +3559,7 @@ function dhp_tax_template( $page_template )
 		if ($isTranscript) {
 			wp_enqueue_style('transcript', plugins_url('/css/transcriptions.css',  dirname(__FILE__)), '', DHP_PLUGIN_VERSION );
 			if ($projObj->selectModalHas('scloud')) {
-				wp_enqueue_script('soundcloud-api', 'http://w.soundcloud.com/player/api.js');
+				wp_enqueue_script('soundcloud-api', 'https://w.soundcloud.com/player/api.js');
 				array_push($dependencies, 'soundcloud-api');
 			}
 			// if ($projObj->selectModalHas('youtube')) {
