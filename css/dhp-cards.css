@@ -89,6 +89,12 @@ p {
 
     /* Material on the cards */
 
+.card img {
+    border-radius: 2px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    padding: 4px 0;
+}
+
 .card p {
     font-size: 11px;
     line-height: 13px;
