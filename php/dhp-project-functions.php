@@ -3338,6 +3338,8 @@ function dhp_page_template( $page_template )
 			wp_enqueue_style('dhp-cards-css', plugins_url('/css/dhp-cards.css',  dirname(__FILE__)) );
 
 			wp_enqueue_script('isotope', plugins_url('/lib/isotope.pkgd.min.js', dirname(__FILE__)));
+			wp_enqueue_script('imagesLoaded', plugins_url('/lib/imagesloaded.pkgd.min.js', dirname(__FILE__)));
+
 			wp_enqueue_script('dhp-cards-view', plugins_url('/js/dhp-cards-view.js', dirname(__FILE__)), 
 				'isotope' );
 

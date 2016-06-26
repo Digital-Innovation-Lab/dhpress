@@ -767,13 +767,15 @@ var dhpCardsView = {
 			sortObj = _.object(dhpCardsView.cardsEP.sortMotes, moteIDs);
 
 				// Initialize Isotope
-			cardHolder.isotope(
+			cardHolder.imagesLoaded(function() {
+				cardHolder.isotope(
 				{ itemSelector: '.card',
 				  getSortData: sortObj,
 				  masonry: {
 					isFitWidth: true
 				  }
-				} );
+				});
+			});
 		} else {
 				// Initialize Isotope
 			cardHolder.isotope(

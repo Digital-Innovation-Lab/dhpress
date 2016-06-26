@@ -23,7 +23,7 @@
 					$page_styles = array('dhp-jquery-ui-style', 'dhp-map-css', 'leaflet-css', 'maki-sprite-style', 'dhp-map-cluster-css', 'dhp-map-clusterdef-css');
 					break;
 				case 'cards':
-					$page_scripts = array('isotope', 'dhp-cards-view');
+					$page_scripts = array('isotope', 'imagesLoaded', 'dhp-cards-view');
 					$page_styles = array('dhp-cards-css');
 					break;
 				case 'pinboard':
