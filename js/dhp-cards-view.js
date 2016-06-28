@@ -767,21 +767,25 @@ var dhpCardsView = {
 			sortObj = _.object(dhpCardsView.cardsEP.sortMotes, moteIDs);
 
 				// Initialize Isotope
-			cardHolder.imagesLoaded(function() {
-				cardHolder.isotope(
-				{ itemSelector: '.card',
-				  getSortData: sortObj,
-				  masonry: {
-					isFitWidth: true
-				  }
-				});
+			var grid = 	cardHolder.isotope(
+						{ itemSelector: '.card',
+				 		  getSortData: sortObj,
+				  		  masonry: {
+						  isFitWidth: true
+				  		  }
+						});
+			grid.imagesLoaded().progress( function() {
+  				grid.isotope('layout');
 			});
+
 		} else {
 				// Initialize Isotope
-			cardHolder.isotope(
-				{ itemSelector: '.card', masonry: { isFitWidth: true } }
-			);
-
+			var grid =	cardHolder.isotope(
+					{ itemSelector: '.card', masonry: { isFitWidth: true } }
+				);
+			grid.imagesLoaded().progress( function() {
+  				grid.isotope('layout');
+			});
 		}
 
 		if (dhpCardsView.currentSort) {
