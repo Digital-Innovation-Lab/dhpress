@@ -11,7 +11,7 @@
 
 <script id="dhp-script-cards-filter-menu" type="text/html">
   <li class="has-dropdown">
-      <a href="#"><?php _e('Filter By'); ?></a>
+      <a href="#"><?php _e('Filter By', 'dhpress'); ?></a>
       <ul class="dropdown" id="dhp-cards-filter-menu">
           <!-- links -->
       </ul>
